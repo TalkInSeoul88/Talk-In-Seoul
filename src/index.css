@@ -15,7 +15,7 @@
   --ok-soft: #e5f2ea;
   --bad: #b23a2f;
   --bad-soft: #f8e6e3;
-  --nav-h: 4.4rem;
+  --nav-h: 4.6rem;
   --shadow: 0 10px 30px rgba(48, 28, 16, 0.08);
   --radius: 1.1rem;
   --font: 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif;
@@ -533,16 +533,39 @@ a {
 @media (min-width: 720px) {
   body {
     padding: 1.5rem 0;
-  }
-
-  .app-shell {
-    min-height: calc(100dvh - 3rem);
-    border-radius: 1.4rem;
+    height: 100dvh;
     overflow: hidden;
   }
 
+  .app-shell {
+    height: calc(100dvh - 3rem);
+    min-height: calc(100dvh - 3rem);
+    border-radius: 1.4rem;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 0;
+  }
+
+  .topbar {
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .page {
+    flex: 1;
+    overflow-y: auto;
+  }
+
   .bottom-nav {
-    width: min(430px, 100%);
+    position: relative;
+    left: auto;
+    bottom: auto;
+    transform: none;
+    width: 100%;
+    height: var(--nav-h);
+    padding-bottom: 0.4rem;
     border-radius: 0 0 1.4rem 1.4rem;
+    flex-shrink: 0;
   }
 }
