@@ -479,11 +479,16 @@ a {
   align-items: flex-start;
   gap: 0.02rem;
   line-height: 1.15;
+  font-size: inherit;
 }
 
 .audio-chip-copy strong {
   font-size: 0.98rem;
   font-weight: 700;
+}
+
+.audio-chip.teacher .audio-chip-copy span {
+  font-size: 0.7rem;
 }
 
 .audio-glyph {
@@ -714,10 +719,10 @@ code {
   transform: translateX(-50%);
   width: min(430px, 100%);
   height: calc(var(--nav-h) + env(safe-area-inset-bottom));
-  padding: 0.4rem 0.4rem calc(0.4rem + env(safe-area-inset-bottom));
+  padding: 0.3rem 0.28rem calc(0.32rem + env(safe-area-inset-bottom));
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 0.2rem;
+  gap: 0.12rem;
   background: rgba(255, 253, 251, 0.94);
   backdrop-filter: blur(16px);
   border-top: 1px solid var(--line);
@@ -728,29 +733,35 @@ code {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.12rem;
+  gap: 0.08rem;
   color: var(--muted);
-  font-size: 0.62rem;
+  font-size: 0.6rem;
   font-weight: 700;
-  border-radius: 0.9rem;
+  border-radius: 0.75rem;
   min-width: 0;
-  padding: 0.2rem 0.1rem;
+  padding: 0.16rem 0.04rem 0.12rem;
 }
 
 .nav-link svg {
-  width: 1.32rem;
-  height: 1.32rem;
+  width: 1.28rem;
+  height: 1.28rem;
+}
+
+.nav-en,
+.nav-ko {
+  max-width: 100%;
+  white-space: nowrap;
+  line-height: 1.1;
 }
 
 .nav-en {
-  line-height: 1.1;
+  letter-spacing: -0.03em;
 }
 
 .nav-ko {
-  font-size: 0.58rem;
+  font-size: 0.56rem;
   font-weight: 600;
   opacity: 0.78;
-  line-height: 1.1;
 }
 
 .nav-link.active {
