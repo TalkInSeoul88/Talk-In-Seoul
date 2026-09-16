@@ -85,19 +85,18 @@ export default function JamoAudioBar({ jamo, revealLabel = true }: Props) {
   async function toggleTeacher() {
     const audio = teacherRef.current
     if (!audio || teacherStatus !== 'ready') return
-    if (teacherPlaying && !audio.paused) {
+    if (!audio.paused) {
       audio.pause()
       audio.currentTime = 0
-      setTeacherPlaying(false)
       return
     }
     mineRef.current?.pause()
     setMinePlaying(false)
     try {
       await playExclusive(audio)
-      setTeacherPlaying(true)
     } catch {
       setTeacherStatus('missing')
+      setTeacherPlaying(false)
     }
   }
 
@@ -137,6 +136,8 @@ export default function JamoAudioBar({ jamo, revealLabel = true }: Props) {
       const name = error instanceof DOMException ? error.name : ''
       if (name === 'NotAllowedError' || name === 'PermissionDeniedError') {
         setRecordError('Microphone permission is needed to record.')
+      } else if (name === 'NotFoundError' || name === 'NotReadableError') {
+        setRecordError('No microphone found. Try this on your phone.')
       } else {
         setRecordError('Recording isn’t available in this browser.')
       }
@@ -157,9 +158,9 @@ export default function JamoAudioBar({ jamo, revealLabel = true }: Props) {
     setTeacherPlaying(false)
     try {
       await playExclusive(audio)
-      setMinePlaying(true)
     } catch {
       setRecordError('Could not play your recording.')
+      setMinePlaying(false)
     }
   }
 
@@ -171,6 +172,7 @@ export default function JamoAudioBar({ jamo, revealLabel = true }: Props) {
           src={src}
           preload="auto"
           playsInline
+          onPlaying={() => setTeacherPlaying(true)}
           onEnded={() => setTeacherPlaying(false)}
           onPause={() => setTeacherPlaying(false)}
         />
@@ -181,6 +183,7 @@ export default function JamoAudioBar({ jamo, revealLabel = true }: Props) {
           src={mineUrl}
           preload="metadata"
           playsInline
+          onPlaying={() => setMinePlaying(true)}
           onEnded={() => setMinePlaying(false)}
           onPause={() => setMinePlaying(false)}
         />
