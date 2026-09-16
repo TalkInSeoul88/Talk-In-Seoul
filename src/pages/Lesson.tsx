@@ -40,8 +40,8 @@ export default function Lesson() {
           <strong>Record</strong> yourself. Clips stay on this phone only.
         </p>
         <p className="tiny" style={{ marginBottom: 0 }}>
-          Vowel files are placeholder beeps until Jung drops his recordings into{' '}
-          <code>public/audio/</code> — same filenames.
+          Vowel clips are Jung’s voice. Consonant audio is next — those rows show “Audio coming soon” until files are
+          added in <code>public/audio/</code>.
         </p>
       </section>
 
