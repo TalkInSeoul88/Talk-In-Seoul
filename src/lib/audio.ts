@@ -1,6 +1,6 @@
 import type { Jamo } from '../data/content'
 
-const AUDIO_REV = 'jung-vowels'
+const AUDIO_REV = 'jung-vowels-v2'
 
 export function teacherAudioSrc(jamo: Jamo): string {
   return `/audio/${jamo.audioId}.mp3?v=${AUDIO_REV}`
