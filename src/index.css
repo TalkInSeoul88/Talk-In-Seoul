@@ -329,6 +329,123 @@ a {
   font-size: 1.35rem;
 }
 
+.prompt-audio {
+  margin-top: 0.9rem;
+  text-align: left;
+}
+
+.jamo-list {
+  margin-top: 0.55rem;
+}
+
+.jamo-row {
+  display: grid;
+  grid-template-columns: 3.1rem 1fr;
+  gap: 0.65rem;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.jamo-row:last-child {
+  border-bottom: 0;
+  padding-bottom: 0.15rem;
+}
+
+.jamo-row-glyph {
+  display: grid;
+  place-items: center;
+  height: 3.1rem;
+  border-radius: 0.85rem;
+  background: var(--paper);
+  font-size: 1.7rem;
+  font-weight: 600;
+}
+
+.jamo-row-title {
+  display: flex;
+  align-items: baseline;
+  gap: 0.15rem;
+}
+
+.audio-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  align-items: center;
+  position: relative;
+}
+
+.audio-bar audio {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.audio-chip {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.05rem;
+  min-height: 2.7rem;
+  min-width: 4.6rem;
+  padding: 0.28rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--cream);
+  color: var(--ink);
+  font-size: 0.82rem;
+  font-weight: 700;
+  line-height: 1.15;
+  touch-action: manipulation;
+}
+
+.audio-chip span {
+  font-size: 0.62rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.audio-chip.on {
+  background: var(--ok-soft);
+  border-color: var(--ok);
+  color: var(--ok);
+}
+
+.audio-chip.on span {
+  color: var(--ok);
+}
+
+.audio-chip.rec {
+  background: var(--bad-soft);
+  border-color: var(--bad);
+  color: var(--bad);
+}
+
+.audio-chip.rec span {
+  color: var(--bad);
+}
+
+.audio-chip:disabled {
+  opacity: 0.5;
+}
+
+.audio-soon {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--muted);
+  font-style: italic;
+}
+
+code {
+  font-size: 0.84em;
+  background: var(--paper);
+  padding: 0.05rem 0.28rem;
+  border-radius: 0.3rem;
+}
+
 .options {
   display: grid;
   grid-template-columns: 1fr 1fr;

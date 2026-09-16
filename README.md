@@ -10,7 +10,8 @@ Students come to an in-person Hangul class at the store, then use this phone-fri
 
 - **Home** — welcome, this week’s lesson, next class (editable), and progress (last quiz + homework)
 - **Lesson review** — Week 1 Hangul basics: vowels, consonants, syllable blocks, and starter words
-- **Practice** — tap the correct 자모 (letter) for a romanization or sound cue; instant feedback
+- **Listen along** — tap **Play** to hear the teacher, then optionally **Record** / **Play me** to compare (no AI scoring)
+- **Practice** — tap the correct 자모 (letter) for a romanization or sound cue; instant feedback + teacher audio when a file exists
 - **Quiz** — eight questions with a score at the end and retry
 - **Homework** — five “before next class” tasks that persist in the browser (`localStorage`)
 
@@ -33,8 +34,52 @@ npm run preview  # serve the production build
 npm run lint     # oxlint
 ```
 
-Progress (quiz score, homework checks, and the next-class note) is stored only in this browser.
+Progress (quiz score, homework checks, and the next-class note) is stored only in this browser. Student recordings stay in memory for this visit and are never uploaded.
+
+## Teacher audio (Jung)
+
+Drop additional MP3 files into `public/audio/` using the names below. Keep the same filenames — the app looks them up automatically. If a file is missing, students see **Audio coming soon** instead of a broken player.
+
+The 10 basic vowels already use **Jung’s recordings**. Consonant files are not included yet; those rows already use the same Play/Record UI.
+
+Tap Play / Record on the phone itself (Safari or Chrome). Browsers require a tap to start audio or the microphone.
+
+### Vowels · 모음 → `vowel-{roman}.mp3`
+
+| Hangul | Roman | File |
+| --- | --- | --- |
+| ㅏ | a | `vowel-a.mp3` |
+| ㅑ | ya | `vowel-ya.mp3` |
+| ㅓ | eo | `vowel-eo.mp3` |
+| ㅕ | yeo | `vowel-yeo.mp3` |
+| ㅗ | o | `vowel-o.mp3` |
+| ㅛ | yo | `vowel-yo.mp3` |
+| ㅜ | u | `vowel-u.mp3` |
+| ㅠ | yu | `vowel-yu.mp3` |
+| ㅡ | eu | `vowel-eu.mp3` |
+| ㅣ | i | `vowel-i.mp3` |
+
+### Consonants · 자음 → `consonant-{slug}.mp3`
+
+| Hangul | Roman | File |
+| --- | --- | --- |
+| ㄱ | g/k | `consonant-g.mp3` |
+| ㄴ | n | `consonant-n.mp3` |
+| ㄷ | d/t | `consonant-d.mp3` |
+| ㄹ | r/l | `consonant-r.mp3` |
+| ㅁ | m | `consonant-m.mp3` |
+| ㅂ | b/p | `consonant-b.mp3` |
+| ㅅ | s | `consonant-s.mp3` |
+| ㅇ | (silent) / ng | `consonant-ng.mp3` |
+| ㅈ | j | `consonant-j.mp3` |
+| ㅊ | ch | `consonant-ch.mp3` |
+| ㅋ | k | `consonant-k.mp3` |
+| ㅌ | t | `consonant-t.mp3` |
+| ㅍ | p | `consonant-p.mp3` |
+| ㅎ | h | `consonant-h.mp3` |
+
+After replacing files, refresh the site (or redeploy). No code change is required.
 
 ## Out of scope
 
-Payments, store cart, Instagram, booking, user accounts, native App Store / Play Store apps, and an admin CMS.
+Payments, store cart, Instagram, booking, user accounts, native App Store / Play Store apps, an admin CMS, AI pronunciation scoring, and cloud upload of student audio.

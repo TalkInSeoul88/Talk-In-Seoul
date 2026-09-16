@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import JamoAudioBar from '../components/JamoAudioBar'
 import { buildPracticeRound } from '../data/activities'
 
 export default function Practice() {
@@ -62,6 +63,12 @@ export default function Practice() {
         <p className="tiny">{current.promptKo}</p>
         <p style={{ margin: '0.2rem 0 0', fontWeight: 700 }}>{current.prompt}</p>
         <p className="big-hint">{current.hint}</p>
+        <div className="prompt-audio">
+          <p className="tiny" style={{ marginBottom: '0.45rem' }}>
+            Listen first · 먼저 듣기
+          </p>
+          <JamoAudioBar key={current.target.audioId} jamo={current.target} revealLabel={Boolean(picked)} />
+        </div>
       </section>
 
       <div className="options">
