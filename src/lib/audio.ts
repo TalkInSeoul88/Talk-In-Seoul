@@ -1,7 +1,9 @@
 import type { Jamo } from '../data/content'
 
+const AUDIO_REV = 'jung-vowels'
+
 export function teacherAudioSrc(jamo: Jamo): string {
-  return `/audio/${jamo.audioId}.mp3`
+  return `/audio/${jamo.audioId}.mp3?v=${AUDIO_REV}`
 }
 
 const availability = new Map<string, boolean>()

@@ -38,9 +38,9 @@ Progress (quiz score, homework checks, and the next-class note) is stored only i
 
 ## Teacher audio (Jung)
 
-Drop MP3 files into `public/audio/` using the names below. Keep the same filenames — the app looks them up automatically. If a file is missing, students see **Audio coming soon** instead of a broken player.
+Drop additional MP3 files into `public/audio/` using the names below. Keep the same filenames — the app looks them up automatically. If a file is missing, students see **Audio coming soon** instead of a broken player.
 
-The 10 vowel files in the repo right now are **short placeholder beeps** so Play can be demoed. Replace them with Jung’s real recordings (same names). Consonant files are not included yet; those rows already use the same Play/Record UI.
+The 10 basic vowels already use **Jung’s recordings**. Consonant files are not included yet; those rows already use the same Play/Record UI.
 
 Tap Play / Record on the phone itself (Safari or Chrome). Browsers require a tap to start audio or the microphone.
 
