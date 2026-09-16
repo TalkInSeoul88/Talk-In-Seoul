@@ -194,13 +194,24 @@ export default function JamoAudioBar({ jamo, revealLabel = true }: Props) {
       ) : (
         <button
           type="button"
-          className={`audio-chip ${teacherPlaying ? 'on' : ''}`}
+          className={`audio-chip teacher ${teacherPlaying ? 'on' : ''}`}
           onClick={() => void toggleTeacher()}
           disabled={teacherStatus !== 'ready'}
           aria-label={revealLabel ? `Play teacher audio for ${jamo.char}` : 'Play teacher audio'}
         >
-          {teacherStatus === 'checking' ? '…' : teacherPlaying ? 'Pause' : 'Play'}
-          <span>선생님</span>
+          {teacherStatus === 'checking' ? (
+            <span className="audio-chip-copy">
+              <strong>…</strong>
+            </span>
+          ) : (
+            <>
+              {teacherPlaying ? <PauseGlyph /> : <PlayGlyph />}
+              <span className="audio-chip-copy">
+                <strong>{teacherPlaying ? 'Pause' : 'Play'}</strong>
+                <span>선생님</span>
+              </span>
+            </>
+          )}
         </button>
       )}
 
@@ -222,7 +233,7 @@ export default function JamoAudioBar({ jamo, revealLabel = true }: Props) {
       {mineUrl && (
         <button
           type="button"
-          className={`audio-chip ${minePlaying ? 'on' : ''}`}
+          className={`audio-chip mine ${minePlaying ? 'on' : ''}`}
           onClick={() => void toggleMine()}
           aria-label="Play my recording"
         >
@@ -233,5 +244,22 @@ export default function JamoAudioBar({ jamo, revealLabel = true }: Props) {
 
       {recordError && <p className="audio-soon">{recordError}</p>}
     </div>
+  )
+}
+
+function PlayGlyph() {
+  return (
+    <svg className="audio-glyph" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M8 5.25v13.5L19.5 12 8 5.25Z" fill="currentColor" />
+    </svg>
+  )
+}
+
+function PauseGlyph() {
+  return (
+    <svg className="audio-glyph" viewBox="0 0 24 24" aria-hidden="true">
+      <rect x="6.5" y="5.5" width="4" height="13" rx="1" fill="currentColor" />
+      <rect x="13.5" y="5.5" width="4" height="13" rx="1" fill="currentColor" />
+    </svg>
   )
 }

@@ -36,11 +36,11 @@ export default function Home() {
           <span>자모 연습</span>
           <strong>Practice</strong>
         </Link>
-        <Link className="quick-link" to="/quiz">
+        <Link className="quick-link sky" to="/quiz">
           <span>퀴즈</span>
           <strong>Quiz</strong>
         </Link>
-        <Link className="quick-link" to="/homework">
+        <Link className="quick-link peach" to="/homework">
           <span>숙제</span>
           <strong>Homework</strong>
         </Link>
