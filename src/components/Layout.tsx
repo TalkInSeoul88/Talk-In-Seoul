@@ -32,11 +32,8 @@ export default function Layout() {
             className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}
           >
             <link.icon />
-            <span>
-              {link.label}
-              <br />
-              {link.ko}
-            </span>
+            <span className="nav-en">{link.label}</span>
+            <span className="nav-ko">{link.ko}</span>
           </NavLink>
         ))}
       </nav>
