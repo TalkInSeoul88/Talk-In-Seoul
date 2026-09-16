@@ -1,3 +1,4 @@
+import JamoListenRow from '../components/JamoListenRow'
 import {
   BASIC_CONSONANTS,
   BASIC_VOWELS,
@@ -33,27 +34,36 @@ export default function Lesson() {
       </section>
 
       <section className="card">
+        <h2>Listen along · 따라 하기</h2>
+        <p className="tiny">
+          Tap <strong>Play</strong> to hear the teacher, say it out loud, then optionally{' '}
+          <strong>Record</strong> yourself. Clips stay on this phone only.
+        </p>
+        <p className="tiny" style={{ marginBottom: 0 }}>
+          Vowel clips are Jung’s voice. Consonant audio is next — those rows show “Audio coming soon” until files are
+          added in <code>public/audio/</code>.
+        </p>
+      </section>
+
+      <section className="card">
         <h2>Basic vowels · 기본 모음</h2>
         <p className="tiny">Vertical vowels (ㅏ ㅓ ㅣ) sit to the right. Horizontal vowels (ㅗ ㅜ ㅡ) sit below.</p>
-        <div className="jamo-grid" style={{ marginTop: '0.7rem' }}>
+        <div className="jamo-list">
           {BASIC_VOWELS.map((jamo) => (
-            <div className="jamo" key={jamo.char}>
-              <span className="glyph">{jamo.char}</span>
-              <span className="roman">{jamo.roman}</span>
-            </div>
+            <JamoListenRow key={jamo.char} jamo={jamo} />
           ))}
         </div>
       </section>
 
       <section className="card">
         <h2>Basic consonants · 기본 자음</h2>
-        <p className="tiny">Fourteen plain consonants. Aspirated letters (ㅋ ㅌ ㅍ ㅊ) add an extra stroke of air.</p>
-        <div className="jamo-grid" style={{ marginTop: '0.7rem' }}>
+        <p className="tiny">
+          Fourteen plain consonants. Teacher audio for these is next — you’ll see “Audio coming soon” until the files
+          are added.
+        </p>
+        <div className="jamo-list">
           {BASIC_CONSONANTS.map((jamo) => (
-            <div className="jamo" key={jamo.char}>
-              <span className="glyph">{jamo.char}</span>
-              <span className="roman">{jamo.roman}</span>
-            </div>
+            <JamoListenRow key={jamo.char} jamo={jamo} />
           ))}
         </div>
       </section>

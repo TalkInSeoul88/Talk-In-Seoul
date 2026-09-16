@@ -4,36 +4,38 @@ export type Jamo = {
   nameKo: string
   cue: string
   kind: 'vowel' | 'consonant'
+  /** Filename stem under /audio/{audioId}.mp3 — e.g. vowel-a */
+  audioId: string
 }
 
 export const BASIC_VOWELS: Jamo[] = [
-  { char: 'ㅏ', roman: 'a', nameKo: '아', cue: 'like the a in father', kind: 'vowel' },
-  { char: 'ㅑ', roman: 'ya', nameKo: '야', cue: 'yah — ㅏ with an extra stroke', kind: 'vowel' },
-  { char: 'ㅓ', roman: 'eo', nameKo: '어', cue: 'like the u in sun', kind: 'vowel' },
-  { char: 'ㅕ', roman: 'yeo', nameKo: '여', cue: 'yuh — ㅓ with an extra stroke', kind: 'vowel' },
-  { char: 'ㅗ', roman: 'o', nameKo: '오', cue: 'like the o in go', kind: 'vowel' },
-  { char: 'ㅛ', roman: 'yo', nameKo: '요', cue: 'yo — ㅗ with an extra stroke', kind: 'vowel' },
-  { char: 'ㅜ', roman: 'u', nameKo: '우', cue: 'like the oo in moon', kind: 'vowel' },
-  { char: 'ㅠ', roman: 'yu', nameKo: '유', cue: 'you — ㅜ with an extra stroke', kind: 'vowel' },
-  { char: 'ㅡ', roman: 'eu', nameKo: '으', cue: 'unrounded “uh,” teeth close, smile slightly', kind: 'vowel' },
-  { char: 'ㅣ', roman: 'i', nameKo: '이', cue: 'like the ee in see', kind: 'vowel' },
+  { char: 'ㅏ', roman: 'a', nameKo: '아', cue: 'like the a in father', kind: 'vowel', audioId: 'vowel-a' },
+  { char: 'ㅑ', roman: 'ya', nameKo: '야', cue: 'yah — ㅏ with an extra stroke', kind: 'vowel', audioId: 'vowel-ya' },
+  { char: 'ㅓ', roman: 'eo', nameKo: '어', cue: 'like the u in sun', kind: 'vowel', audioId: 'vowel-eo' },
+  { char: 'ㅕ', roman: 'yeo', nameKo: '여', cue: 'yuh — ㅓ with an extra stroke', kind: 'vowel', audioId: 'vowel-yeo' },
+  { char: 'ㅗ', roman: 'o', nameKo: '오', cue: 'like the o in go', kind: 'vowel', audioId: 'vowel-o' },
+  { char: 'ㅛ', roman: 'yo', nameKo: '요', cue: 'yo — ㅗ with an extra stroke', kind: 'vowel', audioId: 'vowel-yo' },
+  { char: 'ㅜ', roman: 'u', nameKo: '우', cue: 'like the oo in moon', kind: 'vowel', audioId: 'vowel-u' },
+  { char: 'ㅠ', roman: 'yu', nameKo: '유', cue: 'you — ㅜ with an extra stroke', kind: 'vowel', audioId: 'vowel-yu' },
+  { char: 'ㅡ', roman: 'eu', nameKo: '으', cue: 'unrounded “uh,” teeth close, smile slightly', kind: 'vowel', audioId: 'vowel-eu' },
+  { char: 'ㅣ', roman: 'i', nameKo: '이', cue: 'like the ee in see', kind: 'vowel', audioId: 'vowel-i' },
 ]
 
 export const BASIC_CONSONANTS: Jamo[] = [
-  { char: 'ㄱ', roman: 'g/k', nameKo: '기역', cue: 'g at the start of a word, k at the end', kind: 'consonant' },
-  { char: 'ㄴ', roman: 'n', nameKo: '니은', cue: 'n as in name', kind: 'consonant' },
-  { char: 'ㄷ', roman: 'd/t', nameKo: '디귿', cue: 'd at the start, t at the end', kind: 'consonant' },
-  { char: 'ㄹ', roman: 'r/l', nameKo: '리을', cue: 'a light r between vowels, l at the end', kind: 'consonant' },
-  { char: 'ㅁ', roman: 'm', nameKo: '미음', cue: 'm as in mom — lips together', kind: 'consonant' },
-  { char: 'ㅂ', roman: 'b/p', nameKo: '비읍', cue: 'b at the start, p at the end', kind: 'consonant' },
-  { char: 'ㅅ', roman: 's', nameKo: '시옷', cue: 's as in sun (sh before ㅣ, ㅑ, ㅕ, ㅛ, ㅠ)', kind: 'consonant' },
-  { char: 'ㅇ', roman: '∅ / ng', nameKo: '이응', cue: 'silent at the start of a syllable; ng at the end', kind: 'consonant' },
-  { char: 'ㅈ', roman: 'j', nameKo: '지읒', cue: 'j as in jam', kind: 'consonant' },
-  { char: 'ㅊ', roman: 'ch', nameKo: '치읓', cue: 'ch as in chat — ㅈ with a hat', kind: 'consonant' },
-  { char: 'ㅋ', roman: 'k', nameKo: '키읔', cue: 'strong k — ㄱ with an extra stroke', kind: 'consonant' },
-  { char: 'ㅌ', roman: 't', nameKo: '티읕', cue: 'strong t — ㄷ with an extra stroke', kind: 'consonant' },
-  { char: 'ㅍ', roman: 'p', nameKo: '피읖', cue: 'strong p — ㅂ with an extra stroke', kind: 'consonant' },
-  { char: 'ㅎ', roman: 'h', nameKo: '히읗', cue: 'h as in hat', kind: 'consonant' },
+  { char: 'ㄱ', roman: 'g/k', nameKo: '기역', cue: 'g at the start of a word, k at the end', kind: 'consonant', audioId: 'consonant-g' },
+  { char: 'ㄴ', roman: 'n', nameKo: '니은', cue: 'n as in name', kind: 'consonant', audioId: 'consonant-n' },
+  { char: 'ㄷ', roman: 'd/t', nameKo: '디귿', cue: 'd at the start, t at the end', kind: 'consonant', audioId: 'consonant-d' },
+  { char: 'ㄹ', roman: 'r/l', nameKo: '리을', cue: 'a light r between vowels, l at the end', kind: 'consonant', audioId: 'consonant-r' },
+  { char: 'ㅁ', roman: 'm', nameKo: '미음', cue: 'm as in mom — lips together', kind: 'consonant', audioId: 'consonant-m' },
+  { char: 'ㅂ', roman: 'b/p', nameKo: '비읍', cue: 'b at the start, p at the end', kind: 'consonant', audioId: 'consonant-b' },
+  { char: 'ㅅ', roman: 's', nameKo: '시옷', cue: 's as in sun (sh before ㅣ, ㅑ, ㅕ, ㅛ, ㅠ)', kind: 'consonant', audioId: 'consonant-s' },
+  { char: 'ㅇ', roman: '∅ / ng', nameKo: '이응', cue: 'silent at the start of a syllable; ng at the end', kind: 'consonant', audioId: 'consonant-ng' },
+  { char: 'ㅈ', roman: 'j', nameKo: '지읒', cue: 'j as in jam', kind: 'consonant', audioId: 'consonant-j' },
+  { char: 'ㅊ', roman: 'ch', nameKo: '치읓', cue: 'ch as in chat — ㅈ with a hat', kind: 'consonant', audioId: 'consonant-ch' },
+  { char: 'ㅋ', roman: 'k', nameKo: '키읔', cue: 'strong k — ㄱ with an extra stroke', kind: 'consonant', audioId: 'consonant-k' },
+  { char: 'ㅌ', roman: 't', nameKo: '티읕', cue: 'strong t — ㄷ with an extra stroke', kind: 'consonant', audioId: 'consonant-t' },
+  { char: 'ㅍ', roman: 'p', nameKo: '피읖', cue: 'strong p — ㅂ with an extra stroke', kind: 'consonant', audioId: 'consonant-p' },
+  { char: 'ㅎ', roman: 'h', nameKo: '히읗', cue: 'h as in hat', kind: 'consonant', audioId: 'consonant-h' },
 ]
 
 export const ALL_JAMO: Jamo[] = [...BASIC_VOWELS, ...BASIC_CONSONANTS]

@@ -24,7 +24,7 @@ export default function Home() {
           {WEEK_1_LESSON.weekLabel} · {WEEK_1_LESSON.title}
         </h2>
         <p className="muted" style={{ marginTop: 0 }}>
-          {WEEK_1_LESSON.titleKo}. {WEEK_1_LESSON.summary}
+          {WEEK_1_LESSON.titleKo}. {WEEK_1_LESSON.summary} Tap Play on the lesson to hear Jung, then say it back.
         </p>
         <Link className="btn" to="/lesson">
           Review the lesson · 복습하기
