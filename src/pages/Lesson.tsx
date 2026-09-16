@@ -10,7 +10,7 @@ import {
 export default function Lesson() {
   return (
     <div className="stack">
-      <header>
+      <header className="page-header">
         <p className="kicker">
           {WEEK_1_LESSON.weekLabel} · {WEEK_1_LESSON.weekLabelKo}
         </p>
@@ -22,7 +22,7 @@ export default function Lesson() {
 
       <section className="card">
         <h2>What is Hangul? · 한글이란?</h2>
-        <p className="muted" style={{ marginTop: 0 }}>
+        <p className="muted mt-0">
           Hangul is the Korean alphabet, created in the 1440s under{' '}
           <strong>King Sejong the Great (세종대왕)</strong>. Letters are grouped into square{' '}
           <strong>syllable blocks</strong> — not written in a single line like English.
@@ -39,7 +39,7 @@ export default function Lesson() {
           Tap <strong>Play</strong> to hear the teacher, say it out loud, then optionally{' '}
           <strong>Record</strong> yourself. Clips stay on this phone only.
         </p>
-        <p className="tiny" style={{ marginBottom: 0 }}>
+        <p className="tiny">
           Vowel clips are Jung’s voice. Consonant audio is next — those rows show “Audio coming soon” until files are
           added in <code>public/audio/</code>.
         </p>
@@ -71,7 +71,7 @@ export default function Lesson() {
       <section className="card">
         <h2>Simple syllables · 쉬운 음절</h2>
         <p className="tiny">Read the block as one beat: consonant, then vowel.</p>
-        <div className="syllable-row" style={{ marginTop: '0.7rem' }}>
+        <div className="syllable-row">
           {SAMPLE_SYLLABLES.map((item) => (
             <div className="syllable" key={item.char}>
               <div className="glyph">{item.char}</div>

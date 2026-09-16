@@ -50,21 +50,23 @@ export default function Practice() {
 
   return (
     <div>
-      <p className="kicker">Practice · 자모 연습</p>
-      <h2 className="page-title">Tap the matching letter</h2>
-      <p className="tiny">
-        {index + 1} / {round.length}
-      </p>
+      <header className="page-header">
+        <p className="kicker">Practice · 자모 연습</p>
+        <h2 className="page-title">Tap the matching letter</h2>
+        <p className="count">
+          {index + 1} / {round.length}
+        </p>
+      </header>
       <div className="progress-bar" aria-hidden="true">
         <span style={{ width: `${(index / round.length) * 100}%` }} />
       </div>
 
       <section className="card prompt-card">
         <p className="tiny">{current.promptKo}</p>
-        <p style={{ margin: '0.2rem 0 0', fontWeight: 700 }}>{current.prompt}</p>
+        <p className="prompt-lead">{current.prompt}</p>
         <p className="big-hint">{current.hint}</p>
         <div className="prompt-audio">
-          <p className="tiny" style={{ marginBottom: '0.45rem' }}>
+          <p className="tiny listen-label">
             Listen first · 먼저 듣기
           </p>
           <JamoAudioBar key={current.target.audioId} jamo={current.target} revealLabel={Boolean(picked)} />

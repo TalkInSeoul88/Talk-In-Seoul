@@ -66,12 +66,14 @@ export default function Quiz() {
 
   return (
     <div>
-      <p className="kicker">Quiz · 퀴즈</p>
-      <h2 className="page-title">Week 1 check-in</h2>
-      <p className="tiny">
-        {index + 1} / {questions.length}
-        {quiz ? ` · last score ${quiz.score}/${quiz.total}` : ''}
-      </p>
+      <header className="page-header">
+        <p className="kicker">Quiz · 퀴즈</p>
+        <h2 className="page-title">Week 1 check-in</h2>
+        <p className="count">
+          {index + 1} / {questions.length}
+          {quiz ? ` · last score ${quiz.score}/${quiz.total}` : ''}
+        </p>
+      </header>
       <div className="progress-bar" aria-hidden="true">
         <span style={{ width: `${(index / questions.length) * 100}%` }} />
       </div>
@@ -107,7 +109,7 @@ export default function Quiz() {
           <p className={`feedback ${isCorrect ? 'ok' : 'bad'}`}>
             {isCorrect ? 'Jeongdap! 정답.' : 'Not quite. 다시 한번 보세요.'}
           </p>
-          <p className="tiny" style={{ textAlign: 'center' }}>
+          <p className="tiny explain">
             {current.explain}
           </p>
           <button className="btn" type="button" onClick={next}>
