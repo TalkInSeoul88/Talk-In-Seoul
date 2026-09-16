@@ -7,6 +7,7 @@ export type PracticePrompt = {
   hint: string
   answer: string
   options: string[]
+  target: Jamo
 }
 
 function shuffle<T>(items: T[]): T[] {
@@ -34,6 +35,7 @@ function makeItem(target: Jamo, pool: Jamo[], index: number, mode: 'roman' | 'cu
       hint: target.cue,
       answer: target.char,
       options,
+      target,
     }
   }
   return {
@@ -43,6 +45,7 @@ function makeItem(target: Jamo, pool: Jamo[], index: number, mode: 'roman' | 'cu
     hint: `${target.nameKo} · ${target.cue}`,
     answer: target.char,
     options,
+    target,
   }
 }
 
