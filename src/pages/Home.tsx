@@ -9,21 +9,21 @@ export default function Home() {
 
   return (
     <div className="stack">
-      <section className="card welcome">
+      <header className="page-header">
         <p className="kicker">안녕 · Welcome</p>
-        <h2>Practice between classes.</h2>
-        <p className="lede" style={{ marginBottom: 0 }}>
+        <h2 className="page-title">Practice between classes.</h2>
+        <p className="lede">
           Warm up your Hangul at home, then come back to{' '}
           <strong>Pop In Seoul</strong> in Springfield, IL for the next in-person session.
         </p>
-      </section>
+      </header>
 
       <section className="card">
         <p className="kicker">This week’s lesson · 이번 주 수업</p>
         <h2>
           {WEEK_1_LESSON.weekLabel} · {WEEK_1_LESSON.title}
         </h2>
-        <p className="muted" style={{ marginTop: 0 }}>
+        <p className="muted mt-0">
           {WEEK_1_LESSON.titleKo}. {WEEK_1_LESSON.summary} Tap Play on the lesson to hear Jung, then say it back.
         </p>
         <Link className="btn" to="/lesson">
@@ -32,15 +32,15 @@ export default function Home() {
       </section>
 
       <div className="quick-grid">
-        <Link className="quick-link accent" to="/practice">
+        <Link className="quick-link" to="/practice">
           <span>자모 연습</span>
           <strong>Practice</strong>
         </Link>
-        <Link className="quick-link sky" to="/quiz">
+        <Link className="quick-link" to="/quiz">
           <span>퀴즈</span>
           <strong>Quiz</strong>
         </Link>
-        <Link className="quick-link peach" to="/homework">
+        <Link className="quick-link" to="/homework">
           <span>숙제</span>
           <strong>Homework</strong>
         </Link>
@@ -52,9 +52,7 @@ export default function Home() {
 
       <section className="card next-class">
         <div className="edit-row">
-          <p className="kicker" style={{ margin: 0 }}>
-            Next class · 다음 수업
-          </p>
+          <p className="kicker mb-0">Next class · 다음 수업</p>
           <button className="text-btn" type="button" onClick={() => setEditing((value) => !value)}>
             {editing ? 'Done' : 'Edit'}
           </button>
@@ -67,7 +65,7 @@ export default function Home() {
             rows={3}
           />
         ) : (
-          <p style={{ whiteSpace: 'pre-wrap', margin: '0.55rem 0 0', fontWeight: 600 }}>{nextClass}</p>
+          <p className="next-class-copy">{nextClass}</p>
         )}
       </section>
 

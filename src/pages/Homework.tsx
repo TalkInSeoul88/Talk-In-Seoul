@@ -6,7 +6,7 @@ export default function Homework() {
 
   return (
     <div className="stack">
-      <header>
+      <header className="page-header">
         <p className="kicker">Homework · 숙제</p>
         <h2 className="page-title">Before next class</h2>
         <p className="lede">
@@ -26,32 +26,31 @@ export default function Homework() {
         <div className="progress-bar" aria-hidden="true">
           <span style={{ width: `${(homeworkDone / homeworkTotal) * 100}%` }} />
         </div>
-        <div className="checklist">
-          {HOMEWORK.map((item) => {
-            const done = Boolean(homework[item.id])
-            return (
-              <button
-                key={item.id}
-                type="button"
-                className={`check-item ${done ? 'done' : ''}`}
-                onClick={() => toggleHomework(item.id)}
-                aria-pressed={done}
-              >
-                <span className="box" aria-hidden="true">
-                  {done ? '✓' : ''}
-                </span>
-                <span>
-                  <strong>{item.title}</strong>
-                  <div className="tiny">{item.titleKo}</div>
-                  <div className="muted" style={{ marginTop: '0.25rem', fontSize: '0.88rem' }}>
-                    {item.detail}
-                  </div>
-                </span>
-              </button>
-            )
-          })}
-        </div>
       </section>
+
+      <div className="checklist">
+        {HOMEWORK.map((item) => {
+          const done = Boolean(homework[item.id])
+          return (
+            <button
+              key={item.id}
+              type="button"
+              className={`check-item ${done ? 'done' : ''}`}
+              onClick={() => toggleHomework(item.id)}
+              aria-pressed={done}
+            >
+              <span className="box" aria-hidden="true">
+                {done ? '✓' : ''}
+              </span>
+              <span>
+                <strong>{item.title}</strong>
+                <div className="tiny">{item.titleKo}</div>
+                <div className="muted check-detail">{item.detail}</div>
+              </span>
+            </button>
+          )
+        })}
+      </div>
     </div>
   )
 }
