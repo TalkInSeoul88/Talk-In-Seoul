@@ -6,16 +6,16 @@ Students come to an in-person Hangul class at the store, then use this phone-fri
 
 **Talk in Seoul** · Hangul Class @ Pop In Seoul
 
-## What’s in the MVP
+## What’s in Phase 1
 
-- **Home** — welcome, this week’s lesson, next class (editable), and progress (last quiz + homework)
-- **Lesson review** — Week 1 Hangul basics: vowels, consonants, syllable blocks, and starter words
-- **Listen along** — tap **Play** to hear the teacher, then optionally **Record** / **Play me** to compare (no AI scoring)
-- **Practice** — tap the correct 자모 (letter) for a romanization or sound cue; instant feedback + teacher audio when a file exists
-- **Quiz** — eight questions with a score at the end and retry
-- **Homework** — five “before next class” tasks that persist in the browser (`localStorage`)
+- **Home** — this week’s focus, then three links: Pronunciation, Quiz, This Week
+- **Pronunciation** — Week 1 vowels and consonants with Play (Jung’s voice) and Record / Play me
+- **Quiz** — flashcards for the 10 basic vowels plus a few starter words (tap to flip)
+- **This Week** — placeholder for class materials (PDFs and links later)
 
-English is the primary UI language, with Korean labels where they feel natural. There is no login.
+Menu is a hamburger in the top-left. English is the primary UI language, with Korean labels where they feel natural. There is no login.
+
+Old `/lesson` and `/practice` URLs go to Pronunciation. `/homework` goes to This Week.
 
 ## Run locally
 

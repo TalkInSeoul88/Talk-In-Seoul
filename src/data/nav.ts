@@ -1,0 +1,27 @@
+export const STUDENT_NAV = [
+  { to: '/', label: 'Home', ko: '홈' },
+  { to: '/pronunciation', label: 'Pronunciation', ko: '발음' },
+  { to: '/quiz', label: 'Quiz', ko: '퀴즈' },
+  { to: '/this-week', label: 'This Week', ko: '이번 주' },
+] as const
+
+export const HOME_LINKS = [
+  {
+    to: '/pronunciation',
+    label: 'Pronunciation',
+    ko: '발음',
+    detail: 'Hear Jung, then say it back.',
+  },
+  {
+    to: '/quiz',
+    label: 'Quiz',
+    ko: '퀴즈',
+    detail: 'Flip this week’s Hangul cards.',
+  },
+  {
+    to: '/this-week',
+    label: 'This Week',
+    ko: '이번 주',
+    detail: 'Materials from class, when they’re posted.',
+  },
+] as const
