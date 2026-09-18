@@ -1,10 +1,12 @@
 import { useEffect, useId, useRef, useState } from 'react'
 import { NavLink, Outlet, useLocation } from 'react-router-dom'
 import { STUDENT_NAV } from '../data/nav'
+import { useEnrollment } from '../lib/enrollment.tsx'
 
 export default function Layout() {
   const [open, setOpen] = useState(false)
   const location = useLocation()
+  const { enrollment } = useEnrollment()
   const menuId = useId()
   const menuButtonRef = useRef<HTMLButtonElement>(null)
   const pathRef = useRef(location.pathname)
@@ -57,7 +59,10 @@ export default function Layout() {
         </button>
         <div className="topbar-copy">
           <h1>Talk in Seoul</h1>
-          <p>Hangul Class @ Pop In Seoul</p>
+          <p>
+            Hangul Class @ Pop In Seoul
+            {enrollment.enrolled && <span className="enrolled-pill">Enrolled</span>}
+          </p>
         </div>
       </header>
 

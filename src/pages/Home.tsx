@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import AccessCodeCard from '../components/AccessCodeCard'
 import { WEEK_1_LESSON } from '../data/content'
 import { HOME_LINKS } from '../data/nav'
 
@@ -14,6 +15,8 @@ export default function Home() {
           Listen to Jung’s vowels, flip a few cards, then check This Week for anything from class.
         </p>
       </header>
+
+      <AccessCodeCard />
 
       <nav className="home-links" aria-label="This week">
         {HOME_LINKS.map((link) => (
