@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import type { Jamo } from '../data/content'
+import type { TeacherClip } from '../data/content'
 import {
   pickRecorderMime,
   playExclusive,
@@ -25,7 +25,7 @@ function storeClip(id: string, blob: Blob): string {
 }
 
 type Props = {
-  jamo: Jamo
+  jamo: TeacherClip
   revealLabel?: boolean
 }
 

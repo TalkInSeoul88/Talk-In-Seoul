@@ -36,8 +36,8 @@ export default function AccessCodeCard() {
       <p className="kicker">Class access</p>
       <h2>Have a code from class?</h2>
       <p className="tiny">
-        Enter it once. No account. Without a code you can still use Home, public This Week, and
-        pronunciation.
+        Enter it once. No account. Without a code you can still use Home, 모음(vowels), and
+        자음(consonants). 음절(syllables) unlock with this code.
       </p>
       <form className="access-form" onSubmit={(event) => void onSubmit(event)}>
         <label className="field">

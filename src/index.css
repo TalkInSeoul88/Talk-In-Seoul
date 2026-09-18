@@ -855,6 +855,11 @@ code {
   border-radius: 999px;
 }
 
+.seg.triple {
+  grid-template-columns: 1fr 1fr 1fr;
+  border-radius: 1.15rem;
+}
+
 .seg-btn {
   min-height: 2.8rem;
   border: 0;
@@ -866,9 +871,216 @@ code {
   touch-action: manipulation;
 }
 
+.seg.triple .seg-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.05rem;
+  min-height: 3rem;
+  border-radius: 0.9rem;
+  font-size: 0.92rem;
+  line-height: 1.15;
+  padding: 0.28rem 0.12rem;
+}
+
+.seg-sub {
+  display: block;
+  font-size: 0.62rem;
+  font-weight: 600;
+  color: var(--muted);
+  letter-spacing: 0;
+}
+
 .seg-btn.on {
   background: var(--coral);
   color: var(--on-coral);
+}
+
+.seg-btn.on .seg-sub {
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.syllable-card {
+  padding-top: 1.35rem;
+}
+
+.syllable-card h2 {
+  margin-bottom: 0.2rem;
+}
+
+.syllable-focus {
+  margin: 0 0 1.15rem;
+  font-family: var(--serif);
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+}
+
+.syllable-focus .text-btn {
+  vertical-align: middle;
+  margin-left: 0.35rem;
+}
+
+.text-btn.quiet {
+  background: transparent;
+  color: var(--coral-deep);
+  min-height: 2.1rem;
+  font-size: 0.82rem;
+}
+
+.syllable-map {
+  margin-top: 1.5rem;
+  padding-top: 1.15rem;
+  border-top: 1px solid var(--line);
+}
+
+.syllable-map.locked-map {
+  margin-top: 1.1rem;
+  padding-top: 0;
+  border-top: 0;
+}
+
+.cv-chart-wrap {
+  overflow: auto;
+  max-height: 14rem;
+  margin-top: 0.7rem;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  -webkit-overflow-scrolling: touch;
+}
+
+.cv-chart {
+  border-collapse: collapse;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.cv-chart th,
+.cv-chart td {
+  text-align: center;
+  padding: 0;
+}
+
+.cv-chart thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--paper);
+}
+
+.cv-chart tbody th {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background: var(--paper);
+}
+
+.cv-axis {
+  font-size: 0.62rem;
+  color: var(--muted);
+  font-weight: 700;
+  width: 1.15rem;
+  height: 1.45rem;
+}
+
+.cv-axis.on {
+  color: var(--coral-deep);
+}
+
+.cv-cell {
+  width: 100%;
+  min-height: 1.45rem;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0.28rem;
+  background: transparent;
+  color: var(--ink);
+  font-size: 0.78rem;
+  font-weight: 600;
+  touch-action: manipulation;
+}
+
+.cv-cell.in-line {
+  background: var(--wash);
+}
+
+.cv-cell.locked {
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.cv-cell.on {
+  background: var(--coral);
+  color: var(--on-coral);
+}
+
+.unlock-bar {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  margin: 0.85rem 0 0.35rem;
+}
+
+.unlock-bar:has(form) {
+  grid-template-columns: 1fr;
+}
+
+.unlock-bar .tiny {
+  margin: 0;
+}
+
+.unlock-bar .text-btn {
+  background: transparent;
+  color: var(--coral-deep);
+}
+
+.unlock-form {
+  display: grid;
+  gap: 0.45rem;
+  flex: 1;
+}
+
+.unlock-form input {
+  width: 100%;
+  min-height: 2.7rem;
+  border: 1.5px solid var(--line);
+  border-radius: 0.9rem;
+  padding: 0.45rem 0.8rem;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.unlock-form .btn {
+  margin-top: 0;
+  min-height: 2.7rem;
+}
+
+.syllable-card .jamo-row {
+  padding: 1.25rem 0;
+}
+
+.syllable-card .jamo-row-glyph {
+  height: 3.7rem;
+  font-size: 2rem;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .field {

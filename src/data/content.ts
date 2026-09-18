@@ -1,11 +1,15 @@
-export type Jamo = {
+/** Anything Play can look up as /audio/{audioId}.mp3 */
+export type TeacherClip = {
   char: string
   roman: string
+  /** Filename stem under /audio/{audioId}.mp3 — e.g. vowel-a or syllable-ga */
+  audioId: string
+}
+
+export type Jamo = TeacherClip & {
   nameKo: string
   cue: string
   kind: 'vowel' | 'consonant'
-  /** Filename stem under /audio/{audioId}.mp3 — e.g. vowel-a */
-  audioId: string
 }
 
 export const BASIC_VOWELS: Jamo[] = [
@@ -40,26 +44,129 @@ export const BASIC_CONSONANTS: Jamo[] = [
 
 export const ALL_JAMO: Jamo[] = [...BASIC_VOWELS, ...BASIC_CONSONANTS]
 
-export type Syllable = {
-  char: string
-  roman: string
+export type CvSyllable = TeacherClip & {
+  initial: string
+  vowel: string
   note: string
 }
 
-export const SAMPLE_SYLLABLES: Syllable[] = [
-  { char: '가', roman: 'ga', note: 'ㄱ + ㅏ' },
-  { char: '나', roman: 'na', note: 'ㄴ + ㅏ' },
-  { char: '다', roman: 'da', note: 'ㄷ + ㅏ' },
-  { char: '마', roman: 'ma', note: 'ㅁ + ㅏ' },
-  { char: '바', roman: 'ba', note: 'ㅂ + ㅏ' },
-  { char: '사', roman: 'sa', note: 'ㅅ + ㅏ' },
-  { char: '아', roman: 'a', note: 'silent ㅇ + ㅏ' },
-  { char: '이', roman: 'i', note: 'silent ㅇ + ㅣ' },
-  { char: '오', roman: 'o', note: 'silent ㅇ + ㅗ' },
-  { char: '우', roman: 'u', note: 'silent ㅇ + ㅜ' },
-  { char: '고', roman: 'go', note: 'ㄱ + ㅗ (vowel sits below)' },
-  { char: '구', roman: 'gu', note: 'ㄱ + ㅜ (vowel sits below)' },
-]
+/** Unicode choseong index (full 19-letter set) for the 14 basic consonants. */
+const CHOSEONG_INDEX: Record<string, number> = {
+  ㄱ: 0,
+  ㄴ: 2,
+  ㄷ: 3,
+  ㄹ: 5,
+  ㅁ: 6,
+  ㅂ: 7,
+  ㅅ: 9,
+  ㅇ: 11,
+  ㅈ: 12,
+  ㅊ: 14,
+  ㅋ: 15,
+  ㅌ: 16,
+  ㅍ: 17,
+  ㅎ: 18,
+}
+
+/** Unicode jungseong index (full 21-letter set) for the 10 basic vowels. */
+const JUNGSEONG_INDEX: Record<string, number> = {
+  ㅏ: 0,
+  ㅑ: 2,
+  ㅓ: 4,
+  ㅕ: 6,
+  ㅗ: 8,
+  ㅛ: 12,
+  ㅜ: 13,
+  ㅠ: 17,
+  ㅡ: 18,
+  ㅣ: 20,
+}
+
+/**
+ * Revised Romanization stem used in `syllable-{roman}.mp3`.
+ * ㅇ is silent at the start of a syllable, so 아 → `syllable-a.mp3`.
+ */
+export const SYLLABLE_INITIAL_ROMAN: Record<string, string> = {
+  ㄱ: 'g',
+  ㄴ: 'n',
+  ㄷ: 'd',
+  ㄹ: 'r',
+  ㅁ: 'm',
+  ㅂ: 'b',
+  ㅅ: 's',
+  ㅇ: '',
+  ㅈ: 'j',
+  ㅊ: 'ch',
+  ㅋ: 'k',
+  ㅌ: 't',
+  ㅍ: 'p',
+  ㅎ: 'h',
+}
+
+export function composeCvSyllable(initial: string, vowel: string): string {
+  const cho = CHOSEONG_INDEX[initial]
+  const jung = JUNGSEONG_INDEX[vowel]
+  if (cho === undefined || jung === undefined) {
+    throw new Error(`Cannot compose ${initial}+${vowel}`)
+  }
+  return String.fromCharCode(0xac00 + (cho * 21 + jung) * 28)
+}
+
+export function syllableRoman(initial: string, vowel: string): string {
+  const vowelJamo = BASIC_VOWELS.find((item) => item.char === vowel)
+  const prefix = SYLLABLE_INITIAL_ROMAN[initial]
+  if (!vowelJamo || prefix === undefined) {
+    throw new Error(`Cannot romanize ${initial}+${vowel}`)
+  }
+  return `${prefix}${vowelJamo.roman}`
+}
+
+function buildBasicCvSyllables(): CvSyllable[] {
+  const list: CvSyllable[] = []
+  for (const cons of BASIC_CONSONANTS) {
+    for (const vowel of BASIC_VOWELS) {
+      const char = composeCvSyllable(cons.char, vowel.char)
+      const roman = syllableRoman(cons.char, vowel.char)
+      list.push({
+        char,
+        roman,
+        audioId: `syllable-${roman}`,
+        initial: cons.char,
+        vowel: vowel.char,
+        note: cons.char === 'ㅇ' ? `silent ㅇ + ${vowel.char}` : `${cons.char} + ${vowel.char}`,
+      })
+    }
+  }
+  if (list.length !== 140) {
+    throw new Error(`Expected 140 CV syllables, got ${list.length}`)
+  }
+  const ids = new Set(list.map((item) => item.audioId))
+  if (ids.size !== 140) {
+    throw new Error('Duplicate syllable audioId values')
+  }
+  const first = list[0]
+  const gi = list[9]
+  const ha = list[130]
+  const hi = list[139]
+  if (first?.char !== '가' || first.audioId !== 'syllable-ga') {
+    throw new Error(`CV chart must start at 가 / syllable-ga, got ${first?.char} ${first?.audioId}`)
+  }
+  if (gi?.char !== '기' || ha?.char !== '하' || hi?.char !== '히') {
+    throw new Error('CV chart corners are wrong (expected 가…기 / 하…히)')
+  }
+  return list
+}
+
+/** 14 consonants × 10 vowels, row-major: 가갸거겨… then 나냐너녀… through 하햐허혀…히 */
+export const BASIC_CV_SYLLABLES: CvSyllable[] = buildBasicCvSyllables()
+
+export function syllablesForInitial(initial: string): CvSyllable[] {
+  return BASIC_CV_SYLLABLES.filter((item) => item.initial === initial)
+}
+
+export function syllablesForVowel(vowel: string): CvSyllable[] {
+  return BASIC_CV_SYLLABLES.filter((item) => item.vowel === vowel)
+}
 
 export const SAMPLE_WORDS = [
   { hangul: '아이', roman: 'ai', meaning: 'child' },

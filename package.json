@@ -8,7 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview --host --port 4173",
-    "test": "node --test api/_lib/*.test.js"
+    "test": "node --test api/_lib/*.test.js src/data/*.test.js"
   },
   "dependencies": {
     "@vercel/blob": "^2.8.0",
