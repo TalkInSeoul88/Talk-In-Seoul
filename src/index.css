@@ -901,42 +901,48 @@ code {
   color: rgba(255, 255, 255, 0.86);
 }
 
-.letter-chips {
-  display: flex;
-  gap: 0.35rem;
-  overflow-x: auto;
-  margin-top: 0.75rem;
-  padding: 0.1rem 0 0.45rem;
-  scrollbar-width: thin;
+.syllable-card {
+  padding-top: 1.35rem;
 }
 
-.letter-chip {
-  flex: 0 0 auto;
-  min-width: 2.55rem;
-  min-height: 2.55rem;
-  padding: 0.2rem 0.45rem;
-  border: 1.5px solid var(--line);
-  border-radius: 0.8rem;
-  background: var(--paper);
-  color: var(--ink);
-  font-size: 1.15rem;
+.syllable-card h2 {
+  margin-bottom: 0.2rem;
+}
+
+.syllable-focus {
+  margin: 0 0 1.15rem;
+  font-family: var(--serif);
+  font-size: 1.7rem;
   font-weight: 700;
-  touch-action: manipulation;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
 }
 
-.letter-chip.on {
-  background: var(--coral);
-  border-color: transparent;
-  color: var(--on-coral);
+.syllable-focus .text-btn {
+  vertical-align: middle;
+  margin-left: 0.35rem;
+}
+
+.text-btn.quiet {
+  background: transparent;
+  color: var(--coral-deep);
+  min-height: 2.1rem;
+  font-size: 0.82rem;
+}
+
+.syllable-map {
+  margin-top: 1.5rem;
+  padding-top: 1.15rem;
+  border-top: 1px solid var(--line);
 }
 
 .cv-chart-wrap {
   overflow: auto;
-  max-height: 15.5rem;
-  margin-top: 0.35rem;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-sm);
-  background: var(--paper);
+  max-height: 14rem;
+  margin-top: 0.7rem;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
   -webkit-overflow-scrolling: touch;
 }
 
@@ -998,6 +1004,7 @@ code {
 
 .cv-cell.free {
   color: var(--ink);
+  background: var(--wash);
 }
 
 .cv-cell.locked {
@@ -1010,25 +1017,11 @@ code {
   color: var(--on-coral);
 }
 
-.cv-chart-hint {
-  margin: 0.55rem 0 0;
-}
-
-.syllable-card .tiny {
-  line-height: 1.45;
-}
-
-.syllable-slice-title {
-  margin: 1.15rem 0 0.15rem;
-  font-size: 1rem;
-}
-
 .unlock-bar {
   display: grid;
   grid-template-columns: 1fr auto;
   align-items: center;
-  gap: 0.65rem 0.75rem;
-  margin-top: 0.85rem;
+  gap: 0.5rem 0.75rem;
 }
 
 .unlock-bar:has(form) {
@@ -1037,6 +1030,11 @@ code {
 
 .unlock-bar .tiny {
   margin: 0;
+}
+
+.unlock-bar .text-btn {
+  background: transparent;
+  color: var(--coral-deep);
 }
 
 .unlock-form {
@@ -1060,12 +1058,13 @@ code {
   min-height: 2.7rem;
 }
 
-.locked-row .jamo-row-glyph {
-  color: var(--muted);
+.syllable-card .jamo-row {
+  padding: 1.25rem 0;
 }
 
-.syllable-card .jamo-row {
-  padding: 1.1rem 0;
+.syllable-card .jamo-row-glyph {
+  height: 3.7rem;
+  font-size: 2rem;
 }
 
 .sr-only {
