@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
 import JamoListenRow from '../components/JamoListenRow'
+import SyllablePractice from '../components/SyllablePractice'
 import { BASIC_CONSONANTS, BASIC_VOWELS } from '../data/content'
 import { probeTeacherAudio, teacherAudioSrc } from '../lib/audio'
 
-type Section = 'vowels' | 'consonants'
+type Section = 'vowels' | 'consonants' | 'syllables'
 type ConsonantMode = 'checking' | 'ready' | 'soon'
 
 export default function Pronunciation() {
@@ -33,7 +34,7 @@ export default function Pronunciation() {
         </p>
       </header>
 
-      <div className="seg" role="tablist" aria-label="Pronunciation sections">
+      <div className="seg triple" role="tablist" aria-label="Pronunciation sections">
         <button
           type="button"
           role="tab"
@@ -41,7 +42,8 @@ export default function Pronunciation() {
           aria-selected={section === 'vowels'}
           onClick={() => setSection('vowels')}
         >
-          모음(vowels)
+          모음
+          <span className="seg-sub">(vowels)</span>
         </button>
         <button
           type="button"
@@ -50,7 +52,18 @@ export default function Pronunciation() {
           aria-selected={section === 'consonants'}
           onClick={() => setSection('consonants')}
         >
-          자음(consonants)
+          자음
+          <span className="seg-sub">(consonants)</span>
+        </button>
+        <button
+          type="button"
+          role="tab"
+          className={section === 'syllables' ? 'seg-btn on' : 'seg-btn'}
+          aria-selected={section === 'syllables'}
+          onClick={() => setSection('syllables')}
+        >
+          음절
+          <span className="seg-sub">(syllables)</span>
         </button>
       </div>
 
@@ -66,6 +79,8 @@ export default function Pronunciation() {
             ))}
           </div>
         </section>
+      ) : section === 'syllables' ? (
+        <SyllablePractice />
       ) : consonantMode === 'ready' ? (
         <section className="card">
           <h2>자음(consonants)</h2>

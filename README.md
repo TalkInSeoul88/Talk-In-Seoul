@@ -9,7 +9,7 @@ Students come to an in-person Hangul class at the store, then use this phone-fri
 ## What’s in this version
 
 - **Home** — this week’s focus, an access-code box, then links: Pronunciation, Quiz, This Week
-- **Pronunciation** — split into **모음(vowels)** (Jung’s audio + Record / Play me) and **자음(consonants)** (section ready; coming-soon until consonant MP3s are added)
+- **Pronunciation** — **모음(vowels)** (Jung’s audio + Record / Play me), **자음(consonants)** (section ready; coming-soon until consonant MP3s are added), and **음절(syllables)** (full 140 CV chart; Play when a file exists, otherwise Audio coming soon)
 - **Quiz** — flashcards for the 10 basic vowels plus a few starter words (tap to flip)
 - **This Week** — placeholder for class materials (PDFs and links later)
 - **Admin** (`/admin`) — hidden from the student hamburger. Jung unlocks with a password, then issues / lists / starts / stops access codes with an expiry date
@@ -105,7 +105,7 @@ See `.env.example` for the full list.
 
 Drop additional MP3 files into `public/audio/` using the names below. Keep the same filenames — the app looks them up automatically. If a file is missing, students see **Audio coming soon** instead of a broken player.
 
-The 10 basic vowels already use **Jung’s recordings**. Consonant files are not included yet; the **자음(consonants)** tab shows a coming-soon state until those files exist.
+The 10 basic vowels already use **Jung’s recordings**. Consonant and syllable files are not included yet; those tabs show **Audio coming soon** (or a coming-soon card for 자음) until the MP3s exist.
 
 Tap Play / Record on the phone itself (Safari or Chrome). Browsers require a tap to start audio or the microphone.
 
@@ -144,6 +144,19 @@ Tap Play / Record on the phone itself (Safari or Chrome). Browsers require a tap
 | ㅎ | h | `consonant-h.mp3` |
 
 After replacing files, refresh the site (or redeploy). No code change is required.
+
+### 음절(syllables) → `syllable-{roman}.mp3`
+
+14 basic 자음(consonants) × 10 basic 모음(vowels) = **140** files. Record them in ㄱ→ㅎ row order. The app looks up `public/audio/syllable-{roman}.mp3`. Example: 가 → `syllable-ga.mp3`.
+
+Romanization map and drop-in steps: [`public/audio/README.md`](public/audio/README.md).  
+Jung’s recording list (all 140 filenames + Hangul): [`public/audio/SYLLABLE-RECORDING-CHECKLIST.md`](public/audio/SYLLABLE-RECORDING-CHECKLIST.md).
+
+Initials: ㄱ g · ㄴ n · ㄷ d · ㄹ r · ㅁ m · ㅂ b · ㅅ s · ㅇ silent · ㅈ j · ㅊ ch · ㅋ k · ㅌ t · ㅍ p · ㅎ h.
+
+Vowels (same as above): a ya eo yeo o yo u yu eu i.
+
+ㅇ + ㅏ is `syllable-a.mp3` (the block 아), not `vowel-a.mp3` (the letter ㅏ).
 
 ## Out of scope
 

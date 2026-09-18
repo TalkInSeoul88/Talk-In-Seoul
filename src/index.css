@@ -855,6 +855,11 @@ code {
   border-radius: 999px;
 }
 
+.seg.triple {
+  grid-template-columns: 1fr 1fr 1fr;
+  border-radius: 1.15rem;
+}
+
 .seg-btn {
   min-height: 2.8rem;
   border: 0;
@@ -866,9 +871,139 @@ code {
   touch-action: manipulation;
 }
 
+.seg.triple .seg-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.05rem;
+  min-height: 3rem;
+  border-radius: 0.9rem;
+  font-size: 0.92rem;
+  line-height: 1.15;
+  padding: 0.28rem 0.12rem;
+}
+
+.seg-sub {
+  display: block;
+  font-size: 0.62rem;
+  font-weight: 600;
+  color: var(--muted);
+  letter-spacing: 0;
+}
+
 .seg-btn.on {
   background: var(--coral);
   color: var(--on-coral);
+}
+
+.seg-btn.on .seg-sub {
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.letter-chips {
+  display: flex;
+  gap: 0.35rem;
+  overflow-x: auto;
+  margin-top: 0.75rem;
+  padding: 0.1rem 0 0.45rem;
+  scrollbar-width: thin;
+}
+
+.letter-chip {
+  flex: 0 0 auto;
+  min-width: 2.55rem;
+  min-height: 2.55rem;
+  padding: 0.2rem 0.45rem;
+  border: 1.5px solid var(--line);
+  border-radius: 0.8rem;
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 1.15rem;
+  font-weight: 700;
+  touch-action: manipulation;
+}
+
+.letter-chip.on {
+  background: var(--coral);
+  border-color: transparent;
+  color: var(--on-coral);
+}
+
+.cv-chart-wrap {
+  overflow-x: auto;
+  margin-top: 0.35rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--paper);
+  -webkit-overflow-scrolling: touch;
+}
+
+.cv-chart {
+  border-collapse: collapse;
+  min-width: 26.5rem;
+  width: 100%;
+}
+
+.cv-chart th,
+.cv-chart td {
+  text-align: center;
+  padding: 0.05rem;
+}
+
+.cv-axis {
+  font-size: 0.7rem;
+  color: var(--muted);
+  font-weight: 700;
+  min-width: 1.65rem;
+  height: 1.8rem;
+}
+
+.cv-axis.on {
+  color: var(--coral-deep);
+}
+
+.cv-cell {
+  width: 100%;
+  min-height: 1.95rem;
+  min-width: 1.85rem;
+  border: 0;
+  border-radius: 0.4rem;
+  background: transparent;
+  color: var(--ink);
+  font-size: 0.92rem;
+  font-weight: 600;
+  touch-action: manipulation;
+}
+
+.cv-cell.in-line {
+  background: var(--wash);
+}
+
+.cv-cell.on {
+  background: var(--coral);
+  color: var(--on-coral);
+}
+
+.cv-chart-hint {
+  margin: 0.45rem 0 0;
+}
+
+.syllable-slice-title {
+  margin: 1rem 0 0.2rem;
+  font-size: 0.95rem;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .field {

@@ -1,9 +1,9 @@
-import type { Jamo } from '../data/content'
+import type { TeacherClip } from '../data/content'
 
 const AUDIO_REV = 'jung-vowels-v2'
 
-export function teacherAudioSrc(jamo: Jamo): string {
-  return `/audio/${jamo.audioId}.mp3?v=${AUDIO_REV}`
+export function teacherAudioSrc(clip: TeacherClip): string {
+  return `/audio/${clip.audioId}.mp3?v=${AUDIO_REV}`
 }
 
 const availability = new Map<string, boolean>()
