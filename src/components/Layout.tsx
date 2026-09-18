@@ -1,87 +1,107 @@
-import { NavLink, Outlet } from 'react-router-dom'
-
-const links = [
-  { to: '/', label: 'Home', ko: '홈', icon: HomeIcon },
-  { to: '/lesson', label: 'Lesson', ko: '수업', icon: LessonIcon },
-  { to: '/practice', label: 'Practice', ko: '연습', icon: PracticeIcon },
-  { to: '/quiz', label: 'Quiz', ko: '퀴즈', icon: QuizIcon },
-  { to: '/homework', label: 'Homework', ko: '숙제', icon: HomeworkIcon },
-] as const
+import { useEffect, useId, useRef, useState } from 'react'
+import { NavLink, Outlet, useLocation } from 'react-router-dom'
+import { STUDENT_NAV } from '../data/nav'
 
 export default function Layout() {
+  const [open, setOpen] = useState(false)
+  const location = useLocation()
+  const menuId = useId()
+  const menuButtonRef = useRef<HTMLButtonElement>(null)
+  const pathRef = useRef(location.pathname)
+
+  useEffect(() => {
+    if (pathRef.current === location.pathname) return
+    pathRef.current = location.pathname
+    setOpen(false)
+  }, [location.pathname])
+
+  useEffect(() => {
+    if (!open) return
+    function onKey(event: KeyboardEvent) {
+      if (event.key === 'Escape') {
+        setOpen(false)
+        menuButtonRef.current?.focus()
+      }
+    }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [open])
+
+  useEffect(() => {
+    if (!open) return
+    const previous = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = previous
+    }
+  }, [open])
+
+  function closeMenu() {
+    setOpen(false)
+    menuButtonRef.current?.focus()
+  }
+
   return (
-    <div className="app-shell">
+    <div className={open ? 'app-shell menu-open' : 'app-shell'}>
       <header className="topbar">
-        <div className="mark" aria-hidden="true">
-          한
-        </div>
+        <button
+          ref={menuButtonRef}
+          type="button"
+          className="menu-btn"
+          aria-expanded={open}
+          aria-controls={menuId}
+          aria-label={open ? 'Close menu' : 'Open menu'}
+          onClick={() => setOpen((value) => !value)}
+        >
+          {open ? <CloseIcon /> : <MenuIcon />}
+        </button>
         <div className="topbar-copy">
           <h1>Talk in Seoul</h1>
           <p>Hangul Class @ Pop In Seoul</p>
         </div>
       </header>
-      <main className="page">
+
+      <div
+        className={open ? 'drawer-layer open' : 'drawer-layer'}
+        inert={!open}
+        aria-hidden={!open}
+      >
+        <button type="button" className="drawer-scrim" tabIndex={-1} onClick={closeMenu} aria-label="Close menu" />
+        <nav id={menuId} className="drawer" aria-label="Student menu">
+          {STUDENT_NAV.map((link) => (
+            <NavLink
+              key={link.to}
+              to={link.to}
+              end={link.to === '/'}
+              className={({ isActive }) => (isActive ? 'drawer-link active' : 'drawer-link')}
+              onClick={() => setOpen(false)}
+            >
+              <strong>{link.label}</strong>
+              <span>{link.ko}</span>
+            </NavLink>
+          ))}
+        </nav>
+      </div>
+
+      <main className="page" inert={open}>
         <Outlet />
       </main>
-      <nav className="bottom-nav" aria-label="Primary">
-        {links.map((link) => (
-          <NavLink
-            key={link.to}
-            to={link.to}
-            end={link.to === '/'}
-            className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}
-          >
-            <link.icon />
-            <span className="nav-en">{link.label}</span>
-            <span className="nav-ko">{link.ko}</span>
-          </NavLink>
-        ))}
-      </nav>
     </div>
   )
 }
 
-function HomeIcon() {
+function MenuIcon() {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-      <path d="M4 11.5 12 4l8 7.5" />
-      <path d="M6.5 10.5V20h11V10.5" />
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" aria-hidden="true">
+      <path d="M5 7h14M5 12h14M5 17h14" strokeLinecap="round" />
     </svg>
   )
 }
 
-function LessonIcon() {
+function CloseIcon() {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-      <path d="M5 5.5h10.5A3.5 3.5 0 0 1 19 9v10.5H8.5A3.5 3.5 0 0 0 5 16V5.5Z" />
-      <path d="M8 8h7M8 12h7" />
-    </svg>
-  )
-}
-
-function PracticeIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-      <circle cx="12" cy="12" r="8.2" />
-      <path d="M12 7.5v5l3 1.8" />
-    </svg>
-  )
-}
-
-function QuizIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-      <path d="M8.5 9.2a3.5 3.5 0 1 1 5.4 2.95c-.9.6-1.4 1.2-1.4 2.35" />
-      <path d="M12.5 17.8h.01" />
-    </svg>
-  )
-}
-
-function HomeworkIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-      <path d="M8 4.5h8.5A2.5 2.5 0 0 1 19 7v12.5H8A3 3 0 0 1 5 16.5v-9A3 3 0 0 1 8 4.5Z" />
-      <path d="M9 10.5h6M9 14h4" />
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" aria-hidden="true">
+      <path d="M6 6l12 12M18 6L6 18" strokeLinecap="round" />
     </svg>
   )
 }
