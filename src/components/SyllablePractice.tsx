@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from 'react'
 import {
   BASIC_CONSONANTS,
   BASIC_VOWELS,
-  isFreeCvSyllable,
   syllablesForInitial,
   syllablesForVowel,
   type CvSyllable,
@@ -17,68 +16,68 @@ export default function SyllablePractice() {
   const [row, setRow] = useState<string | null>(null)
   const [focusId, setFocusId] = useState<string | null>(null)
 
-  const showingGaHa = !enrolled || !row
+  const showingGaHa = !row
   const items = useMemo(
     () => (showingGaHa ? syllablesForVowel('ㅏ') : syllablesForInitial(row ?? 'ㄱ')),
     [showingGaHa, row],
   )
 
   useEffect(() => {
-    if (!focusId) return
+    if (!focusId || !enrolled) return
     const node = document.getElementById(`clip-${focusId}`)
     node?.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
-  }, [focusId, items])
+  }, [focusId, items, enrolled])
 
   function selectCell(syllable: CvSyllable) {
+    if (!enrolled) return
     setFocusId(syllable.audioId)
-    if (!enrolled) {
-      setRow(null)
-      return
-    }
-    setRow(isFreeCvSyllable(syllable) ? null : syllable.initial)
+    setRow(syllable.vowel === 'ㅏ' ? null : syllable.initial)
   }
 
   return (
     <section className="card syllable-card">
       <h2>음절(syllables)</h2>
-      <p className="syllable-focus">
-        {showingGaHa ? '가–하' : `${row}`}
-        {enrolled && row ? (
-          <>
-            {' '}
-            <button type="button" className="text-btn quiet" onClick={() => setRow(null)}>
-              가–하
-            </button>
-          </>
-        ) : null}
-      </p>
 
-      <div className="jamo-list">
-        {items.map((syllable) => (
-          <JamoListenRow
-            key={syllable.audioId}
-            jamo={{
-              char: syllable.char,
-              roman: syllable.roman,
-              audioId: syllable.audioId,
-              nameKo: syllable.note,
-            }}
-          />
-        ))}
-      </div>
+      {enrolled ? (
+        <p className="syllable-focus">
+          {showingGaHa ? '가–하' : row}
+          {row ? (
+            <>
+              {' '}
+              <button type="button" className="text-btn quiet" onClick={() => setRow(null)}>
+                가–하
+              </button>
+            </>
+          ) : null}
+        </p>
+      ) : (
+        <div className="unlock-bar">
+          <p className="tiny">Access code needed</p>
+          <UnlockControl />
+        </div>
+      )}
 
-      <div className="syllable-map">
-        {!enrolled && (
-          <div className="unlock-bar">
-            <p className="tiny">Access code needed</p>
-            <UnlockControl />
-          </div>
-        )}
+      {enrolled && (
+        <div className="jamo-list">
+          {items.map((syllable) => (
+            <JamoListenRow
+              key={syllable.audioId}
+              jamo={{
+                char: syllable.char,
+                roman: syllable.roman,
+                audioId: syllable.audioId,
+                nameKo: syllable.note,
+              }}
+            />
+          ))}
+        </div>
+      )}
+
+      <div className={enrolled ? 'syllable-map' : 'syllable-map locked-map'}>
         <div className="cv-chart-wrap">
           <table className="cv-chart">
             <caption className="sr-only">
-              Basic CV syllable chart. Tap 가–하 to practice. Other cells need a class code until
-              you unlock.
+              Basic CV syllable chart. Play and Record need a class access code.
             </caption>
             <thead>
               <tr>
@@ -86,7 +85,11 @@ export default function SyllablePractice() {
                   <span className="sr-only">자음(consonants)</span>
                 </th>
                 {BASIC_VOWELS.map((jamo) => (
-                  <th key={jamo.char} scope="col" className={jamo.char === 'ㅏ' ? 'cv-axis on' : 'cv-axis'}>
+                  <th
+                    key={jamo.char}
+                    scope="col"
+                    className={enrolled && showingGaHa && jamo.char === 'ㅏ' ? 'cv-axis on' : 'cv-axis'}
+                  >
                     {jamo.char}
                   </th>
                 ))}
@@ -102,24 +105,24 @@ export default function SyllablePractice() {
                     {cons.char}
                   </th>
                   {syllablesForInitial(cons.char).map((syllable) => {
-                    const free = isFreeCvSyllable(syllable)
-                    const locked = !enrolled && !free
-                    const inLine = showingGaHa ? free : syllable.initial === row
+                    const inLine = enrolled && (showingGaHa ? syllable.vowel === 'ㅏ' : syllable.initial === row)
                     return (
                       <td key={syllable.char}>
-                        <button
-                          type="button"
-                          className={`cv-cell${inLine ? ' in-line' : ''}${
-                            focusId === syllable.audioId ? ' on' : ''
-                          }${enrolled ? '' : free ? ' free' : ' locked'}`}
-                          aria-current={focusId === syllable.audioId ? 'true' : undefined}
-                          aria-label={`${syllable.char} ${syllable.roman}${
-                            locked ? ', access code needed' : ''
-                          }`}
-                          onClick={() => selectCell(syllable)}
-                        >
-                          {syllable.char}
-                        </button>
+                        {enrolled ? (
+                          <button
+                            type="button"
+                            className={`cv-cell${inLine ? ' in-line' : ''}${
+                              focusId === syllable.audioId ? ' on' : ''
+                            }`}
+                            aria-current={focusId === syllable.audioId ? 'true' : undefined}
+                            aria-label={`${syllable.char} ${syllable.roman}`}
+                            onClick={() => selectCell(syllable)}
+                          >
+                            {syllable.char}
+                          </button>
+                        ) : (
+                          <span className="cv-cell locked">{syllable.char}</span>
+                        )}
                       </td>
                     )
                   })}

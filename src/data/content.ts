@@ -168,21 +168,6 @@ export function syllablesForVowel(vowel: string): CvSyllable[] {
   return BASIC_CV_SYLLABLES.filter((item) => item.vowel === vowel)
 }
 
-/** Free without an access code: the ㅏ column 가 나 다 라 마 바 사 아 자 차 카 타 파 하. */
-export const FREE_A_SYLLABLES: CvSyllable[] = syllablesForVowel('ㅏ')
-
-export function isFreeCvSyllable(syllable: CvSyllable): boolean {
-  return syllable.vowel === 'ㅏ'
-}
-
-if (
-  FREE_A_SYLLABLES.length !== 14 ||
-  FREE_A_SYLLABLES[0]?.char !== '가' ||
-  FREE_A_SYLLABLES[13]?.char !== '하'
-) {
-  throw new Error('Free ㅏ column must be 가나다라마바사아자차카타파하')
-}
-
 export const SAMPLE_WORDS = [
   { hangul: '아이', roman: 'ai', meaning: 'child' },
   { hangul: '오이', roman: 'oi', meaning: 'cucumber' },
