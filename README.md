@@ -9,7 +9,7 @@ Students come to an in-person Hangul class at the store, then use this phone-fri
 ## What’s in this version
 
 - **Home** — this week’s focus, an access-code box, then links: Pronunciation, Quiz, This Week
-- **Pronunciation** — **모음(vowels)** (Jung’s audio + Record / Play me), **자음(consonants)** (section ready; coming-soon until consonant MP3s are added), and **음절(syllables)** (full 140 CV chart; Play when a file exists, otherwise Audio coming soon)
+- **Pronunciation** — **모음(vowels)** (Jung’s audio + Record / Play me), **자음(consonants)** (section ready; coming-soon until consonant MP3s are added), and **음절(syllables)** (full 140 CV chart; free 가–하 without a code; the rest Unlock with class access. Play when a file exists, otherwise Audio coming soon)
 - **Quiz** — flashcards for the 10 basic vowels plus a few starter words (tap to flip)
 - **This Week** — placeholder for class materials (PDFs and links later)
 - **Admin** (`/admin`) — hidden from the student hamburger. Jung unlocks with a password, then issues / lists / starts / stops access codes with an expiry date

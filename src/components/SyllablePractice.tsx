@@ -2,24 +2,32 @@ import { useEffect, useMemo, useState } from 'react'
 import {
   BASIC_CONSONANTS,
   BASIC_VOWELS,
+  isFreeCvSyllable,
   syllablesForInitial,
   syllablesForVowel,
   type CvSyllable,
 } from '../data/content'
+import { useEnrollment } from '../lib/enrollment.tsx'
 import JamoListenRow from './JamoListenRow'
+import UnlockControl from './UnlockControl'
 
 type BrowseBy = 'consonant' | 'vowel'
 
 export default function SyllablePractice() {
-  const [browseBy, setBrowseBy] = useState<BrowseBy>('consonant')
+  const { enrollment } = useEnrollment()
+  const enrolled = enrollment.enrolled
+  const [browseBy, setBrowseBy] = useState<BrowseBy>('vowel')
   const [initial, setInitial] = useState(BASIC_CONSONANTS[0]?.char ?? 'ㄱ')
-  const [vowel, setVowel] = useState(BASIC_VOWELS[0]?.char ?? 'ㅏ')
+  const [vowel, setVowel] = useState('ㅏ')
   const [focusId, setFocusId] = useState<string | null>(null)
 
   const items = useMemo(
     () => (browseBy === 'consonant' ? syllablesForInitial(initial) : syllablesForVowel(vowel)),
     [browseBy, initial, vowel],
   )
+
+  const lockedVisible = !enrolled && items.some((item) => !isFreeCvSyllable(item))
+  const showingFreeA = browseBy === 'vowel' && vowel === 'ㅏ'
 
   useEffect(() => {
     if (!focusId) return
@@ -31,16 +39,22 @@ export default function SyllablePractice() {
     setInitial(syllable.initial)
     setVowel(syllable.vowel)
     setFocusId(syllable.audioId)
+    if (!enrolled && isFreeCvSyllable(syllable)) {
+      setBrowseBy('vowel')
+      return
+    }
+    if (!enrolled) setBrowseBy('consonant')
   }
 
   const axisLabel = browseBy === 'consonant' ? `Row ${initial}` : `Column ${vowel}`
 
   return (
-    <section className="card">
+    <section className="card syllable-card">
       <h2>음절(syllables)</h2>
       <p className="tiny">
-        14 자음(consonants) × 10 모음(vowels) = 140 blocks. Browse a consonant row or a vowel
-        column, then Play Jung’s voice and Record yourself — same tools as 모음(vowels).
+        {enrolled
+          ? 'Browse a 자음(consonants) row or a 모음(vowels) column. Play Jung’s voice, then Record.'
+          : 'Start with 가–하. Play and Record those 14. The rest of the chart stays visible — Unlock with a class code to practice them.'}
       </p>
 
       <div className="seg" role="tablist" aria-label="Browse syllables by row or column">
@@ -140,15 +154,19 @@ export default function SyllablePractice() {
                     browseBy === 'consonant'
                       ? syllable.initial === initial
                       : syllable.vowel === vowel
+                  const free = isFreeCvSyllable(syllable)
+                  const locked = !enrolled && !free
                   return (
                     <td key={syllable.char}>
                       <button
                         type="button"
                         className={`cv-cell${inLine ? ' in-line' : ''}${
                           focusId === syllable.audioId ? ' on' : ''
-                        }`}
+                        }${enrolled ? '' : free ? ' free' : ' locked'}`}
                         aria-current={focusId === syllable.audioId ? 'true' : undefined}
-                        aria-label={`${syllable.char} ${syllable.roman}, ${syllable.note}`}
+                        aria-label={`${syllable.char} ${syllable.roman}, ${syllable.note}${
+                          locked ? ', access code needed' : ''
+                        }`}
                         onClick={() => selectCell(syllable)}
                       >
                         {syllable.char}
@@ -162,11 +180,19 @@ export default function SyllablePractice() {
         </table>
       </div>
       <p className="tiny cv-chart-hint">
-        Chart: 가 → 히. Audio files are added later — missing clips show “Audio coming soon”.
+        {enrolled
+          ? 'Chart: 가 → 히. Missing clips show “Audio coming soon”.'
+          : '가–하 (the ㅏ column) are free. Other cells stay visible until you Unlock.'}
       </p>
 
       <h3 className="syllable-slice-title">
-        {browseBy === 'consonant' ? (
+        {showingFreeA ? (
+          enrolled ? (
+            <>ㅏ column · 가–하</>
+          ) : (
+            <>가–하 · free 음절(syllables)</>
+          )
+        ) : browseBy === 'consonant' ? (
           <>
             {initial} row · {items.length} 음절(syllables)
           </>
@@ -176,19 +202,47 @@ export default function SyllablePractice() {
           </>
         )}
       </h3>
+
+      {lockedVisible && (
+        <div className="unlock-bar">
+          <p className="tiny">Access code needed</p>
+          <UnlockControl />
+        </div>
+      )}
+
       <div className="jamo-list">
-        {items.map((syllable) => (
-          <JamoListenRow
-            key={syllable.audioId}
-            jamo={{
-              char: syllable.char,
-              roman: syllable.roman,
-              audioId: syllable.audioId,
-              nameKo: syllable.note,
-              cue: 'Play Jung, then Record and compare.',
-            }}
-          />
-        ))}
+        {items.map((syllable) => {
+          const locked = !enrolled && !isFreeCvSyllable(syllable)
+          if (locked) {
+            return (
+              <article key={syllable.audioId} className="jamo-row locked-row" id={`clip-${syllable.audioId}`}>
+                <div className="jamo-row-head">
+                  <div className="jamo-row-glyph" aria-hidden="true">
+                    {syllable.char}
+                  </div>
+                  <div className="jamo-row-copy">
+                    <div className="jamo-row-title">
+                      <strong>{syllable.roman}</strong>
+                      <span className="tiny"> · {syllable.note}</span>
+                    </div>
+                  </div>
+                </div>
+              </article>
+            )
+          }
+          return (
+            <JamoListenRow
+              key={syllable.audioId}
+              jamo={{
+                char: syllable.char,
+                roman: syllable.roman,
+                audioId: syllable.audioId,
+                nameKo: syllable.note,
+                cue: 'Play Jung, then Record and compare.',
+              }}
+            />
+          )
+        })}
       </div>
     </section>
   )

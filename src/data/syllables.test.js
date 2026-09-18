@@ -118,3 +118,9 @@ test('recording checklist lists 140 unique syllable mp3 filenames', async () => 
   assert.equal(files[0], 'syllable-ga.mp3')
   assert.equal(files[139], 'syllable-hi.mp3')
 })
+
+test('free ㅏ column is 가나다라마바사아자차카타파하', () => {
+  const aColumn = INITIALS.map((initial) => compose(initial, 'ㅏ')).join('')
+  assert.equal(aColumn, '가나다라마바사아자차카타파하')
+  assert.equal(aColumn.length, 14)
+})

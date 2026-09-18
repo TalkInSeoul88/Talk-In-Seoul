@@ -996,18 +996,76 @@ code {
   background: var(--wash);
 }
 
+.cv-cell.free {
+  color: var(--ink);
+}
+
+.cv-cell.locked {
+  color: var(--muted);
+  font-weight: 500;
+}
+
 .cv-cell.on {
   background: var(--coral);
   color: var(--on-coral);
 }
 
 .cv-chart-hint {
-  margin: 0.45rem 0 0;
+  margin: 0.55rem 0 0;
+}
+
+.syllable-card .tiny {
+  line-height: 1.45;
 }
 
 .syllable-slice-title {
-  margin: 1rem 0 0.2rem;
-  font-size: 0.95rem;
+  margin: 1.15rem 0 0.15rem;
+  font-size: 1rem;
+}
+
+.unlock-bar {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 0.65rem 0.75rem;
+  margin-top: 0.85rem;
+}
+
+.unlock-bar:has(form) {
+  grid-template-columns: 1fr;
+}
+
+.unlock-bar .tiny {
+  margin: 0;
+}
+
+.unlock-form {
+  display: grid;
+  gap: 0.45rem;
+  flex: 1;
+}
+
+.unlock-form input {
+  width: 100%;
+  min-height: 2.7rem;
+  border: 1.5px solid var(--line);
+  border-radius: 0.9rem;
+  padding: 0.45rem 0.8rem;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.unlock-form .btn {
+  margin-top: 0;
+  min-height: 2.7rem;
+}
+
+.locked-row .jamo-row-glyph {
+  color: var(--muted);
+}
+
+.syllable-card .jamo-row {
+  padding: 1.1rem 0;
 }
 
 .sr-only {
