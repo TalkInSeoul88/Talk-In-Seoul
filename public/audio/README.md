@@ -21,7 +21,7 @@ These ten files are Jung’s recordings and must keep these names.
 
 ## 자음(consonants) → `consonant-{slug}.mp3`
 
-Not recorded yet. When they exist, the 자음(consonants) tab switches from coming-soon to Play / Record.
+ㄱ ㄴ ㄷ are Jung’s recordings. The rest are not recorded yet — those rows stay **Audio coming soon**. When more files exist, Play / Record appear automatically.
 
 | Hangul | Slug | File |
 | --- | --- | --- |
