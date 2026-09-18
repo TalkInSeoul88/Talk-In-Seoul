@@ -931,7 +931,8 @@ code {
 }
 
 .cv-chart-wrap {
-  overflow-x: auto;
+  overflow: auto;
+  max-height: 15.5rem;
   margin-top: 0.35rem;
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
@@ -941,22 +942,36 @@ code {
 
 .cv-chart {
   border-collapse: collapse;
-  min-width: 26.5rem;
   width: 100%;
+  table-layout: fixed;
 }
 
 .cv-chart th,
 .cv-chart td {
   text-align: center;
-  padding: 0.05rem;
+  padding: 0;
+}
+
+.cv-chart thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--paper);
+}
+
+.cv-chart tbody th {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background: var(--paper);
 }
 
 .cv-axis {
-  font-size: 0.7rem;
+  font-size: 0.62rem;
   color: var(--muted);
   font-weight: 700;
-  min-width: 1.65rem;
-  height: 1.8rem;
+  width: 1.15rem;
+  height: 1.45rem;
 }
 
 .cv-axis.on {
@@ -965,13 +980,14 @@ code {
 
 .cv-cell {
   width: 100%;
-  min-height: 1.95rem;
-  min-width: 1.85rem;
+  min-height: 1.45rem;
+  min-width: 0;
+  padding: 0;
   border: 0;
-  border-radius: 0.4rem;
+  border-radius: 0.28rem;
   background: transparent;
   color: var(--ink);
-  font-size: 0.92rem;
+  font-size: 0.78rem;
   font-weight: 600;
   touch-action: manipulation;
 }
