@@ -31,12 +31,17 @@ function formatDay(value: string): string {
 }
 
 async function parseError(response: Response): Promise<string> {
+  const text = await response.text()
   try {
-    const payload = (await response.json()) as { error?: string }
-    return payload.error || `Something went wrong (${response.status}).`
+    const payload = JSON.parse(text) as { error?: string }
+    if (payload.error) return payload.error
   } catch {
-    return `Something went wrong (${response.status}).`
+    /* not JSON */
   }
+  if (text.includes('FUNCTION_INVOCATION_FAILED')) {
+    return 'The login server crashed. After the API fix is deployed, try again.'
+  }
+  return `Something went wrong (${response.status}).`
 }
 
 export default function Admin() {

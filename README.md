@@ -52,7 +52,9 @@ The password is **never** shipped to the browser. The app checks it on the serve
 2. Go to **Settings → Environment Variables**.
 3. Add `ADMIN_PASSWORD` with a long password only you know.
 4. Apply it to **Production** and **Preview**.
-5. Redeploy (or wait for the next deploy) so the function picks it up.
+5. Redeploy so `/api/admin/login` picks it up: Vercel → Deployments → ⋯ on Production → **Redeploy** (or merge this repo’s next PR). Do not skip the redeploy; env vars are applied at function boot.
+
+Wrong password returns **401 JSON**. If `ADMIN_PASSWORD` is missing, the function returns **503 JSON** instead of crashing.
 
 Optional: also set `ADMIN_SESSION_SECRET` to a random string. If you skip it, the admin session key is derived from `ADMIN_PASSWORD`.
 
@@ -67,6 +69,24 @@ ADMIN_PASSWORD=your-password
 ```
 
 Do not prefix this with `VITE_`. That would copy the password into the client bundle.
+
+## Vercel `/api` functions
+
+This is a Vite SPA plus serverless files under `/api`. Production login is `api/admin/login.js`: a Node.js handler with **no relative imports**, so Vercel does not have to bundle `api/_lib`. Wrong password → 401 JSON. Missing `ADMIN_PASSWORD` → 503 JSON.
+
+`vercel.json` keeps SPA fallback for student routes and tells Vercel to ship `api/_lib/**` with the codes/redeem functions:
+
+```json
+{
+  "rewrites": [{ "source": "/((?!api/).*)", "destination": "/index.html" }],
+  "functions": {
+    "api/admin/*.js": { "includeFiles": "api/_lib/**" },
+    "api/access/*.js": { "includeFiles": "api/_lib/**" }
+  }
+}
+```
+
+`package.json` has `"type": "module"` so these `.js` files are ESM. After this fix is on `main`, Vercel should auto-deploy; if not, Redeploy Production.
 
 ## Durable store for issued codes (Vercel Blob)
 

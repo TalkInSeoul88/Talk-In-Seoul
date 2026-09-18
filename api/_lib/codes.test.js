@@ -9,10 +9,9 @@ import {
   statusLabel,
   validateCodeFormat,
   validateExpiry,
-  type AccessCode,
-} from './codes.ts'
+} from './codes.js'
 
-function code(partial: Partial<AccessCode>): AccessCode {
+function code(partial) {
   return {
     code: 'POP-TEST',
     expiresAt: '2099-01-01',
@@ -48,7 +47,7 @@ describe('access codes', () => {
   })
 
   it('generates unique POP- codes', () => {
-    const used = new Set<string>(['POP-AAAA'])
+    const used = new Set(['POP-AAAA'])
     const next = generateCode(used)
     assert.match(next, /^POP-[A-Z0-9]{4}$/)
     assert.equal(used.has(next), false)
