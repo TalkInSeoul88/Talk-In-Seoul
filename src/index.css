@@ -91,12 +91,12 @@ a {
 .topbar {
   position: sticky;
   top: 0;
-  z-index: 30;
+  z-index: 40;
   display: flex;
   align-items: center;
   gap: 0.7rem;
   padding: 0.75rem var(--space) 0.7rem;
-  background: color-mix(in srgb, var(--cream) 86%, transparent);
+  background: color-mix(in srgb, var(--cream) 92%, transparent);
   backdrop-filter: blur(14px);
   border-bottom: 1px solid color-mix(in srgb, var(--line) 85%, transparent);
 }
@@ -120,10 +120,14 @@ a {
   height: 1.45rem;
 }
 
-.menu-btn:hover,
-.menu-btn[aria-expanded='true'] {
+.menu-btn:hover {
   background: var(--coral-soft);
   color: var(--coral-deep);
+}
+
+.menu-btn[aria-expanded='true'] {
+  background: var(--coral);
+  color: #fffaf7;
 }
 
 .topbar-copy {
@@ -790,14 +794,14 @@ code {
 
 .drawer {
   position: absolute;
-  top: 0;
+  top: 3.95rem;
   left: 0;
   bottom: 0;
   width: min(18.75rem, 82%);
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
-  padding: 4.7rem 0.7rem 1.4rem;
+  padding: 0.55rem 0.7rem 1.4rem;
   background: #fffdfb;
   border-right: 1px solid var(--line);
   box-shadow: 18px 0 40px rgba(44, 36, 32, 0.08);
