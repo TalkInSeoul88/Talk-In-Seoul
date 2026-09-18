@@ -6,14 +6,15 @@ Students come to an in-person Hangul class at the store, then use this phone-fri
 
 **Talk in Seoul** · Hangul Class @ Pop In Seoul
 
-## What’s in Phase 1
+## What’s in this version
 
-- **Home** — this week’s focus, then three links: Pronunciation, Quiz, This Week
-- **Pronunciation** — Week 1 vowels and consonants with Play (Jung’s voice) and Record / Play me
+- **Home** — this week’s focus, an access-code box, then links: Pronunciation, Quiz, This Week
+- **Pronunciation** — split into **모음(vowels)** (Jung’s audio + Record / Play me) and **자음(consonants)** (section ready; coming-soon until consonant MP3s are added)
 - **Quiz** — flashcards for the 10 basic vowels plus a few starter words (tap to flip)
 - **This Week** — placeholder for class materials (PDFs and links later)
+- **Admin** (`/admin`) — hidden from the student hamburger. Jung unlocks with a password, then issues / lists / starts / stops access codes with an expiry date
 
-Menu is a hamburger in the top-left. English is the primary UI language, with Korean labels where they feel natural. There is no login.
+Menu is a hamburger in the top-left. English is the primary UI language, with Korean labels where they feel natural. Students do **not** create an account. Without a code they can still use the free app.
 
 Old `/lesson` and `/practice` URLs go to Pronunciation. `/homework` goes to This Week.
 
@@ -21,10 +22,14 @@ Old `/lesson` and `/practice` URLs go to Pronunciation. `/homework` goes to This
 
 ```bash
 npm install
+cp .env.example .env.local
+# set ADMIN_PASSWORD in .env.local
 npm run dev
 ```
 
 Then open the URL Vite prints (usually `http://localhost:5173`) on your computer or phone.
+
+Local issued codes are saved to `.data/access-codes.json` (gitignored) so you can test without Vercel Blob.
 
 ### Other commands
 
@@ -32,19 +37,59 @@ Then open the URL Vite prints (usually `http://localhost:5173`) on your computer
 npm run build    # production build
 npm run preview  # serve the production build
 npm run lint     # oxlint
+npm test         # access-code helpers
 ```
 
-Progress (quiz score, homework checks, and the next-class note) is stored only in this browser. Student recordings stay in memory for this visit and are never uploaded.
+Student enrollment is remembered in this browser (`localStorage`). Issued codes are **not** stored only on the phone — they live in Vercel Blob in production, or `.data/` locally. Student recordings stay in memory for this visit and are never uploaded.
+
+## Admin password (Jung)
+
+The password is **never** shipped to the browser. The app checks it on the server.
+
+### Set it on Vercel
+
+1. Open the Talk in Seoul project on Vercel.
+2. Go to **Settings → Environment Variables**.
+3. Add `ADMIN_PASSWORD` with a long password only you know.
+4. Apply it to **Production** and **Preview**.
+5. Redeploy (or wait for the next deploy) so the function picks it up.
+
+Optional: also set `ADMIN_SESSION_SECRET` to a random string. If you skip it, the admin session key is derived from `ADMIN_PASSWORD`.
+
+Then visit `https://talk-in-seoul.vercel.app/admin` (this URL is not in the student menu). Unlock, create a code, set the expiry, and use **On / Off** to start or stop it.
+
+### Local
+
+In `.env.local`:
+
+```
+ADMIN_PASSWORD=your-password
+```
+
+Do not prefix this with `VITE_`. That would copy the password into the client bundle.
+
+## Durable store for issued codes (Vercel Blob)
+
+Access codes must survive deploys. This app stores them as one JSON file in **Vercel Blob** — not in student `localStorage`.
+
+1. Vercel dashboard → the Talk in Seoul project → **Storage** → **Create Database** → **Blob**.
+2. Choose **Private** access if you can. If the store is public-only, also add env `BLOB_ACCESS=public`.
+3. Connect the store to this project for **Production** and **Preview**.
+4. Vercel injects `BLOB_STORE_ID` (OIDC on Vercel) and/or `BLOB_READ_WRITE_TOKEN`. You can also paste `BLOB_READ_WRITE_TOKEN` yourself under Environment Variables.
+
+After that, codes Jung creates on `/admin` persist across deploys. Students redeem a code on Home; a valid, active, unexpired code marks that phone as enrolled.
+
+See `.env.example` for the full list.
 
 ## Teacher audio (Jung)
 
 Drop additional MP3 files into `public/audio/` using the names below. Keep the same filenames — the app looks them up automatically. If a file is missing, students see **Audio coming soon** instead of a broken player.
 
-The 10 basic vowels already use **Jung’s recordings**. Consonant files are not included yet; those rows already use the same Play/Record UI.
+The 10 basic vowels already use **Jung’s recordings**. Consonant files are not included yet; the **자음(consonants)** tab shows a coming-soon state until those files exist.
 
 Tap Play / Record on the phone itself (Safari or Chrome). Browsers require a tap to start audio or the microphone.
 
-### Vowels · 모음 → `vowel-{roman}.mp3`
+### 모음(vowels) → `vowel-{roman}.mp3`
 
 | Hangul | Roman | File |
 | --- | --- | --- |
@@ -59,7 +104,7 @@ Tap Play / Record on the phone itself (Safari or Chrome). Browsers require a tap
 | ㅡ | eu | `vowel-eu.mp3` |
 | ㅣ | i | `vowel-i.mp3` |
 
-### Consonants · 자음 → `consonant-{slug}.mp3`
+### 자음(consonants) → `consonant-{slug}.mp3`
 
 | Hangul | Roman | File |
 | --- | --- | --- |
@@ -82,4 +127,4 @@ After replacing files, refresh the site (or redeploy). No code change is require
 
 ## Out of scope
 
-Payments, store cart, Instagram, booking, user accounts, native App Store / Play Store apps, an admin CMS, AI pronunciation scoring, and cloud upload of student audio.
+Payments / Stripe, store cart, Instagram, booking, email signup, native App Store / Play Store apps, a full CMS, AI pronunciation scoring, cloud upload of student audio, PDF upload, Google Docs, and hard 20/20 free gates.
