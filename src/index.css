@@ -1,25 +1,16 @@
 :root {
-  --paper: #fff8f2;
-  --paper-deep: #ffe4d2;
-  --peach: #ffe9dc;
-  --sky: #e7f4ff;
-  --sky-accent: #4ba3e3;
-  --cream: #fffdfb;
+  --paper: #ffffff;
   --card: #ffffff;
-  --ink: #2c2420;
-  --ink-soft: #5c534e;
-  --muted: #7a716b;
-  --line: #f1ddd0;
+  --ink: #1c1c1c;
+  --ink-soft: #4a4a4a;
+  --muted: #6b6b6b;
+  --line: #e6e6e6;
+  --wash: #f4f4f4;
   --coral: #ff6a45;
   --coral-deep: #ee5538;
-  --coral-soft: #ffe3d8;
-  --sun: #ffc14a;
-  --ok: #22a06b;
-  --ok-soft: #e3f8ee;
-  --bad: #e85a3c;
-  --bad-soft: #ffe8e1;
-  --shadow: 0 10px 28px rgba(255, 106, 69, 0.1);
-  --shadow-sm: 0 4px 14px rgba(44, 36, 32, 0.05);
+  --on-coral: #ffffff;
+  --shadow: 0 10px 28px rgba(28, 28, 28, 0.08);
+  --shadow-sm: 0 4px 14px rgba(28, 28, 28, 0.05);
   --radius: 1.2rem;
   --radius-sm: 0.9rem;
   --space: 1.15rem;
@@ -44,11 +35,7 @@ body {
   margin: 0;
   font-family: var(--font);
   color: var(--ink);
-  background:
-    radial-gradient(1100px 520px at 8% -12%, rgba(255, 106, 69, 0.14), transparent 52%),
-    radial-gradient(900px 480px at 108% 0%, rgba(75, 163, 227, 0.16), transparent 48%),
-    radial-gradient(700px 380px at 50% 100%, rgba(255, 193, 74, 0.12), transparent 55%),
-    var(--paper);
+  background: var(--wash);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
@@ -77,9 +64,8 @@ a {
   width: min(430px, 100%);
   min-height: 100dvh;
   margin: 0 auto;
-  background:
-    linear-gradient(180deg, #fffdfb 0%, #fff6ef 140px, var(--paper) 280px);
-  box-shadow: 0 0 0 1px rgba(255, 106, 69, 0.06), var(--shadow);
+  background: var(--paper);
+  box-shadow: 0 0 0 1px var(--line), var(--shadow);
   position: relative;
   padding-bottom: env(safe-area-inset-bottom);
 }
@@ -96,7 +82,7 @@ a {
   align-items: center;
   gap: 0.7rem;
   padding: 0.75rem var(--space) 0.7rem;
-  background: color-mix(in srgb, var(--cream) 92%, transparent);
+  background: color-mix(in srgb, var(--paper) 92%, transparent);
   backdrop-filter: blur(14px);
   border-bottom: 1px solid color-mix(in srgb, var(--line) 85%, transparent);
 }
@@ -121,13 +107,13 @@ a {
 }
 
 .menu-btn:hover {
-  background: var(--coral-soft);
-  color: var(--coral-deep);
+  background: var(--wash);
+  color: var(--ink);
 }
 
 .menu-btn[aria-expanded='true'] {
   background: var(--coral);
-  color: #fffaf7;
+  color: var(--on-coral);
 }
 
 .topbar-copy {
@@ -253,7 +239,7 @@ a {
 
 .stat {
   flex: 1;
-  background: var(--peach);
+  background: var(--wash);
   border-radius: var(--radius-sm);
   padding: 0.75rem 0.85rem;
 }
@@ -270,7 +256,7 @@ a {
 }
 
 .jamo {
-  background: var(--peach);
+  background: var(--wash);
   border-radius: 0.8rem;
   text-align: center;
   padding: 0.5rem 0.15rem 0.45rem;
@@ -297,7 +283,7 @@ a {
 
 .syllable {
   text-align: center;
-  background: var(--peach);
+  background: var(--wash);
   border-radius: var(--radius-sm);
   padding: 0.65rem 0.35rem;
 }
@@ -332,8 +318,8 @@ a {
 }
 
 .callout {
-  background: var(--sky);
-  border-left: 3px solid var(--sky-accent);
+  background: var(--wash);
+  border-left: 3px solid var(--coral);
   padding: 0.8rem 0.9rem;
   border-radius: 0 0.85rem 0.85rem 0;
   color: var(--ink-soft);
@@ -388,7 +374,7 @@ a {
   place-items: center;
   height: 3.4rem;
   border-radius: var(--radius-sm);
-  background: var(--peach);
+  background: var(--wash);
   font-size: 1.8rem;
   font-weight: 600;
 }
@@ -430,7 +416,7 @@ a {
   padding: 0.4rem 0.7rem;
   border-radius: 999px;
   border: 1.5px solid var(--line);
-  background: var(--cream);
+  background: var(--paper);
   color: var(--ink);
   font-size: 0.86rem;
   font-weight: 700;
@@ -452,13 +438,13 @@ a {
   padding: 0.45rem 1rem;
   background: var(--coral);
   border-color: transparent;
-  color: #fffaf7;
+  color: var(--on-coral);
   font-size: 1rem;
-  box-shadow: 0 8px 16px rgba(255, 106, 69, 0.28);
+  box-shadow: none;
 }
 
 .audio-chip.teacher span {
-  color: rgba(255, 250, 247, 0.86);
+  color: rgba(255, 255, 255, 0.86);
 }
 
 .audio-chip-copy {
@@ -486,35 +472,35 @@ a {
 }
 
 .audio-chip.on {
-  background: var(--ok-soft);
-  border-color: var(--ok);
-  color: var(--ok);
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
   box-shadow: none;
 }
 
 .audio-chip.on span {
-  color: var(--ok);
+  color: rgba(255, 255, 255, 0.78);
 }
 
 .audio-chip.teacher.on {
-  background: var(--ok);
+  background: var(--ink);
   border-color: transparent;
-  color: #fff;
-  box-shadow: 0 8px 16px rgba(34, 160, 107, 0.24);
+  color: var(--paper);
+  box-shadow: none;
 }
 
 .audio-chip.teacher.on span {
-  color: rgba(255, 255, 255, 0.88);
+  color: rgba(255, 255, 255, 0.78);
 }
 
 .audio-chip.rec {
-  background: var(--bad-soft);
-  border-color: var(--bad);
-  color: var(--bad);
+  background: var(--coral);
+  border-color: transparent;
+  color: var(--on-coral);
 }
 
 .audio-chip.rec span {
-  color: var(--bad);
+  color: rgba(255, 255, 255, 0.86);
 }
 
 .audio-chip:disabled {
@@ -535,7 +521,7 @@ a {
 
 code {
   font-size: 0.84em;
-  background: var(--peach);
+  background: var(--wash);
   padding: 0.05rem 0.28rem;
   border-radius: 0.3rem;
 }
@@ -572,16 +558,16 @@ code {
 }
 
 .choice.correct {
-  background: var(--ok-soft);
-  border-color: var(--ok);
-  color: var(--ok);
+  background: var(--wash);
+  border-color: var(--ink);
+  color: var(--ink);
   box-shadow: none;
 }
 
 .choice.wrong {
-  background: var(--bad-soft);
-  border-color: var(--bad);
-  color: var(--bad);
+  background: var(--wash);
+  border-color: var(--coral);
+  color: var(--coral-deep);
   box-shadow: none;
 }
 
@@ -592,11 +578,11 @@ code {
 }
 
 .feedback.ok {
-  color: var(--ok);
+  color: var(--ink);
 }
 
 .feedback.bad {
-  color: var(--bad);
+  color: var(--coral-deep);
 }
 
 .btn {
@@ -608,10 +594,10 @@ code {
   border: 0;
   border-radius: 999px;
   background: var(--coral);
-  color: #fffaf7;
+  color: var(--on-coral);
   font-weight: 700;
   margin-top: 1rem;
-  box-shadow: 0 8px 16px rgba(255, 106, 69, 0.24);
+  box-shadow: none;
   touch-action: manipulation;
 }
 
@@ -629,7 +615,7 @@ code {
 
 .progress-bar {
   height: 0.42rem;
-  background: var(--peach);
+  background: var(--wash);
   border-radius: 999px;
   overflow: hidden;
   margin: 0.45rem 0 0.95rem;
@@ -638,7 +624,7 @@ code {
 .progress-bar > span {
   display: block;
   height: 100%;
-  background: linear-gradient(90deg, var(--coral), var(--sun));
+  background: var(--coral);
 }
 
 .checklist {
@@ -653,7 +639,7 @@ code {
   align-items: start;
   width: 100%;
   text-align: left;
-  background: var(--cream);
+  background: var(--paper);
   border: 1.5px solid var(--line);
   border-radius: var(--radius);
   padding: 0.95rem 1rem;
@@ -661,8 +647,8 @@ code {
 }
 
 .check-item.done {
-  background: var(--ok-soft);
-  border-color: color-mix(in srgb, var(--ok) 38%, var(--line));
+  background: var(--wash);
+  border-color: var(--ink);
 }
 
 .box {
@@ -675,12 +661,12 @@ code {
   margin-top: 0.15rem;
   color: var(--coral);
   font-size: 0.85rem;
-  background: #fff;
+  background: var(--paper);
 }
 
 .check-item.done .box {
-  background: var(--ok);
-  border-color: var(--ok);
+  background: var(--ink);
+  border-color: var(--ink);
   color: white;
 }
 
@@ -707,7 +693,8 @@ code {
 }
 
 .flashcard.flipped {
-  background: #fff7f2;
+  background: var(--paper);
+  border-color: var(--coral);
 }
 
 .flashcard-kicker {
@@ -783,7 +770,7 @@ code {
   inset: 0;
   border: 0;
   padding: 0;
-  background: rgba(44, 36, 32, 0.28);
+  background: rgba(28, 28, 28, 0.28);
   opacity: 0;
   transition: opacity 0.2s ease;
 }
@@ -802,9 +789,9 @@ code {
   flex-direction: column;
   gap: 0.25rem;
   padding: 0.55rem 0.7rem 1.4rem;
-  background: #fffdfb;
+  background: var(--paper);
   border-right: 1px solid var(--line);
-  box-shadow: 18px 0 40px rgba(44, 36, 32, 0.08);
+  box-shadow: 18px 0 40px rgba(28, 28, 28, 0.08);
   transform: translateX(-105%);
   transition: transform 0.22s ease;
 }
@@ -837,11 +824,11 @@ code {
 
 .drawer-link.active {
   background: var(--coral);
-  color: #fffaf7;
+  color: var(--on-coral);
 }
 
 .drawer-link.active span {
-  color: rgba(255, 250, 247, 0.82);
+  color: rgba(255, 255, 255, 0.82);
 }
 
 .edit-row {
@@ -853,8 +840,8 @@ code {
 
 .text-btn {
   border: 0;
-  background: var(--coral-soft);
-  color: var(--coral-deep);
+  background: var(--wash);
+  color: var(--ink);
   font-weight: 700;
   font-size: 0.78rem;
   min-height: 2.2rem;
