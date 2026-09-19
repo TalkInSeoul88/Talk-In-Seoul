@@ -42,9 +42,28 @@ These ten files are Jung’s recordings and must keep these names.
 
 ## 음절(syllables) → `syllable-{roman}.mp3`
 
-140 basic CV blocks (14 자음 × 10 모음). None are in the repo yet. Record in order using [SYLLABLE-RECORDING-CHECKLIST.md](./SYLLABLE-RECORDING-CHECKLIST.md).
+140 basic CV blocks (14 자음 × 10 모음). **ㅏ row only is in the repo (14/140).** Other vowel columns stay **Audio coming soon**. Record the rest in order using [SYLLABLE-RECORDING-CHECKLIST.md](./SYLLABLE-RECORDING-CHECKLIST.md). Do not merge to production until all 140 are ready.
 
 `audioId` is the filename without `.mp3`. Example: 가 → `syllable-ga` → `syllable-ga.mp3`.
+
+### ㅏ row (Jung’s recordings) — 가나다라마바사아자차카타파하
+
+| Hangul | Roman | File |
+| --- | --- | --- |
+| 가 | ga | `syllable-ga.mp3` |
+| 나 | na | `syllable-na.mp3` |
+| 다 | da | `syllable-da.mp3` |
+| 라 | ra | `syllable-ra.mp3` |
+| 마 | ma | `syllable-ma.mp3` |
+| 바 | ba | `syllable-ba.mp3` |
+| 사 | sa | `syllable-sa.mp3` |
+| 아 | a | `syllable-a.mp3` |
+| 자 | ja | `syllable-ja.mp3` |
+| 차 | cha | `syllable-cha.mp3` |
+| 카 | ka | `syllable-ka.mp3` |
+| 타 | ta | `syllable-ta.mp3` |
+| 파 | pa | `syllable-pa.mp3` |
+| 하 | ha | `syllable-ha.mp3` |
 
 ### Romanization map (Revised Romanization)
 

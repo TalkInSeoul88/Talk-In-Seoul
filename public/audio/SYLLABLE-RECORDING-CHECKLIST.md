@@ -2,6 +2,8 @@
 
 Jung: record the **140 basic CV blocks** in this order (ㄱ row through ㅎ row). One Hangul per MP3. Drop each file into this folder (`public/audio/`) using the exact filename. Do **not** rename after recording — the app looks up `syllable-{roman}.mp3`.
 
+**ㅏ row is in (14/140):** 가나다라마바사아자차카타파하. Do not merge to production until all 140 are ready.
+
 Missing files are fine. Students see **Audio coming soon** and Play stays disabled until the MP3 is here. Existing `vowel-*.mp3` files must stay as they are.
 
 ## How to drop files in
@@ -31,7 +33,7 @@ Full romanization map: [README.md](./README.md) in this folder.
 
 | # | Hangul | Roman | File | Done |
 | --- | --- | --- | --- | --- |
-| 1 | 가 | ga | `syllable-ga.mp3` | ☐ |
+| 1 | 가 | ga | `syllable-ga.mp3` | ☑ |
 | 2 | 갸 | gya | `syllable-gya.mp3` | ☐ |
 | 3 | 거 | geo | `syllable-geo.mp3` | ☐ |
 | 4 | 겨 | gyeo | `syllable-gyeo.mp3` | ☐ |
@@ -46,7 +48,7 @@ Full romanization map: [README.md](./README.md) in this folder.
 
 | # | Hangul | Roman | File | Done |
 | --- | --- | --- | --- | --- |
-| 11 | 나 | na | `syllable-na.mp3` | ☐ |
+| 11 | 나 | na | `syllable-na.mp3` | ☑ |
 | 12 | 냐 | nya | `syllable-nya.mp3` | ☐ |
 | 13 | 너 | neo | `syllable-neo.mp3` | ☐ |
 | 14 | 녀 | nyeo | `syllable-nyeo.mp3` | ☐ |
@@ -61,7 +63,7 @@ Full romanization map: [README.md](./README.md) in this folder.
 
 | # | Hangul | Roman | File | Done |
 | --- | --- | --- | --- | --- |
-| 21 | 다 | da | `syllable-da.mp3` | ☐ |
+| 21 | 다 | da | `syllable-da.mp3` | ☑ |
 | 22 | 댜 | dya | `syllable-dya.mp3` | ☐ |
 | 23 | 더 | deo | `syllable-deo.mp3` | ☐ |
 | 24 | 뎌 | dyeo | `syllable-dyeo.mp3` | ☐ |
@@ -76,7 +78,7 @@ Full romanization map: [README.md](./README.md) in this folder.
 
 | # | Hangul | Roman | File | Done |
 | --- | --- | --- | --- | --- |
-| 31 | 라 | ra | `syllable-ra.mp3` | ☐ |
+| 31 | 라 | ra | `syllable-ra.mp3` | ☑ |
 | 32 | 랴 | rya | `syllable-rya.mp3` | ☐ |
 | 33 | 러 | reo | `syllable-reo.mp3` | ☐ |
 | 34 | 려 | ryeo | `syllable-ryeo.mp3` | ☐ |
@@ -91,7 +93,7 @@ Full romanization map: [README.md](./README.md) in this folder.
 
 | # | Hangul | Roman | File | Done |
 | --- | --- | --- | --- | --- |
-| 41 | 마 | ma | `syllable-ma.mp3` | ☐ |
+| 41 | 마 | ma | `syllable-ma.mp3` | ☑ |
 | 42 | 먀 | mya | `syllable-mya.mp3` | ☐ |
 | 43 | 머 | meo | `syllable-meo.mp3` | ☐ |
 | 44 | 며 | myeo | `syllable-myeo.mp3` | ☐ |
@@ -106,7 +108,7 @@ Full romanization map: [README.md](./README.md) in this folder.
 
 | # | Hangul | Roman | File | Done |
 | --- | --- | --- | --- | --- |
-| 51 | 바 | ba | `syllable-ba.mp3` | ☐ |
+| 51 | 바 | ba | `syllable-ba.mp3` | ☑ |
 | 52 | 뱌 | bya | `syllable-bya.mp3` | ☐ |
 | 53 | 버 | beo | `syllable-beo.mp3` | ☐ |
 | 54 | 벼 | byeo | `syllable-byeo.mp3` | ☐ |
@@ -121,7 +123,7 @@ Full romanization map: [README.md](./README.md) in this folder.
 
 | # | Hangul | Roman | File | Done |
 | --- | --- | --- | --- | --- |
-| 61 | 사 | sa | `syllable-sa.mp3` | ☐ |
+| 61 | 사 | sa | `syllable-sa.mp3` | ☑ |
 | 62 | 샤 | sya | `syllable-sya.mp3` | ☐ |
 | 63 | 서 | seo | `syllable-seo.mp3` | ☐ |
 | 64 | 셔 | syeo | `syllable-syeo.mp3` | ☐ |
@@ -136,7 +138,7 @@ Full romanization map: [README.md](./README.md) in this folder.
 
 | # | Hangul | Roman | File | Done |
 | --- | --- | --- | --- | --- |
-| 71 | 아 | a | `syllable-a.mp3` | ☐ |
+| 71 | 아 | a | `syllable-a.mp3` | ☑ |
 | 72 | 야 | ya | `syllable-ya.mp3` | ☐ |
 | 73 | 어 | eo | `syllable-eo.mp3` | ☐ |
 | 74 | 여 | yeo | `syllable-yeo.mp3` | ☐ |
@@ -151,7 +153,7 @@ Full romanization map: [README.md](./README.md) in this folder.
 
 | # | Hangul | Roman | File | Done |
 | --- | --- | --- | --- | --- |
-| 81 | 자 | ja | `syllable-ja.mp3` | ☐ |
+| 81 | 자 | ja | `syllable-ja.mp3` | ☑ |
 | 82 | 쟈 | jya | `syllable-jya.mp3` | ☐ |
 | 83 | 저 | jeo | `syllable-jeo.mp3` | ☐ |
 | 84 | 져 | jyeo | `syllable-jyeo.mp3` | ☐ |
@@ -166,7 +168,7 @@ Full romanization map: [README.md](./README.md) in this folder.
 
 | # | Hangul | Roman | File | Done |
 | --- | --- | --- | --- | --- |
-| 91 | 차 | cha | `syllable-cha.mp3` | ☐ |
+| 91 | 차 | cha | `syllable-cha.mp3` | ☑ |
 | 92 | 챠 | chya | `syllable-chya.mp3` | ☐ |
 | 93 | 처 | cheo | `syllable-cheo.mp3` | ☐ |
 | 94 | 쳐 | chyeo | `syllable-chyeo.mp3` | ☐ |
@@ -181,7 +183,7 @@ Full romanization map: [README.md](./README.md) in this folder.
 
 | # | Hangul | Roman | File | Done |
 | --- | --- | --- | --- | --- |
-| 101 | 카 | ka | `syllable-ka.mp3` | ☐ |
+| 101 | 카 | ka | `syllable-ka.mp3` | ☑ |
 | 102 | 캬 | kya | `syllable-kya.mp3` | ☐ |
 | 103 | 커 | keo | `syllable-keo.mp3` | ☐ |
 | 104 | 켜 | kyeo | `syllable-kyeo.mp3` | ☐ |
@@ -196,7 +198,7 @@ Full romanization map: [README.md](./README.md) in this folder.
 
 | # | Hangul | Roman | File | Done |
 | --- | --- | --- | --- | --- |
-| 111 | 타 | ta | `syllable-ta.mp3` | ☐ |
+| 111 | 타 | ta | `syllable-ta.mp3` | ☑ |
 | 112 | 탸 | tya | `syllable-tya.mp3` | ☐ |
 | 113 | 터 | teo | `syllable-teo.mp3` | ☐ |
 | 114 | 텨 | tyeo | `syllable-tyeo.mp3` | ☐ |
@@ -211,7 +213,7 @@ Full romanization map: [README.md](./README.md) in this folder.
 
 | # | Hangul | Roman | File | Done |
 | --- | --- | --- | --- | --- |
-| 121 | 파 | pa | `syllable-pa.mp3` | ☐ |
+| 121 | 파 | pa | `syllable-pa.mp3` | ☑ |
 | 122 | 퍄 | pya | `syllable-pya.mp3` | ☐ |
 | 123 | 퍼 | peo | `syllable-peo.mp3` | ☐ |
 | 124 | 펴 | pyeo | `syllable-pyeo.mp3` | ☐ |
@@ -226,7 +228,7 @@ Full romanization map: [README.md](./README.md) in this folder.
 
 | # | Hangul | Roman | File | Done |
 | --- | --- | --- | --- | --- |
-| 131 | 하 | ha | `syllable-ha.mp3` | ☐ |
+| 131 | 하 | ha | `syllable-ha.mp3` | ☑ |
 | 132 | 햐 | hya | `syllable-hya.mp3` | ☐ |
 | 133 | 허 | heo | `syllable-heo.mp3` | ☐ |
 | 134 | 혀 | hyeo | `syllable-hyeo.mp3` | ☐ |
