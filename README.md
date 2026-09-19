@@ -9,7 +9,7 @@ Students come to an in-person Hangul class at the store, then use this phone-fri
 ## What’s in this version
 
 - **Home** — this week’s focus, an access-code box, then links: Pronunciation, Quiz, This Week
-- **Pronunciation** — **모음(vowels)** (Jung’s audio + Record / Play me) and **자음(consonants)** are free. **음절(syllables)** is the full 140 CV chart; Play / Record need a class access code. Missing clips show Audio coming soon.
+- **Pronunciation** — **모음(vowels)** (Jung’s audio + Record / Play me) and **자음(consonants)** are free. The first three 자음 (ㄱ ㄴ ㄷ) have teacher clips; the rest say Audio coming soon. **음절(syllables)** is the full 140 CV chart; Play / Record need a class access code. Missing clips show Audio coming soon.
 - **Quiz** — flashcards for the 10 basic vowels plus a few starter words (tap to flip)
 - **This Week** — placeholder for class materials (PDFs and links later)
 - **Admin** (`/admin`) — hidden from the student hamburger. Jung unlocks with a password, then issues / lists / starts / stops access codes with an expiry date
@@ -105,7 +105,7 @@ See `.env.example` for the full list.
 
 Drop additional MP3 files into `public/audio/` using the names below. Keep the same filenames — the app looks them up automatically. If a file is missing, students see **Audio coming soon** instead of a broken player.
 
-The 10 basic vowels already use **Jung’s recordings**. Consonant and syllable files are not included yet; those tabs show **Audio coming soon** (or a coming-soon card for 자음) until the MP3s exist.
+The 10 basic vowels and the first three consonants (**ㄱ ㄴ ㄷ**) already use **Jung’s recordings**. The remaining 자음 and all 음절 files are not included yet; missing clips show **Audio coming soon**.
 
 Tap Play / Record on the phone itself (Safari or Chrome). Browsers require a tap to start audio or the microphone.
 

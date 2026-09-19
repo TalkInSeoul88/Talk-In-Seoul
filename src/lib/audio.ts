@@ -1,6 +1,6 @@
 import type { TeacherClip } from '../data/content'
 
-const AUDIO_REV = 'jung-vowels-v2'
+const AUDIO_REV = 'jung-consonants-gnd-v1'
 
 export function teacherAudioSrc(clip: TeacherClip): string {
   return `/audio/${clip.audioId}.mp3?v=${AUDIO_REV}`
