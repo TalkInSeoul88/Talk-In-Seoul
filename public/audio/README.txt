@@ -1,4 +1,4 @@
-Vowel files (vowel-*.mp3) and the first six consonants (consonant-g/n/d/r/m/b.mp3) are Jung’s teacher recordings.
+Vowel files (vowel-*.mp3) and all 14 consonants (consonant-g/n/d/r/m/b/s/ng/j/ch/k/t/p/h.mp3) are Jung’s teacher recordings.
 
 Romanization map, consonant names, and syllable filenames: see README.md in this folder.
 Recording order for the 140 음절(syllables): SYLLABLE-RECORDING-CHECKLIST.md.
