@@ -220,6 +220,39 @@ a {
   color: var(--coral);
 }
 
+.material-kind {
+  flex-shrink: 0;
+  color: var(--coral-deep);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.material-note {
+  margin: -0.2rem 0 0.75rem;
+}
+
+.card .material-note {
+  margin: 0 0 0.75rem;
+}
+
+.class-material-links {
+  margin-top: 0.15rem;
+}
+
+.material-locked {
+  background: var(--wash);
+  box-shadow: none;
+}
+
+.material-locked .material-kind {
+  color: var(--muted);
+}
+
+.card .unlock-bar {
+  margin-top: 0.95rem;
+}
+
 .next-class textarea {
   width: 100%;
   border: 0;
