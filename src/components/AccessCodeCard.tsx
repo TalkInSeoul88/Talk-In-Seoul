@@ -37,8 +37,8 @@ export default function AccessCodeCard() {
       <h2>Have a code from class?</h2>
       <p className="tiny">
         Enter it once. No account. Without a code you can still use Home, 모음(vowels),
-        자음(consonants), and the free This Week sheets. 음절(syllables) and class materials
-        unlock with this code.
+        자음(consonants), 쌍자음(double consonants), and the free This Week sheets.
+        음절(syllables) and class materials unlock with this code.
       </p>
       <form className="access-form" onSubmit={(event) => void onSubmit(event)}>
         <label className="field">

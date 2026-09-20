@@ -1,27 +1,85 @@
 import { useEffect, useState } from 'react'
 import JamoListenRow from '../components/JamoListenRow'
 import SyllablePractice from '../components/SyllablePractice'
-import { BASIC_CONSONANTS, BASIC_VOWELS } from '../data/content'
+import { BASIC_CONSONANTS, BASIC_VOWELS, DOUBLE_CONSONANTS, type Jamo } from '../data/content'
 import { probeTeacherAudio, teacherAudioSrc } from '../lib/audio'
 
-type Section = 'vowels' | 'consonants' | 'syllables'
-type ConsonantMode = 'checking' | 'ready' | 'soon'
+type Section = 'vowels' | 'consonants' | 'ssang' | 'syllables'
+type ClipMode = 'checking' | 'ready' | 'soon'
 
-export default function Pronunciation() {
-  const [section, setSection] = useState<Section>('vowels')
-  const [consonantMode, setConsonantMode] = useState<ConsonantMode>('checking')
+const TABS: { id: Section; label: string; sub: string }[] = [
+  { id: 'vowels', label: '모음', sub: '(vowels)' },
+  { id: 'consonants', label: '자음', sub: '(consonants)' },
+  { id: 'ssang', label: '쌍자음', sub: '(double consonants)' },
+  { id: 'syllables', label: '음절', sub: '(syllables)' },
+]
+
+function useClipMode(items: Jamo[]): ClipMode {
+  const [mode, setMode] = useState<ClipMode>('checking')
 
   useEffect(() => {
     let cancelled = false
-    void Promise.all(BASIC_CONSONANTS.map((jamo) => probeTeacherAudio(teacherAudioSrc(jamo)))).then(
-      (results) => {
-        if (!cancelled) setConsonantMode(results.some(Boolean) ? 'ready' : 'soon')
-      },
-    )
+    void Promise.all(items.map((jamo) => probeTeacherAudio(teacherAudioSrc(jamo)))).then((results) => {
+      if (!cancelled) setMode(results.some(Boolean) ? 'ready' : 'soon')
+    })
     return () => {
       cancelled = true
     }
-  }, [])
+  }, [items])
+
+  return mode
+}
+
+function JamoPracticeSection({
+  title,
+  hint,
+  items,
+  mode,
+}: {
+  title: string
+  hint: string
+  items: Jamo[]
+  mode: ClipMode
+}) {
+  if (mode === 'ready') {
+    return (
+      <section className="card">
+        <h2>{title}</h2>
+        <p className="tiny">{hint}</p>
+        <div className="jamo-list">
+          {items.map((jamo) => (
+            <JamoListenRow key={jamo.char} jamo={jamo} />
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  return (
+    <section className="card empty-card">
+      <p className="kicker">{title}</p>
+      <h2>Teacher audio coming soon</h2>
+      <p className="muted">
+        This section is ready for recording later. When Jung adds the MP3s, Play and Record will
+        appear here — 모음(vowels) stay as they are.
+      </p>
+      <div className="jamo-grid" aria-label={title}>
+        {items.map((jamo) => (
+          <div key={jamo.char} className="jamo">
+            <span className="glyph">{jamo.char}</span>
+            <span className="roman">{jamo.roman}</span>
+          </div>
+        ))}
+      </div>
+      {mode === 'checking' && <p className="tiny">Checking for audio files…</p>}
+    </section>
+  )
+}
+
+export default function Pronunciation() {
+  const [section, setSection] = useState<Section>('vowels')
+  const consonantMode = useClipMode(BASIC_CONSONANTS)
+  const ssangMode = useClipMode(DOUBLE_CONSONANTS)
 
   return (
     <div className="stack">
@@ -34,37 +92,20 @@ export default function Pronunciation() {
         </p>
       </header>
 
-      <div className="seg triple" role="tablist" aria-label="Pronunciation sections">
-        <button
-          type="button"
-          role="tab"
-          className={section === 'vowels' ? 'seg-btn on' : 'seg-btn'}
-          aria-selected={section === 'vowels'}
-          onClick={() => setSection('vowels')}
-        >
-          모음
-          <span className="seg-sub">(vowels)</span>
-        </button>
-        <button
-          type="button"
-          role="tab"
-          className={section === 'consonants' ? 'seg-btn on' : 'seg-btn'}
-          aria-selected={section === 'consonants'}
-          onClick={() => setSection('consonants')}
-        >
-          자음
-          <span className="seg-sub">(consonants)</span>
-        </button>
-        <button
-          type="button"
-          role="tab"
-          className={section === 'syllables' ? 'seg-btn on' : 'seg-btn'}
-          aria-selected={section === 'syllables'}
-          onClick={() => setSection('syllables')}
-        >
-          음절
-          <span className="seg-sub">(syllables)</span>
-        </button>
+      <div className="seg quad" role="tablist" aria-label="Pronunciation sections">
+        {TABS.map((tab) => (
+          <button
+            key={tab.id}
+            type="button"
+            role="tab"
+            className={section === tab.id ? 'seg-btn on' : 'seg-btn'}
+            aria-selected={section === tab.id}
+            onClick={() => setSection(tab.id)}
+          >
+            {tab.label}
+            <span className="seg-sub">{tab.sub}</span>
+          </button>
+        ))}
       </div>
 
       {section === 'vowels' ? (
@@ -79,36 +120,22 @@ export default function Pronunciation() {
             ))}
           </div>
         </section>
-      ) : section === 'syllables' ? (
-        <SyllablePractice />
-      ) : consonantMode === 'ready' ? (
-        <section className="card">
-          <h2>자음(consonants)</h2>
-          <p className="tiny">Same Play / Record tools as 모음(vowels).</p>
-          <div className="jamo-list">
-            {BASIC_CONSONANTS.map((jamo) => (
-              <JamoListenRow key={jamo.char} jamo={jamo} />
-            ))}
-          </div>
-        </section>
+      ) : section === 'consonants' ? (
+        <JamoPracticeSection
+          title="자음(consonants)"
+          hint="Same Play / Record tools as 모음(vowels)."
+          items={BASIC_CONSONANTS}
+          mode={consonantMode}
+        />
+      ) : section === 'ssang' ? (
+        <JamoPracticeSection
+          title="쌍자음(double consonants)"
+          hint="Same Play / Record tools as 자음(consonants). Free — no access code."
+          items={DOUBLE_CONSONANTS}
+          mode={ssangMode}
+        />
       ) : (
-        <section className="card empty-card">
-          <p className="kicker">자음(consonants)</p>
-          <h2>Teacher audio coming soon</h2>
-          <p className="muted">
-            This section is ready for recording later. When Jung adds the MP3s, Play and Record
-            will appear here — 모음(vowels) stay as they are.
-          </p>
-          <div className="jamo-grid" aria-label="Basic consonants">
-            {BASIC_CONSONANTS.map((jamo) => (
-              <div key={jamo.char} className="jamo">
-                <span className="glyph">{jamo.char}</span>
-                <span className="roman">{jamo.roman}</span>
-              </div>
-            ))}
-          </div>
-          {consonantMode === 'checking' && <p className="tiny">Checking for audio files…</p>}
-        </section>
+        <SyllablePractice />
       )}
     </div>
   )

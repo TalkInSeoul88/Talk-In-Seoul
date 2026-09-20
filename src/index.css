@@ -925,7 +925,7 @@ code {
   border-radius: 999px;
 }
 
-.seg:not(.triple) .seg-btn {
+.seg:not(.triple):not(.quad) .seg-btn {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -935,9 +935,17 @@ code {
   padding: 0.28rem 0.35rem;
 }
 
+.seg.triple,
+.seg.quad {
+  border-radius: 1.15rem;
+}
+
 .seg.triple {
   grid-template-columns: 1fr 1fr 1fr;
-  border-radius: 1.15rem;
+}
+
+.seg.quad {
+  grid-template-columns: 1fr 1fr 1fr 1fr;
 }
 
 .seg-btn {
@@ -951,7 +959,8 @@ code {
   touch-action: manipulation;
 }
 
-.seg.triple .seg-btn {
+.seg.triple .seg-btn,
+.seg.quad .seg-btn {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -962,6 +971,18 @@ code {
   font-size: 0.92rem;
   line-height: 1.15;
   padding: 0.28rem 0.12rem;
+}
+
+.seg.quad .seg-btn {
+  font-size: 0.78rem;
+  padding: 0.28rem 0.04rem;
+}
+
+.seg.quad .seg-sub {
+  font-size: 0.5rem;
+  line-height: 1.15;
+  max-width: 100%;
+  text-wrap: balance;
 }
 
 .seg-sub {

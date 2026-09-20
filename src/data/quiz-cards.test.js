@@ -1,5 +1,8 @@
 import assert from 'node:assert/strict'
+import { existsSync } from 'node:fs'
+import { dirname, join } from 'node:path'
 import test from 'node:test'
+import { fileURLToPath } from 'node:url'
 import {
   BASIC_CONSONANTS,
   BASIC_CV_SYLLABLES,
@@ -45,7 +48,7 @@ test('quiz cards stay free jamo — no compound vowels and no 음절', () => {
   )
 })
 
-test('쌍자음 are quiz-only and do not change the 140 CV chart', () => {
+test('쌍자음 stay off the 140 CV chart and use kk/tt/pp/ss/jj clips', () => {
   assert.equal(BASIC_VOWELS.length, 10)
   assert.equal(BASIC_CONSONANTS.length, 14)
   assert.equal(BASIC_CV_SYLLABLES.length, 140)
@@ -61,4 +64,18 @@ test('쌍자음 are quiz-only and do not change the 140 CV chart', () => {
     DOUBLE_CONSONANTS.map((item) => item.audioId),
     ['consonant-kk', 'consonant-tt', 'consonant-pp', 'consonant-ss', 'consonant-jj'],
   )
+  assert.deepEqual(
+    DOUBLE_CONSONANTS.map((item) => [item.char, item.roman, item.nameKo]),
+    [
+      ['ㄲ', 'kk', '쌍기역'],
+      ['ㄸ', 'tt', '쌍디귿'],
+      ['ㅃ', 'pp', '쌍비읍'],
+      ['ㅆ', 'ss', '쌍시옷'],
+      ['ㅉ', 'jj', '쌍지읒'],
+    ],
+  )
+  const audioDir = join(dirname(fileURLToPath(import.meta.url)), '../../public/audio')
+  for (const item of DOUBLE_CONSONANTS) {
+    assert.equal(existsSync(join(audioDir, `${item.audioId}.mp3`)), true, item.audioId)
+  }
 })
