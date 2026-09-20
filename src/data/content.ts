@@ -10,6 +10,8 @@ export type Jamo = TeacherClip & {
   nameKo: string
   cue: string
   kind: 'vowel' | 'consonant'
+  /** 쌍자음 (ㄲㄸㅃㅆㅉ). Omitted on the 10 vowels and 14 basic consonants. */
+  family?: 'ssang'
 }
 
 export const BASIC_VOWELS: Jamo[] = [
@@ -41,6 +43,46 @@ export const BASIC_CONSONANTS: Jamo[] = [
   { char: 'ㅍ', roman: 'p', nameKo: '피읖', cue: 'strong p — ㅂ with an extra stroke', kind: 'consonant', audioId: 'consonant-p' },
   { char: 'ㅎ', roman: 'h', nameKo: '히읗', cue: 'h as in hat', kind: 'consonant', audioId: 'consonant-h' },
 ]
+
+/** 쌍자음 — Quiz only. Do not fold into BASIC_CONSONANTS (that set drives the 140 CV chart). */
+export const DOUBLE_CONSONANTS: Jamo[] = [
+  { char: 'ㄲ', roman: 'kk', nameKo: '쌍기역', cue: 'tense g/k — doubled ㄱ', kind: 'consonant', family: 'ssang', audioId: 'consonant-kk' },
+  { char: 'ㄸ', roman: 'tt', nameKo: '쌍디귿', cue: 'tense d/t — doubled ㄷ', kind: 'consonant', family: 'ssang', audioId: 'consonant-tt' },
+  { char: 'ㅃ', roman: 'pp', nameKo: '쌍비읍', cue: 'tense b/p — doubled ㅂ', kind: 'consonant', family: 'ssang', audioId: 'consonant-pp' },
+  { char: 'ㅆ', roman: 'ss', nameKo: '쌍시옷', cue: 'tense s — doubled ㅅ', kind: 'consonant', family: 'ssang', audioId: 'consonant-ss' },
+  { char: 'ㅉ', roman: 'jj', nameKo: '쌍지읒', cue: 'tense j — doubled ㅈ', kind: 'consonant', family: 'ssang', audioId: 'consonant-jj' },
+]
+
+/** Free Quiz deck: 10 basic 모음 + 19 자음 (14 basic + 5 쌍자음). No compound vowels, no 음절. */
+export const QUIZ_VOWELS: Jamo[] = BASIC_VOWELS
+export const QUIZ_CONSONANTS: Jamo[] = [...BASIC_CONSONANTS, ...DOUBLE_CONSONANTS]
+export const QUIZ_FLASHCARDS: Jamo[] = [...QUIZ_VOWELS, ...QUIZ_CONSONANTS]
+
+const QUIZ_VOWEL_CHARS = 'ㅏㅑㅓㅕㅗㅛㅜㅠㅡㅣ'
+const QUIZ_CONSONANT_CHARS = 'ㄱㄴㄷㄹㅁㅂㅅㅇㅈㅊㅋㅌㅍㅎㄲㄸㅃㅆㅉ'
+const COMPOUND_VOWELS = 'ㅐㅒㅔㅖㅘㅙㅚㅝㅞㅟㅢ'
+
+function assertQuizFlashcards() {
+  const vowels = QUIZ_VOWELS.map((item) => item.char).join('')
+  const consonants = QUIZ_CONSONANTS.map((item) => item.char).join('')
+  if (vowels !== QUIZ_VOWEL_CHARS) {
+    throw new Error(`Quiz vowels must be the 10 basic 모음, got ${vowels}`)
+  }
+  if (consonants !== QUIZ_CONSONANT_CHARS) {
+    throw new Error(`Quiz consonants must be 14 basic + 5 쌍자음, got ${consonants}`)
+  }
+  if (QUIZ_FLASHCARDS.length !== 29) {
+    throw new Error(`Expected 29 free quiz cards, got ${QUIZ_FLASHCARDS.length}`)
+  }
+  if (QUIZ_FLASHCARDS.some((item) => COMPOUND_VOWELS.includes(item.char))) {
+    throw new Error('Quiz must not include compound vowels')
+  }
+  if (QUIZ_FLASHCARDS.some((item) => item.audioId.startsWith('syllable-'))) {
+    throw new Error('Quiz must not include 음절(syllable) cards')
+  }
+}
+
+assertQuizFlashcards()
 
 export const ALL_JAMO: Jamo[] = [...BASIC_VOWELS, ...BASIC_CONSONANTS]
 

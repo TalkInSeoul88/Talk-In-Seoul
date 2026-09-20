@@ -12,7 +12,8 @@ export default function Home() {
         </p>
         <h2 className="page-title">Hangul basics this week</h2>
         <p className="lede">
-          Listen to Jung’s vowels, flip a few cards, then check This Week for anything from class.
+          Listen to Jung’s vowels, flip the free 모음/자음 cards, then check This Week for anything from
+          class.
         </p>
       </header>
 
