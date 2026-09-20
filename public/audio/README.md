@@ -42,9 +42,66 @@ All 14 basic 자음 are Jung’s recordings. Play / Record appear automatically 
 
 ## 음절(syllables) → `syllable-{roman}.mp3`
 
-140 basic CV blocks (14 자음 × 10 모음). None are in the repo yet. Record in order using [SYLLABLE-RECORDING-CHECKLIST.md](./SYLLABLE-RECORDING-CHECKLIST.md).
+140 basic CV blocks (14 자음 × 10 모음). **ㅏ + ㅑ + ㅓ rows are in the repo (42/140).** Other vowel columns stay **Audio coming soon**. Record the rest in order using [SYLLABLE-RECORDING-CHECKLIST.md](./SYLLABLE-RECORDING-CHECKLIST.md). Do not merge to production until all 140 are ready.
 
 `audioId` is the filename without `.mp3`. Example: 가 → `syllable-ga` → `syllable-ga.mp3`.
+
+### ㅏ row (Jung’s recordings) — 가나다라마바사아자차카타파하
+
+| Hangul | Roman | File |
+| --- | --- | --- |
+| 가 | ga | `syllable-ga.mp3` |
+| 나 | na | `syllable-na.mp3` |
+| 다 | da | `syllable-da.mp3` |
+| 라 | ra | `syllable-ra.mp3` |
+| 마 | ma | `syllable-ma.mp3` |
+| 바 | ba | `syllable-ba.mp3` |
+| 사 | sa | `syllable-sa.mp3` |
+| 아 | a | `syllable-a.mp3` |
+| 자 | ja | `syllable-ja.mp3` |
+| 차 | cha | `syllable-cha.mp3` |
+| 카 | ka | `syllable-ka.mp3` |
+| 타 | ta | `syllable-ta.mp3` |
+| 파 | pa | `syllable-pa.mp3` |
+| 하 | ha | `syllable-ha.mp3` |
+
+### ㅑ row (Jung’s recordings) — 갸냐댜랴먀뱌샤야쟈챠캬탸퍄햐
+
+| Hangul | Roman | File |
+| --- | --- | --- |
+| 갸 | gya | `syllable-gya.mp3` |
+| 냐 | nya | `syllable-nya.mp3` |
+| 댜 | dya | `syllable-dya.mp3` |
+| 랴 | rya | `syllable-rya.mp3` |
+| 먀 | mya | `syllable-mya.mp3` |
+| 뱌 | bya | `syllable-bya.mp3` |
+| 샤 | sya | `syllable-sya.mp3` |
+| 야 | ya | `syllable-ya.mp3` |
+| 쟈 | jya | `syllable-jya.mp3` |
+| 챠 | chya | `syllable-chya.mp3` |
+| 캬 | kya | `syllable-kya.mp3` |
+| 탸 | tya | `syllable-tya.mp3` |
+| 퍄 | pya | `syllable-pya.mp3` |
+| 햐 | hya | `syllable-hya.mp3` |
+
+### ㅓ row (Jung’s recordings) — 거너더러머버서어저처커터퍼허
+
+| Hangul | Roman | File |
+| --- | --- | --- |
+| 거 | geo | `syllable-geo.mp3` |
+| 너 | neo | `syllable-neo.mp3` |
+| 더 | deo | `syllable-deo.mp3` |
+| 러 | reo | `syllable-reo.mp3` |
+| 머 | meo | `syllable-meo.mp3` |
+| 버 | beo | `syllable-beo.mp3` |
+| 서 | seo | `syllable-seo.mp3` |
+| 어 | eo | `syllable-eo.mp3` |
+| 저 | jeo | `syllable-jeo.mp3` |
+| 처 | cheo | `syllable-cheo.mp3` |
+| 커 | keo | `syllable-keo.mp3` |
+| 터 | teo | `syllable-teo.mp3` |
+| 퍼 | peo | `syllable-peo.mp3` |
+| 허 | heo | `syllable-heo.mp3` |
 
 ### Romanization map (Revised Romanization)
 
