@@ -21,7 +21,7 @@ These ten files are Jung’s recordings and must keep these names.
 
 ## 자음(consonants) → `consonant-{slug}.mp3`
 
-ㄱ ㄴ ㄷ ㄹ ㅁ ㅂ are Jung’s recordings. The rest are not recorded yet — those rows stay **Audio coming soon**. When more files exist, Play / Record appear automatically.
+All 14 basic 자음 are Jung’s recordings. Play / Record appear automatically when the matching MP3 is present.
 
 | Hangul | Slug | File |
 | --- | --- | --- |
