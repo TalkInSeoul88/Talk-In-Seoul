@@ -16,7 +16,7 @@ export const PUBLIC_MATERIALS: WeekMaterial[] = [
   {
     id: 'week-1-vowel-writing',
     title: 'Week 1 — Vowel writing practice (모음)',
-    detail: 'Printable look → trace → write sheet. ㅏㅑㅓㅕㅗㅛㅜㅠㅡㅣ.',
+    detail: 'Printable look → trace → write sheet. ㅏ–ㅣ.',
     href: '/materials/hangul-vowel-practice.pdf',
   },
 ]
