@@ -21,6 +21,11 @@ test('public writing PDFs are in public/materials', () => {
   assertPdf('public/materials/hangul-vowel-practice.pdf')
 })
 
+test('consonant writing PDF has both pages (ㄱ–ㅅ and ㅇ–ㅎ)', () => {
+  const bytes = readFileSync(join(root, 'public/materials/hangul-consonant-practice.pdf'))
+  assert.match(bytes.toString('latin1'), /\/Count 2/)
+})
+
 test('class word PDF is present for enrolled students', () => {
   assertPdf('public/materials/hangul-word-practice-week1.pdf')
 })
