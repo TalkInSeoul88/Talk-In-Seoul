@@ -220,6 +220,18 @@ a {
   color: var(--coral);
 }
 
+.material-kind {
+  flex-shrink: 0;
+  color: var(--coral-deep);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.material-note {
+  margin: -0.2rem 0 0.75rem;
+}
+
 .next-class textarea {
   width: 100%;
   border: 0;
