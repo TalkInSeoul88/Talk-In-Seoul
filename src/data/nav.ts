@@ -22,6 +22,6 @@ export const HOME_LINKS = [
     to: '/this-week',
     label: 'This Week',
     ko: '이번 주',
-    detail: 'Printable consonant writing practice, plus more from class.',
+    detail: 'Free 자음 and 모음 sheets. Word practice with a class code.',
   },
 ] as const

@@ -1,7 +1,11 @@
 import { useState, type FormEvent } from 'react'
 import { useEnrollment } from '../lib/enrollment.tsx'
 
-export default function UnlockControl() {
+export default function UnlockControl({
+  inputId = 'syllable-access-code',
+}: {
+  inputId?: string
+}) {
   const { redeem, error } = useEnrollment()
   const [open, setOpen] = useState(false)
   const [code, setCode] = useState('')
@@ -24,11 +28,11 @@ export default function UnlockControl() {
 
   return (
     <form className="unlock-form" onSubmit={(event) => void onSubmit(event)}>
-      <label className="sr-only" htmlFor="syllable-access-code">
+      <label className="sr-only" htmlFor={inputId}>
         Access code
       </label>
       <input
-        id="syllable-access-code"
+        id={inputId}
         value={code}
         onChange={(event) => setCode(event.target.value)}
         autoCapitalize="characters"

@@ -11,7 +11,7 @@ Students come to an in-person Hangul class at the store, then use this phone-fri
 - **Home** — this week’s focus, an access-code box, then links: Pronunciation, Quiz, This Week
 - **Pronunciation** — **모음(vowels)** (Jung’s audio + Record / Play me) and **자음(consonants)** are free. All 14 자음 have teacher clips. **음절(syllables)** is the full 140 CV chart; Play / Record need a class access code. All 10 vowel rows (ㅏㅑㅓㅕㅗㅛㅜㅠㅡㅣ, 140/140) have teacher clips.
 - **Quiz** — flashcards for the 10 basic vowels plus a few starter words (tap to flip)
-- **This Week** — public class materials (no access code). Week 1 has a printable consonant writing practice PDF (`/materials/hangul-consonant-practice.pdf`)
+- **This Week** — public writing sheets (no access code): 자음 (`/materials/hangul-consonant-practice.pdf`) and 모음 (`/materials/hangul-vowel-practice.pdf`). Word writing (단어) is under Class materials and unlocks with a class access code.
 - **Admin** (`/admin`) — hidden from the student hamburger. Jung unlocks with a password, then issues / lists / starts / stops access codes with an expiry date
 
 Menu is a hamburger in the top-left. English is the primary UI language, with Korean labels where they feel natural. Students do **not** create an account. Without a code they can still use the free app.
