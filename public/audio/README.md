@@ -42,7 +42,7 @@ All 14 basic 자음 are Jung’s recordings. Play / Record appear automatically 
 
 ## 음절(syllables) → `syllable-{roman}.mp3`
 
-140 basic CV blocks (14 자음 × 10 모음). **ㅏ + ㅑ + ㅓ rows are in the repo (42/140).** Other vowel columns stay **Audio coming soon**. Record the rest in order using [SYLLABLE-RECORDING-CHECKLIST.md](./SYLLABLE-RECORDING-CHECKLIST.md). Do not merge to production until all 140 are ready.
+140 basic CV blocks (14 자음 × 10 모음). **ㅏ + ㅑ + ㅓ + ㅕ + ㅗ + ㅛ rows are in the repo (84/140).** Other vowel columns stay **Audio coming soon**. Record the rest in order using [SYLLABLE-RECORDING-CHECKLIST.md](./SYLLABLE-RECORDING-CHECKLIST.md). Jung may merge when ready.
 
 `audioId` is the filename without `.mp3`. Example: 가 → `syllable-ga` → `syllable-ga.mp3`.
 
@@ -102,6 +102,63 @@ All 14 basic 자음 are Jung’s recordings. Play / Record appear automatically 
 | 터 | teo | `syllable-teo.mp3` |
 | 퍼 | peo | `syllable-peo.mp3` |
 | 허 | heo | `syllable-heo.mp3` |
+
+### ㅕ row (Jung’s recordings) — 겨녀뎌려며벼셔여져쳐켜텨펴혀
+
+| Hangul | Roman | File |
+| --- | --- | --- |
+| 겨 | gyeo | `syllable-gyeo.mp3` |
+| 녀 | nyeo | `syllable-nyeo.mp3` |
+| 뎌 | dyeo | `syllable-dyeo.mp3` |
+| 려 | ryeo | `syllable-ryeo.mp3` |
+| 며 | myeo | `syllable-myeo.mp3` |
+| 벼 | byeo | `syllable-byeo.mp3` |
+| 셔 | syeo | `syllable-syeo.mp3` |
+| 여 | yeo | `syllable-yeo.mp3` |
+| 져 | jyeo | `syllable-jyeo.mp3` |
+| 쳐 | chyeo | `syllable-chyeo.mp3` |
+| 켜 | kyeo | `syllable-kyeo.mp3` |
+| 텨 | tyeo | `syllable-tyeo.mp3` |
+| 펴 | pyeo | `syllable-pyeo.mp3` |
+| 혀 | hyeo | `syllable-hyeo.mp3` |
+
+### ㅗ row (Jung’s recordings) — 고노도로모보소오조초코토포호
+
+| Hangul | Roman | File |
+| --- | --- | --- |
+| 고 | go | `syllable-go.mp3` |
+| 노 | no | `syllable-no.mp3` |
+| 도 | do | `syllable-do.mp3` |
+| 로 | ro | `syllable-ro.mp3` |
+| 모 | mo | `syllable-mo.mp3` |
+| 보 | bo | `syllable-bo.mp3` |
+| 소 | so | `syllable-so.mp3` |
+| 오 | o | `syllable-o.mp3` |
+| 조 | jo | `syllable-jo.mp3` |
+| 초 | cho | `syllable-cho.mp3` |
+| 코 | ko | `syllable-ko.mp3` |
+| 토 | to | `syllable-to.mp3` |
+| 포 | po | `syllable-po.mp3` |
+| 호 | ho | `syllable-ho.mp3` |
+
+### ㅛ row (Jung’s recordings) — 교뇨됴료묘뵤쇼요죠쵸쿄툐표효
+
+| Hangul | Roman | File |
+| --- | --- | --- |
+| 교 | gyo | `syllable-gyo.mp3` |
+| 뇨 | nyo | `syllable-nyo.mp3` |
+| 됴 | dyo | `syllable-dyo.mp3` |
+| 료 | ryo | `syllable-ryo.mp3` |
+| 묘 | myo | `syllable-myo.mp3` |
+| 뵤 | byo | `syllable-byo.mp3` |
+| 쇼 | syo | `syllable-syo.mp3` |
+| 요 | yo | `syllable-yo.mp3` |
+| 죠 | jyo | `syllable-jyo.mp3` |
+| 쵸 | chyo | `syllable-chyo.mp3` |
+| 쿄 | kyo | `syllable-kyo.mp3` |
+| 툐 | tyo | `syllable-tyo.mp3` |
+| 표 | pyo | `syllable-pyo.mp3` |
+| 효 | hyo | `syllable-hyo.mp3` |
 
 ### Romanization map (Revised Romanization)
 
