@@ -40,6 +40,16 @@ All 14 basic 자음 are Jung’s recordings. Play / Record appear automatically 
 | ㅍ | p | `consonant-p.mp3` |
 | ㅎ | h | `consonant-h.mp3` |
 
+Quiz also lists the 5 쌍자음. Drop matching files here when recorded; until then the card still shows and Play says **Audio coming soon**.
+
+| Hangul | Slug | File |
+| --- | --- | --- |
+| ㄲ | kk | `consonant-kk.mp3` |
+| ㄸ | tt | `consonant-tt.mp3` |
+| ㅃ | pp | `consonant-pp.mp3` |
+| ㅆ | ss | `consonant-ss.mp3` |
+| ㅉ | jj | `consonant-jj.mp3` |
+
 ## 음절(syllables) → `syllable-{roman}.mp3`
 
 140 basic CV blocks (14 자음 × 10 모음). **All 10 vowel rows are in the repo (140/140).** Recording order: [SYLLABLE-RECORDING-CHECKLIST.md](./SYLLABLE-RECORDING-CHECKLIST.md).

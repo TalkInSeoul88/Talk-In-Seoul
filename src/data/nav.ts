@@ -16,7 +16,7 @@ export const HOME_LINKS = [
     to: '/quiz',
     label: 'Quiz',
     ko: '퀴즈',
-    detail: 'Flip this week’s Hangul cards.',
+    detail: '29 free flashcards — 모음(vowels) and 자음(consonants).',
   },
   {
     to: '/this-week',
