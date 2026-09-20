@@ -44,7 +44,7 @@ export const BASIC_CONSONANTS: Jamo[] = [
   { char: 'ㅎ', roman: 'h', nameKo: '히읗', cue: 'h as in hat', kind: 'consonant', audioId: 'consonant-h' },
 ]
 
-/** 쌍자음 — Quiz only. Do not fold into BASIC_CONSONANTS (that set drives the 140 CV chart). */
+/** 쌍자음 — Pronunciation + Quiz. Do not fold into BASIC_CONSONANTS (that set drives the 140 CV chart). */
 export const DOUBLE_CONSONANTS: Jamo[] = [
   { char: 'ㄲ', roman: 'kk', nameKo: '쌍기역', cue: 'tense g/k — doubled ㄱ', kind: 'consonant', family: 'ssang', audioId: 'consonant-kk' },
   { char: 'ㄸ', roman: 'tt', nameKo: '쌍디귿', cue: 'tense d/t — doubled ㄷ', kind: 'consonant', family: 'ssang', audioId: 'consonant-tt' },

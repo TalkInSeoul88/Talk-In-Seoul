@@ -40,15 +40,17 @@ All 14 basic 자음 are Jung’s recordings. Play / Record appear automatically 
 | ㅍ | p | `consonant-p.mp3` |
 | ㅎ | h | `consonant-h.mp3` |
 
-Quiz also lists the 5 쌍자음. Drop matching files here when recorded; until then the card still shows and Play says **Audio coming soon**.
+## 쌍자음(double consonants) → `consonant-{slug}.mp3`
 
-| Hangul | Slug | File |
-| --- | --- | --- |
-| ㄲ | kk | `consonant-kk.mp3` |
-| ㄸ | tt | `consonant-tt.mp3` |
-| ㅃ | pp | `consonant-pp.mp3` |
-| ㅆ | ss | `consonant-ss.mp3` |
-| ㅉ | jj | `consonant-jj.mp3` |
+All 5 쌍자음 are Jung’s recordings. Pronunciation has a free **쌍자음** tab (same Play / Record as 자음). Quiz 자음 cards reuse the same `audioId`s.
+
+| Hangul | Name | Slug | File |
+| --- | --- | --- | --- |
+| ㄲ | 쌍기역 | kk | `consonant-kk.mp3` |
+| ㄸ | 쌍디귿 | tt | `consonant-tt.mp3` |
+| ㅃ | 쌍비읍 | pp | `consonant-pp.mp3` |
+| ㅆ | 쌍시옷 | ss | `consonant-ss.mp3` |
+| ㅉ | 쌍지읒 | jj | `consonant-jj.mp3` |
 
 ## 음절(syllables) → `syllable-{roman}.mp3`
 

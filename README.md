@@ -9,8 +9,8 @@ Students come to an in-person Hangul class at the store, then use this phone-fri
 ## What’s in this version
 
 - **Home** — this week’s focus, an access-code box, then links: Pronunciation, Quiz, This Week
-- **Pronunciation** — **모음(vowels)** (Jung’s audio + Record / Play me) and **자음(consonants)** are free. All 14 자음 have teacher clips. **음절(syllables)** is the full 140 CV chart; Play / Record need a class access code. All 10 vowel rows (ㅏㅑㅓㅕㅗㅛㅜㅠㅡㅣ, 140/140) have teacher clips.
-- **Quiz** — free flashcards (no access code): 10 basic 모음(vowels) + 19 자음(consonants) (14 basic + 5 쌍자음). Tap to flip; Play uses Jung’s clips when the MP3 exists. Compound vowels and 음절(syllables) are not in this deck.
+- **Pronunciation** — **모음(vowels)**, **자음(consonants)**, and **쌍자음(double consonants)** are free (Jung’s audio + Record / Play me). All 14 자음 and all 5 쌍자음 (ㄲㄸㅃㅆㅉ) have teacher clips. **음절(syllables)** is the full 140 CV chart; Play / Record need a class access code. All 10 vowel rows (ㅏㅑㅓㅕㅗㅛㅜㅠㅡㅣ, 140/140) have teacher clips.
+- **Quiz** — free flashcards (no access code): 10 basic 모음(vowels) + 19 자음(consonants) (14 basic + 5 쌍자음). Tap to flip; Play uses Jung’s clips (including ㄲㄸㅃㅆㅉ). Compound vowels and 음절(syllables) are not in this deck.
 - **This Week** — free writing sheets (no code): 자음 PDF `/materials/hangul-consonant-practice.pdf` (2 pages ㄱ–ㅎ) and 모음 PDF `/materials/hangul-vowel-practice.pdf`; plus code-gated Class materials with word writing practice PDF.
 - **Admin** (`/admin`) — hidden from the student hamburger. Jung unlocks with a password, then issues / lists / starts / stops access codes with an expiry date
 

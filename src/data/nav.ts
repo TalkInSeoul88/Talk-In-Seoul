@@ -10,7 +10,7 @@ export const HOME_LINKS = [
     to: '/pronunciation',
     label: 'Pronunciation',
     ko: '발음',
-    detail: '모음(vowels) and 자음(consonants). 음절(syllables) with a class code.',
+    detail: '모음, 자음, and 쌍자음 are free. 음절(syllables) with a class code.',
   },
   {
     to: '/quiz',
