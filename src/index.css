@@ -725,6 +725,43 @@ code {
   touch-action: manipulation;
 }
 
+.flashcard-flip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  width: 100%;
+  flex: 1;
+  min-height: 11.5rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: center;
+  touch-action: manipulation;
+}
+
+.flashcard-play {
+  width: min(16rem, 100%);
+}
+
+.flashcard-play-btn {
+  width: 100%;
+}
+
+.flashcard-audio-soon {
+  margin: 0.15rem 0 0;
+  font-size: 0.78rem;
+  color: var(--muted);
+  font-style: italic;
+}
+
+.quiz-free-note {
+  color: var(--coral-deep);
+  font-weight: 700;
+}
+
 .flashcard.flipped {
   background: var(--paper);
   border-color: var(--coral);
@@ -886,6 +923,16 @@ code {
   padding: 0.3rem;
   background: var(--wash);
   border-radius: 999px;
+}
+
+.seg:not(.triple) .seg-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.05rem;
+  line-height: 1.15;
+  padding: 0.28rem 0.35rem;
 }
 
 .seg.triple {
