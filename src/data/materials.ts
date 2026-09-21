@@ -19,14 +19,13 @@ export const PUBLIC_MATERIALS: WeekMaterial[] = [
     detail: 'Printable look → trace → write sheet. ㅏ–ㅣ.',
     href: '/materials/hangul-vowel-practice.pdf',
   },
-]
-
-/** Shown only after a student redeems a class access code. */
-export const CLASS_MATERIALS: WeekMaterial[] = [
   {
     id: 'week-1-word-writing',
-    title: 'Word writing practice (단어)',
-    detail: 'Week 1 words · look → trace → write.',
-    href: '/materials/hangul-word-practice-week1.pdf',
+    title: 'Word writing practice (단어) — animals',
+    detail: '개 호랑이 토끼 다람쥐 새 개구리 나비 곰 · look → trace → write.',
+    href: '/materials/hangul-word-practice.pdf',
   },
 ]
+
+/** Shown only after a student redeems a class access code. Empty until Jung adds class-only sheets. */
+export const CLASS_MATERIALS: WeekMaterial[] = []
