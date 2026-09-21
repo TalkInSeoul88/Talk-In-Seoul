@@ -10,7 +10,7 @@ Students come to an in-person Hangul class at the store, then use this phone-fri
 
 - **Home** — this week’s focus, an access-code box, then links: Pronunciation, Quiz, This Week
 - **Pronunciation** — **모음(vowels)**, **자음(consonants)**, and **쌍자음(double consonants)** are free (Jung’s audio + Record / Play me). All 14 자음 and all 5 쌍자음 (ㄲㄸㅃㅆㅉ) have teacher clips. **음절(syllables)** is the full 140 CV chart; Play / Record need a class access code. All 10 vowel rows (ㅏㅑㅓㅕㅗㅛㅜㅠㅡㅣ, 140/140) have teacher clips.
-- **Quiz** — free flashcards (no access code): 10 basic 모음(vowels) + 19 자음(consonants) (14 basic + 5 쌍자음). Tap to flip; Play uses Jung’s clips (including ㄲㄸㅃㅆㅉ). Compound vowels and 음절(syllables) are not in this deck.
+- **Quiz** — flashcards. **모음(vowels)** and **자음(consonants)** (14 basic + 5 쌍자음) stay free; Play uses Jung’s clips. **Words (단어) · Easy 20** is also free (no access code). **Words (단어) · Class unlock** needs the same student access code as 음절(syllables). Word cards have no teacher MP3s yet, so they stay silent. Compound vowels and 음절(syllables) are not in the jamo decks.
 - **This Week** — free writing sheets (no code): 자음 PDF `/materials/hangul-consonant-practice.pdf` (2 pages ㄱ–ㅎ), 모음 PDF `/materials/hangul-vowel-practice.pdf`, and 단어 (animals) PDF `/materials/hangul-word-practice.pdf` (개 호랑이 토끼 다람쥐 새 개구리 나비 곰).
 - **Admin** (`/admin`) — hidden from the student hamburger. Jung unlocks with a password, then issues / lists / starts / stops access codes with an expiry date
 
