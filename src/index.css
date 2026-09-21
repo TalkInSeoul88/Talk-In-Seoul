@@ -762,6 +762,19 @@ code {
   font-weight: 700;
 }
 
+.quiz-class-note {
+  color: var(--coral-deep);
+  font-weight: 700;
+}
+
+.flashcard-front.phrase {
+  font-size: clamp(1.55rem, 9vw, 2.85rem);
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+  max-width: 100%;
+  word-break: keep-all;
+}
+
 .flashcard.flipped {
   background: var(--paper);
   border-color: var(--coral);
@@ -933,6 +946,15 @@ code {
   gap: 0.05rem;
   line-height: 1.15;
   padding: 0.28rem 0.35rem;
+}
+
+.seg.decks {
+  border-radius: 1.15rem;
+}
+
+.seg.decks .seg-btn {
+  min-height: 3rem;
+  border-radius: 0.9rem;
 }
 
 .seg.triple,

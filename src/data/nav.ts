@@ -16,7 +16,7 @@ export const HOME_LINKS = [
     to: '/quiz',
     label: 'Quiz',
     ko: '퀴즈',
-    detail: '29 free flashcards — 모음(vowels) and 자음(consonants).',
+    detail: 'Free 모음, 자음, and Easy 20 단어. Class 단어 with a code.',
   },
   {
     to: '/this-week',
