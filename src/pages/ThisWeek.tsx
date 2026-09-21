@@ -28,38 +28,38 @@ export default function ThisWeek() {
         </nav>
       </section>
 
-      <section className="card">
-        <p className="kicker">Class materials</p>
-        <h2>{enrolled ? 'Unlocked' : 'Code required'}</h2>
-        {enrolled ? (
-          <nav className="home-links class-material-links" aria-label="Class materials">
-            {CLASS_MATERIALS.map((item) => (
-              <MaterialLink key={item.id} item={item} />
-            ))}
-          </nav>
-        ) : (
-          <>
-            <p className="tiny material-note">
-              Word writing practice unlocks with a class access code.
-            </p>
-            <nav className="home-links class-material-links" aria-label="Locked class materials">
+      {CLASS_MATERIALS.length > 0 ? (
+        <section className="card">
+          <p className="kicker">Class materials</p>
+          <h2>{enrolled ? 'Unlocked' : 'Code required'}</h2>
+          {enrolled ? (
+            <nav className="home-links class-material-links" aria-label="Class materials">
               {CLASS_MATERIALS.map((item) => (
-                <div key={item.id} className="home-link material-locked">
-                  <span>
-                    <strong>{item.title}</strong>
-                    <span className="tiny">Unlock with a class access code.</span>
-                  </span>
-                  <span className="material-kind">Locked</span>
-                </div>
+                <MaterialLink key={item.id} item={item} />
               ))}
             </nav>
-            <div className="unlock-bar">
-              <p className="tiny">Access code needed</p>
-              <UnlockControl inputId="this-week-access-code" />
-            </div>
-          </>
-        )}
-      </section>
+          ) : (
+            <>
+              <p className="tiny material-note">These sheets unlock with a class access code.</p>
+              <nav className="home-links class-material-links" aria-label="Locked class materials">
+                {CLASS_MATERIALS.map((item) => (
+                  <div key={item.id} className="home-link material-locked">
+                    <span>
+                      <strong>{item.title}</strong>
+                      <span className="tiny">Unlock with a class access code.</span>
+                    </span>
+                    <span className="material-kind">Locked</span>
+                  </div>
+                ))}
+              </nav>
+              <div className="unlock-bar">
+                <p className="tiny">Access code needed</p>
+                <UnlockControl inputId="this-week-access-code" />
+              </div>
+            </>
+          )}
+        </section>
+      ) : null}
     </div>
   )
 }
