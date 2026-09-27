@@ -1,6 +1,7 @@
 export const STUDENT_NAV = [
   { to: '/', label: 'Home', ko: '홈' },
   { to: '/pronunciation', label: 'Pronunciation', ko: '발음' },
+  { to: '/trace', label: 'Trace', ko: '쓰기' },
   { to: '/quiz', label: 'Quiz', ko: '퀴즈' },
   { to: '/this-week', label: 'This Week', ko: '이번 주' },
 ] as const
@@ -11,6 +12,12 @@ export const HOME_LINKS = [
     label: 'Pronunciation',
     ko: '발음',
     detail: '모음, 자음, and 쌍자음 are free. 음절(syllables) with a class code.',
+  },
+  {
+    to: '/trace',
+    label: 'Trace',
+    ko: '쓰기',
+    detail: 'Free consonants ㄱ–ㅎ. Vowels, double consonants, and syllable lines with a class code.',
   },
   {
     to: '/quiz',
