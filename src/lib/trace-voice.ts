@@ -1,10 +1,17 @@
 import type { TeacherClip } from '../data/content.ts'
-import { playExclusive, teacherAudioSrc } from './audio.ts'
+import { holdActiveAudio, teacherAudioSrc } from './audio.ts'
 
 const SILENT_WAV = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA='
 
+/** Beat after Jung’s clip ends before the next letter appears. */
+const AFTER_CLIP_MS = 300
+/** If `ended` never fires, give up and move on. Not a delay when the clip finishes. */
+const CLIP_FALLBACK_MS = 6000
+
 let shared: HTMLAudioElement | null = null
-let primeGeneration = 0
+let generation = 0
+let unlockDone: Promise<void> = Promise.resolve()
+let finishPlayback: (() => void) | null = null
 
 function element(): HTMLAudioElement {
   if (!shared) {
@@ -15,80 +22,133 @@ function element(): HTMLAudioElement {
   return shared
 }
 
-/** A real clip started after this prime must not be paused by the unlock. */
-function beginLetterPlayback() {
-  primeGeneration += 1
+function isSilent(src: string): boolean {
+  return src.startsWith('data:audio/wav')
 }
 
-/** Unlock HTML audio during a tap so the letter can play after the chime. */
+/**
+ * Unlock HTML audio during a tap so the letter can play after the chime.
+ * The unlock always uses a silent clip. Replaying the syllable here is what
+ * made iPhone Safari speak the letter twice (the in-flight unlock adopted
+ * the mp3 URL, then the success path called play() again).
+ */
 export function primeLetterAudio() {
   const audio = element()
-  const generation = primeGeneration
-  if (!audio.src) audio.src = SILENT_WAV
-  const pending = audio.play()
-  if (!pending) return
-  void pending
-    .then(() => {
-      if (generation !== primeGeneration) return
-      audio.pause()
-      audio.currentTime = 0
-    })
-    .catch(() => {
-      /* The next real play() still has the click as a fallback. */
-    })
-}
-
-function waitForClip(audio: HTMLAudioElement, failed: boolean): Promise<void> {
-  return new Promise((resolve) => {
-    let settled = false
-    const finish = () => {
-      if (settled) return
-      settled = true
+  const gen = generation
+  if (!isSilent(audio.src)) {
+    audio.pause()
+    audio.src = SILENT_WAV
+  } else if (!audio.src) {
+    audio.src = SILENT_WAV
+  }
+  let pending: Promise<void> | undefined
+  try {
+    pending = audio.play()
+  } catch {
+    pending = undefined
+  }
+  unlockDone = new Promise((resolve) => {
+    const settle = () => {
+      if (gen === generation) audio.pause()
       resolve()
     }
-    if (failed) {
-      window.setTimeout(finish, 1500)
-      return
-    }
-    const cap = window.setTimeout(finish, 8000)
-    audio.addEventListener(
-      'ended',
-      () => {
-        window.clearTimeout(cap)
-        finish()
-      },
-      { once: true },
-    )
-    audio.addEventListener(
-      'error',
-      () => {
-        window.clearTimeout(cap)
-        window.setTimeout(finish, 1500)
-      },
-      { once: true },
-    )
+    if (pending) void pending.then(settle, settle)
+    else settle()
   })
 }
 
-/** Jung’s clip for this letter. Resolves on end, or after ~1.5s if it cannot play. */
-export async function playLetterVoice(clip: TeacherClip): Promise<void> {
-  beginLetterPlayback()
-  const audio = element()
-  audio.src = teacherAudioSrc(clip)
-  try {
-    await playExclusive(audio)
-    await waitForClip(audio, false)
-  } catch {
-    await waitForClip(audio, true)
-  }
+/** Stop an in-flight clip and drop any wait for it to end. */
+export function cancelLetterAudio() {
+  generation += 1
+  const finish = finishPlayback
+  finishPlayback = null
+  finish?.()
+  // A clip that already ended is paused. Touching it again makes Safari replay.
+  if (shared && !shared.paused) shared.pause()
 }
 
-export async function playLetterNow(clip: TeacherClip): Promise<void> {
-  beginLetterPlayback()
+function playClip(clip: TeacherClip, token: number, afterEndedMs: number): Promise<void> {
   const audio = element()
+  holdActiveAudio(audio)
+  if (!audio.paused) audio.pause()
   audio.src = teacherAudioSrc(clip)
+  if (token !== generation) return Promise.resolve()
+
+  return new Promise((resolve) => {
+    let settled = false
+    let afterTimer = 0
+    const finish = () => {
+      if (settled) return
+      settled = true
+      window.clearTimeout(cap)
+      window.clearTimeout(afterTimer)
+      audio.removeEventListener('ended', onEnded)
+      audio.removeEventListener('error', onError)
+      if (finishPlayback === finish) finishPlayback = null
+      resolve()
+    }
+    finishPlayback = finish
+    const arm = (delay: number) => {
+      window.clearTimeout(cap)
+      window.clearTimeout(afterTimer)
+      afterTimer = window.setTimeout(finish, delay)
+    }
+    const onEnded = () => {
+      if (token !== generation || settled) return
+      arm(afterEndedMs)
+    }
+    const onError = () => {
+      if (token !== generation || settled) return
+      arm(afterEndedMs)
+    }
+    const cap = window.setTimeout(() => {
+      if (token !== generation) {
+        finish()
+        return
+      }
+      audio.pause()
+      finish()
+    }, CLIP_FALLBACK_MS)
+    audio.addEventListener('ended', onEnded)
+    audio.addEventListener('error', onError)
+    let pending: Promise<void> | undefined
+    try {
+      pending = audio.play()
+    } catch {
+      onError()
+      return
+    }
+    void pending.catch(() => {
+      onError()
+    })
+  })
+}
+
+/**
+ * Jung’s clip for this letter, exactly once. Resolves about 300ms after
+ * `ended`, or after a short fallback if the file never ends.
+ */
+export async function playLetterVoice(clip: TeacherClip): Promise<void> {
+  await unlockDone
+  const previous = finishPlayback
+  const token = ++generation
+  previous?.()
+  await playClip(clip, token, AFTER_CLIP_MS)
+}
+
+/** Hear it. One play, no auto-advance. */
+export async function playLetterNow(clip: TeacherClip): Promise<void> {
+  await unlockDone
+  const previous = finishPlayback
+  const token = ++generation
+  previous?.()
+  const audio = element()
+  holdActiveAudio(audio)
+  if (!audio.paused) audio.pause()
+  audio.src = teacherAudioSrc(clip)
+  if (token !== generation) return
   try {
-    await playExclusive(audio)
+    await audio.play()
   } catch {
     /* Hear it stays quiet when the clip is missing. */
   }

@@ -12,7 +12,7 @@ import { useEnrollment } from '../lib/enrollment.tsx'
 import { stopActiveAudio } from '../lib/audio'
 import { loadTraceProgress, rememberedIndex, saveTraceProgress } from '../lib/trace-progress'
 import { playTraceSuccessNow, unlockTraceAudio } from '../lib/trace-success'
-import { playLetterNow, playLetterVoice, primeLetterAudio } from '../lib/trace-voice'
+import { cancelLetterAudio, playLetterNow, playLetterVoice, primeLetterAudio } from '../lib/trace-voice'
 
 type Phase = 'practice' | 'success' | 'complete'
 
@@ -64,9 +64,16 @@ export default function Trace() {
   useEffect(() => {
     return () => {
       runRef.current += 1
+      cancelLetterAudio()
       stopActiveAudio()
     }
   }, [])
+
+  function stopTraceAudio() {
+    runRef.current += 1
+    cancelLetterAudio()
+    stopActiveAudio()
+  }
 
   function armAudio() {
     unlockTraceAudio()
@@ -82,6 +89,7 @@ export default function Trace() {
     if (runRef.current !== token) return
     await playLetterVoice(clip)
     if (runRef.current !== token) return
+    cancelLetterAudio()
     hasInkRef.current = false
     if (at + 1 < total) {
       phaseRef.current = 'practice'
@@ -96,8 +104,7 @@ export default function Trace() {
   function openLine(id: string) {
     const next = findTraceLine(id)
     if (!next) return
-    runRef.current += 1
-    stopActiveAudio()
+    stopTraceAudio()
     const stored = loadTraceProgress()
     phaseRef.current = 'practice'
     hasInkRef.current = false
@@ -108,8 +115,7 @@ export default function Trace() {
   }
 
   function backToLines() {
-    runRef.current += 1
-    stopActiveAudio()
+    stopTraceAudio()
     phaseRef.current = 'practice'
     setPhase('practice')
     setView('picker')
@@ -119,8 +125,7 @@ export default function Trace() {
     if (phaseRef.current !== 'practice') return
     const next = clampIndex(line, index + delta)
     if (next === index) return
-    runRef.current += 1
-    stopActiveAudio()
+    stopTraceAudio()
     hasInkRef.current = false
     setIndex(next)
   }
@@ -137,7 +142,9 @@ export default function Trace() {
       setFailToken((value) => value + 1)
       return
     }
-    // Both play() calls stay in this click so iPhone Safari can hear them.
+    // Drop any in-flight clip, then unlock the voice element in this click.
+    // The syllable itself starts only once, after the chime.
+    cancelLetterAudio()
     primeLetterAudio()
     const chime = playTraceSuccessNow()
     phaseRef.current = 'success'
@@ -152,8 +159,7 @@ export default function Trace() {
   }
 
   function onAgain() {
-    runRef.current += 1
-    stopActiveAudio()
+    stopTraceAudio()
     hasInkRef.current = false
     phaseRef.current = 'practice'
     setPhase('practice')
@@ -162,8 +168,7 @@ export default function Trace() {
 
   function onNextLine() {
     if (!upcoming) return
-    runRef.current += 1
-    stopActiveAudio()
+    stopTraceAudio()
     hasInkRef.current = false
     phaseRef.current = 'practice'
     setPhase('practice')
