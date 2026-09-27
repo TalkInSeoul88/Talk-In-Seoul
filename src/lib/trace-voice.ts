@@ -4,6 +4,7 @@ import { playExclusive, teacherAudioSrc } from './audio.ts'
 const SILENT_WAV = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA='
 
 let shared: HTMLAudioElement | null = null
+let primeGeneration = 0
 
 function element(): HTMLAudioElement {
   if (!shared) {
@@ -14,14 +15,21 @@ function element(): HTMLAudioElement {
   return shared
 }
 
+/** A real clip started after this prime must not be paused by the unlock. */
+function beginLetterPlayback() {
+  primeGeneration += 1
+}
+
 /** Unlock HTML audio during a tap so the letter can play after the chime. */
 export function primeLetterAudio() {
   const audio = element()
+  const generation = primeGeneration
   if (!audio.src) audio.src = SILENT_WAV
   const pending = audio.play()
   if (!pending) return
   void pending
     .then(() => {
+      if (generation !== primeGeneration) return
       audio.pause()
       audio.currentTime = 0
     })
@@ -64,6 +72,7 @@ function waitForClip(audio: HTMLAudioElement, failed: boolean): Promise<void> {
 
 /** Jung’s clip for this letter. Resolves on end, or after ~1.5s if it cannot play. */
 export async function playLetterVoice(clip: TeacherClip): Promise<void> {
+  beginLetterPlayback()
   const audio = element()
   audio.src = teacherAudioSrc(clip)
   try {
@@ -75,6 +84,7 @@ export async function playLetterVoice(clip: TeacherClip): Promise<void> {
 }
 
 export async function playLetterNow(clip: TeacherClip): Promise<void> {
+  beginLetterPlayback()
   const audio = element()
   audio.src = teacherAudioSrc(clip)
   try {

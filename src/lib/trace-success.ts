@@ -1,20 +1,43 @@
-import { probeTeacherAudio } from './audio.ts'
-
-/**
- * Drop a recording at this path to replace the generated chime.
- * No other code change is required.
- */
-export const TRACE_SUCCESS_SRC = '/audio/trace-success.mp3'
+import { playExclusive, traceSuccessSrc } from './audio.ts'
 
 const DING_HZ = 1567.98
 const DONG_HZ = 1174.66
 const CHIME_MS = 620
+const FILE_CAP_MS = 2500
 
-let customProbe: Promise<boolean> | null = null
+let chime: HTMLAudioElement | null = null
+let chimePlaying = false
+let chimePrimed = false
 let audioCtx: AudioContext | null = null
 
+function chimeElement(): HTMLAudioElement {
+  if (!chime) {
+    chime = new Audio(traceSuccessSrc())
+    chime.preload = 'auto'
+    chime.setAttribute('playsinline', 'true')
+  }
+  return chime
+}
+
+/**
+ * Load the doorbell file and start it inside a pointer gesture, then pause
+ * unless a real play has already begun. Safari will then allow the chime.
+ */
 export function primeTraceSuccess() {
-  if (!customProbe) customProbe = probeTeacherAudio(TRACE_SUCCESS_SRC)
+  const audio = chimeElement()
+  if (chimePrimed) return
+  chimePrimed = true
+  const pending = audio.play()
+  if (!pending) return
+  void pending
+    .then(() => {
+      if (chimePlaying) return
+      audio.pause()
+      audio.currentTime = 0
+    })
+    .catch(() => {
+      if (!chimePlaying) chimePrimed = false
+    })
 }
 
 function context(): AudioContext {
@@ -27,13 +50,13 @@ function context(): AudioContext {
   return audioCtx
 }
 
-/** Call from a pointer or click so Safari will allow the chime. */
+/** Call from a pointer or click so Safari can play the file, or the fallback. */
 export function unlockTraceAudio() {
   primeTraceSuccess()
   try {
     context()
   } catch {
-    /* Chime is skipped if Web Audio is missing. */
+    /* The file path does not need Web Audio. */
   }
 }
 
@@ -60,9 +83,7 @@ function tone(
 }
 
 /**
- * Bright two-note doorbell (띠동): a high ding, then a lower dong.
- * Soft sine fundamentals, a quiet triangle harmonic for sparkle, quick attack,
- * and a short bell-like decay. About 0.6s, kept quiet.
+ * Bright two-note doorbell (띠동). Used only when the mp3 cannot play.
  */
 export function playDingDong(): Promise<void> {
   const ctx = context()
@@ -86,47 +107,49 @@ export function playDingDong(): Promise<void> {
   })
 }
 
-function playCustomFile(src: string): Promise<void> {
-  const audio = new Audio(src)
-  audio.preload = 'auto'
-  audio.setAttribute('playsinline', 'true')
+/**
+ * Play the committed doorbell file. Call this directly from the Done click
+ * so `play()` runs in that gesture. Resolves when the file ends. Falls back
+ * to the synthesized chime only if playback fails.
+ */
+export function playTraceSuccessNow(): Promise<void> {
+  const audio = chimeElement()
+  chimePlaying = true
+
   return new Promise((resolve) => {
     let settled = false
-    const finish = () => {
+    const done = () => {
       if (settled) return
       settled = true
+      chimePlaying = false
       resolve()
     }
-    const cap = window.setTimeout(finish, 4000)
-    const fallback = () => {
-      if (settled) return
+    const cap = window.setTimeout(done, FILE_CAP_MS)
+    const onEnded = () => {
       window.clearTimeout(cap)
-      void playDingDong().then(finish)
+      audio.removeEventListener('error', onFail)
+      done()
     }
-    audio.addEventListener(
-      'ended',
-      () => {
-        window.clearTimeout(cap)
-        finish()
-      },
-      { once: true },
-    )
-    audio.addEventListener('error', fallback, { once: true })
-    void audio.play().catch(fallback)
+    const onFail = () => {
+      if (settled) return
+      settled = true
+      window.clearTimeout(cap)
+      audio.removeEventListener('ended', onEnded)
+      audio.removeEventListener('error', onFail)
+      void playDingDong().then(
+        () => {
+          chimePlaying = false
+          resolve()
+        },
+        () => {
+          chimePlaying = false
+          resolve()
+        },
+      )
+    }
+    audio.addEventListener('ended', onEnded, { once: true })
+    audio.addEventListener('error', onFail, { once: true })
+    // play() is invoked before this function returns to the click handler.
+    void playExclusive(audio).catch(onFail)
   })
-}
-
-/** Custom file when it exists, otherwise the generated ding-dong. */
-export async function playTraceSuccess(): Promise<void> {
-  primeTraceSuccess()
-  const custom = customProbe ? await customProbe : false
-  if (custom) {
-    await playCustomFile(TRACE_SUCCESS_SRC)
-    return
-  }
-  try {
-    await playDingDong()
-  } catch {
-    /* A missing audio context should not block the next letter. */
-  }
 }

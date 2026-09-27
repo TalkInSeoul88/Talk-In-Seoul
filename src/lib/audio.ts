@@ -6,6 +6,11 @@ export function teacherAudioSrc(clip: TeacherClip): string {
   return `/audio/${clip.audioId}.mp3?v=${AUDIO_REV}`
 }
 
+/** Doorbell chime for a finished trace. Same cache-bust as Jung’s clips. */
+export function traceSuccessSrc(): string {
+  return `/audio/trace-success.mp3?v=${AUDIO_REV}`
+}
+
 const availability = new Map<string, boolean>()
 const inflight = new Map<string, Promise<boolean>>()
 

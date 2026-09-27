@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react'
-import { estimateStrokeWidth, glyphCoverage, toleranceRadius } from '../lib/trace-coverage'
+import { brushWidthForStroke, estimateStrokeWidth } from '../lib/trace-coverage'
 
 const FONT_FAMILY = '"Noto Sans KR", "Apple SD Gothic Neo", sans-serif'
 const PINK = '#f7d2d8'
@@ -14,8 +14,7 @@ type Props = {
   success: boolean
   failToken: number
   clearToken: number
-  debug: boolean
-  onCoverage: (ratio: number) => void
+  onInk: (hasInk: boolean) => void
   onInteract: () => void
 }
 
@@ -95,41 +94,34 @@ export default function TracePad({
   success,
   failToken,
   clearToken,
-  debug,
-  onCoverage,
+  onInk,
   onInteract,
 }: Props) {
   const rootRef = useRef<HTMLDivElement>(null)
   const exampleRef = useRef<HTMLCanvasElement>(null)
   const guideRef = useRef<HTMLCanvasElement>(null)
   const inkRef = useRef<HTMLCanvasElement>(null)
-  const glyphRef = useRef<Uint8Array | null>(null)
-  const sizeRef = useRef({ w: 0, h: 0 })
-  const brushRef = useRef(18)
-  const radiusRef = useRef(6)
+  const brushRef = useRef(8)
+  const inkedRef = useRef(false)
   const drawingRef = useRef(false)
   const pointerRef = useRef<number | null>(null)
   const lastRef = useRef<{ x: number; y: number } | null>(null)
-  const lastCheckRef = useRef(0)
   const failingRef = useRef(false)
   const successRef = useRef(success)
-  const debugRef = useRef(debug)
-  const onCoverageRef = useRef(onCoverage)
+  const onInkRef = useRef(onInk)
   const onInteractRef = useRef(onInteract)
   const seenFailRef = useRef(failToken)
   const seenClearRef = useRef(clearToken)
   const [ready, setReady] = useState(false)
   const [failing, setFailing] = useState(false)
-  const [debugPercent, setDebugPercent] = useState(0)
 
   useEffect(() => {
     successRef.current = success
-    debugRef.current = debug
-    onCoverageRef.current = onCoverage
+    onInkRef.current = onInk
     onInteractRef.current = onInteract
   })
 
-  function buildMask(canvas: HTMLCanvasElement) {
+  function measureBrush(canvas: HTMLCanvasElement) {
     const width = canvas.width
     const height = canvas.height
     const off = document.createElement('canvas')
@@ -143,12 +135,14 @@ export default function TracePad({
     const pixels = ctx.getImageData(0, 0, width, height).data
     const glyph = new Uint8Array(width * height)
     for (let i = 0; i < glyph.length; i++) glyph[i] = pixels[i * 4 + 3] > 48 ? 1 : 0
-    const stroke = Math.max(1, estimateStrokeWidth(glyph, width, height))
-    glyphRef.current = glyph
-    sizeRef.current = { w: width, h: height }
-    const cap = Math.round(Math.min(width, height) * 0.22)
-    brushRef.current = Math.min(Math.max(8, stroke), Math.max(8, cap))
-    radiusRef.current = toleranceRadius(stroke)
+    const stem = estimateStrokeWidth(glyph, width, height)
+    brushRef.current = brushWidthForStroke(stem)
+  }
+
+  function markInk() {
+    if (inkedRef.current) return
+    inkedRef.current = true
+    onInkRef.current(true)
   }
 
   function clearInk(notify: boolean) {
@@ -156,26 +150,8 @@ export default function TracePad({
     if (!ink) return
     const ctx = ink.getContext('2d')
     ctx?.clearRect(0, 0, ink.width, ink.height)
-    if (notify) onCoverageRef.current(0)
-    if (debugRef.current) setDebugPercent(0)
-  }
-
-  function readCoverage(force: boolean) {
-    const now = performance.now()
-    if (!force && now - lastCheckRef.current < 48) return
-    lastCheckRef.current = now
-    const ink = inkRef.current
-    const glyph = glyphRef.current
-    const { w, h } = sizeRef.current
-    if (!ink || !glyph || w < 2 || h < 2) return
-    const ctx = ink.getContext('2d', { willReadFrequently: true })
-    if (!ctx) return
-    const pixels = ctx.getImageData(0, 0, w, h).data
-    const bits = new Uint8Array(w * h)
-    for (let i = 0; i < bits.length; i++) bits[i] = pixels[i * 4 + 3] > 24 ? 1 : 0
-    const ratio = glyphCoverage(glyph, bits, w, h, radiusRef.current)
-    if (debugRef.current) setDebugPercent(Math.round(ratio * 100))
-    onCoverageRef.current(ratio)
+    inkedRef.current = false
+    if (notify) onInkRef.current(false)
   }
 
   useEffect(() => {
@@ -223,7 +199,7 @@ export default function TracePad({
       const guideColor = successRef.current ? SUCCESS : GUIDE
       paintExample(example, char, color)
       paintGuide(guide, char, guideColor)
-      buildMask(guide)
+      measureBrush(guide)
       if (practiceChanged && !successRef.current) clearInk(true)
       setReady(true)
     }
@@ -244,7 +220,7 @@ export default function TracePad({
   useEffect(() => {
     const example = exampleRef.current
     const guide = guideRef.current
-    if (!example || !guide || sizeRef.current.w < 2) return
+    if (!example || !guide || guide.width < 2) return
     paintExample(example, char, success ? SUCCESS : GLYPH)
     paintGuide(guide, char, success ? SUCCESS : GUIDE)
   }, [success, char])
@@ -334,7 +310,7 @@ export default function TracePad({
       previous = next
     }
     lastRef.current = previous
-    readCoverage(false)
+    if (previous) markInk()
   }
 
   function onPointerMove(event: ReactPointerEvent<HTMLCanvasElement>) {
@@ -352,7 +328,7 @@ export default function TracePad({
       previous = next
     }
     lastRef.current = previous
-    readCoverage(false)
+    if (previous) markInk()
   }
 
   function endStroke(event: ReactPointerEvent<HTMLCanvasElement>) {
@@ -360,7 +336,6 @@ export default function TracePad({
     pointerRef.current = null
     drawingRef.current = false
     lastRef.current = null
-    if (!successRef.current) readCoverage(true)
   }
 
   return (
@@ -394,11 +369,6 @@ export default function TracePad({
             </svg>
             <span className="trace-fail-text">Try again</span>
           </div>
-        )}
-        {debug && (
-          <p className="trace-debug" data-testid="trace-coverage">
-            {debugPercent}%
-          </p>
         )}
       </div>
     </div>

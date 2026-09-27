@@ -10,9 +10,8 @@ import {
 } from '../data/trace-lines'
 import { useEnrollment } from '../lib/enrollment.tsx'
 import { stopActiveAudio } from '../lib/audio'
-import { COVERAGE_THRESHOLD } from '../lib/trace-coverage'
 import { loadTraceProgress, rememberedIndex, saveTraceProgress } from '../lib/trace-progress'
-import { playTraceSuccess, unlockTraceAudio } from '../lib/trace-success'
+import { playTraceSuccessNow, unlockTraceAudio } from '../lib/trace-success'
 import { playLetterNow, playLetterVoice, primeLetterAudio } from '../lib/trace-voice'
 
 type Phase = 'practice' | 'success' | 'complete'
@@ -20,10 +19,6 @@ type Phase = 'practice' | 'success' | 'complete'
 function clampIndex(line: TraceLine, index: number): number {
   if (line.items.length === 0) return 0
   return Math.min(Math.max(0, index), line.items.length - 1)
-}
-
-function debugRequested(): boolean {
-  return new URLSearchParams(window.location.search).has('traceDebug')
 }
 
 function initialPlace(): { view: 'picker' | 'line'; lineId: string; index: number } {
@@ -42,7 +37,6 @@ export default function Trace() {
   const [phase, setPhase] = useState<Phase>('practice')
   const [failToken, setFailToken] = useState(0)
   const [clearToken, setClearToken] = useState(0)
-  const [debug] = useState(debugRequested)
 
   const line = findTraceLine(lineId) ?? TRACE_LINES[0]
   const item = line.items[clampIndex(line, index)] ?? line.items[0]
@@ -50,9 +44,8 @@ export default function Trace() {
   const upcoming = nextTraceLine(line.id)
 
   const phaseRef = useRef<Phase>('practice')
-  const coverageRef = useRef(0)
+  const hasInkRef = useRef(false)
   const runRef = useRef(0)
-  const celebrateRef = useRef<() => Promise<void>>(async () => {})
 
   useEffect(() => {
     phaseRef.current = phase
@@ -80,15 +73,16 @@ export default function Trace() {
     primeLetterAudio()
   }
 
-  async function celebrate() {
+  async function celebrate(chime: Promise<void>) {
     const token = ++runRef.current
     const clip = item
     const at = index
     const total = line.items.length
-    await playTraceSuccess()
+    await chime
     if (runRef.current !== token) return
     await playLetterVoice(clip)
     if (runRef.current !== token) return
+    hasInkRef.current = false
     if (at + 1 < total) {
       phaseRef.current = 'practice'
       setPhase('practice')
@@ -99,19 +93,6 @@ export default function Trace() {
     setPhase('complete')
   }
 
-  useEffect(() => {
-    celebrateRef.current = celebrate
-  })
-
-  function handleCoverage(ratio: number) {
-    coverageRef.current = ratio
-    if (ratio >= COVERAGE_THRESHOLD && phaseRef.current === 'practice') {
-      phaseRef.current = 'success'
-      setPhase('success')
-      void celebrateRef.current()
-    }
-  }
-
   function openLine(id: string) {
     const next = findTraceLine(id)
     if (!next) return
@@ -119,6 +100,7 @@ export default function Trace() {
     stopActiveAudio()
     const stored = loadTraceProgress()
     phaseRef.current = 'practice'
+    hasInkRef.current = false
     setPhase('practice')
     setLineId(next.id)
     setIndex(clampIndex(next, rememberedIndex(stored, id)))
@@ -139,27 +121,28 @@ export default function Trace() {
     if (next === index) return
     runRef.current += 1
     stopActiveAudio()
-    coverageRef.current = 0
+    hasInkRef.current = false
     setIndex(next)
   }
 
   function onClear() {
     if (phaseRef.current !== 'practice') return
-    coverageRef.current = 0
+    hasInkRef.current = false
     setClearToken((value) => value + 1)
   }
 
   function onDone() {
     if (phaseRef.current !== 'practice') return
-    armAudio()
-    if (coverageRef.current >= COVERAGE_THRESHOLD) {
-      phaseRef.current = 'success'
-      setPhase('success')
-      void celebrateRef.current()
+    if (!hasInkRef.current) {
+      setFailToken((value) => value + 1)
       return
     }
-    coverageRef.current = 0
-    setFailToken((value) => value + 1)
+    // Both play() calls stay in this click so iPhone Safari can hear them.
+    primeLetterAudio()
+    const chime = playTraceSuccessNow()
+    phaseRef.current = 'success'
+    setPhase('success')
+    void celebrate(chime)
   }
 
   async function onHear() {
@@ -171,7 +154,7 @@ export default function Trace() {
   function onAgain() {
     runRef.current += 1
     stopActiveAudio()
-    coverageRef.current = 0
+    hasInkRef.current = false
     phaseRef.current = 'practice'
     setPhase('practice')
     setIndex(0)
@@ -181,7 +164,7 @@ export default function Trace() {
     if (!upcoming) return
     runRef.current += 1
     stopActiveAudio()
-    coverageRef.current = 0
+    hasInkRef.current = false
     phaseRef.current = 'practice'
     setPhase('practice')
     setLineId(upcoming.id)
@@ -287,8 +270,9 @@ export default function Trace() {
             success={phase === 'success'}
             failToken={failToken}
             clearToken={clearToken}
-            debug={debug}
-            onCoverage={handleCoverage}
+            onInk={(hasInk) => {
+              hasInkRef.current = hasInk
+            }}
             onInteract={armAudio}
           />
           <div className="trace-actions">
