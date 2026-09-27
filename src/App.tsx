@@ -6,6 +6,7 @@ import Home from './pages/Home'
 import Pronunciation from './pages/Pronunciation'
 import Quiz from './pages/Quiz'
 import ThisWeek from './pages/ThisWeek'
+import Trace from './pages/Trace'
 
 export default function App() {
   return (
@@ -15,6 +16,7 @@ export default function App() {
           <Route element={<Layout />}>
             <Route path="/" element={<Home />} />
             <Route path="/pronunciation" element={<Pronunciation />} />
+            <Route path="/trace" element={<Trace />} />
             <Route path="/quiz" element={<Quiz />} />
             <Route path="/this-week" element={<ThisWeek />} />
             <Route path="/lesson" element={<Navigate to="/pronunciation" replace />} />

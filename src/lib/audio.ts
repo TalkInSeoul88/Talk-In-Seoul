@@ -6,6 +6,11 @@ export function teacherAudioSrc(clip: TeacherClip): string {
   return `/audio/${clip.audioId}.mp3?v=${AUDIO_REV}`
 }
 
+/** Doorbell chime for a finished trace. Same cache-bust as Jung’s clips. */
+export function traceSuccessSrc(): string {
+  return `/audio/trace-success.mp3?v=${AUDIO_REV}`
+}
+
 const availability = new Map<string, boolean>()
 const inflight = new Map<string, Promise<boolean>>()
 
@@ -39,8 +44,13 @@ let active: HTMLAudioElement | null = null
 export function stopActiveAudio() {
   if (!active) return
   active.pause()
-  active.currentTime = 0
   active = null
+}
+
+/** Pause whatever is still playing and treat `audio` as the current clip. Does not seek. */
+export function holdActiveAudio(audio: HTMLAudioElement) {
+  if (active && active !== audio && !active.paused) active.pause()
+  active = audio
 }
 
 export async function playExclusive(audio: HTMLAudioElement): Promise<void> {
