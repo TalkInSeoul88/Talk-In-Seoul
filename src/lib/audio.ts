@@ -47,12 +47,6 @@ export function stopActiveAudio() {
   active = null
 }
 
-/** Pause whatever is still playing and treat `audio` as the current clip. Does not seek. */
-export function holdActiveAudio(audio: HTMLAudioElement) {
-  if (active && active !== audio && !active.paused) active.pause()
-  active = audio
-}
-
 export async function playExclusive(audio: HTMLAudioElement): Promise<void> {
   if (active && active !== audio) {
     active.pause()

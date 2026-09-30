@@ -11,8 +11,8 @@ import {
 import { useEnrollment } from '../lib/enrollment.tsx'
 import { stopActiveAudio } from '../lib/audio'
 import { loadTraceProgress, rememberedIndex, saveTraceProgress } from '../lib/trace-progress'
-import { playTraceSuccessNow, unlockTraceAudio } from '../lib/trace-success'
-import { cancelLetterAudio, playLetterNow, playLetterVoice, primeLetterAudio } from '../lib/trace-voice'
+import { playTraceSuccessNow, stopTraceChime, unlockTraceAudio } from '../lib/trace-success'
+import { cancelLetterAudio, playLetterNow, playLetterVoice, preloadLetter } from '../lib/trace-voice'
 
 type Phase = 'practice' | 'success' | 'complete'
 
@@ -62,9 +62,15 @@ export default function Trace() {
   }, [view, lineId, index, line])
 
   useEffect(() => {
+    if (view !== 'line' || locked || !item) return
+    preloadLetter(item)
+  }, [view, locked, item])
+
+  useEffect(() => {
     return () => {
       runRef.current += 1
       cancelLetterAudio()
+      stopTraceChime()
       stopActiveAudio()
     }
   }, [])
@@ -72,24 +78,21 @@ export default function Trace() {
   function stopTraceAudio() {
     runRef.current += 1
     cancelLetterAudio()
+    stopTraceChime()
     stopActiveAudio()
   }
 
   function armAudio() {
     unlockTraceAudio()
-    primeLetterAudio()
+    if (item) preloadLetter(item)
   }
 
-  async function celebrate(chime: Promise<void>) {
+  async function advanceAfter(voice: Promise<void>) {
     const token = ++runRef.current
-    const clip = item
     const at = index
     const total = line.items.length
-    await chime
+    await voice
     if (runRef.current !== token) return
-    await playLetterVoice(clip)
-    if (runRef.current !== token) return
-    cancelLetterAudio()
     hasInkRef.current = false
     if (at + 1 < total) {
       phaseRef.current = 'practice'
@@ -142,20 +145,19 @@ export default function Trace() {
       setFailToken((value) => value + 1)
       return
     }
-    // Drop any in-flight clip, then unlock the voice element in this click.
-    // The syllable itself starts only once, after the chime.
+    if (!item) return
+    // Both play() calls stay in this click. The clip does not wait for the chime.
     cancelLetterAudio()
-    primeLetterAudio()
-    const chime = playTraceSuccessNow()
+    const voice = playLetterVoice(item)
+    playTraceSuccessNow()
     phaseRef.current = 'success'
     setPhase('success')
-    void celebrate(chime)
+    void advanceAfter(voice)
   }
 
-  async function onHear() {
+  function onHear() {
     if (!item || phaseRef.current === 'success') return
-    armAudio()
-    await playLetterNow(item)
+    playLetterNow(item)
   }
 
   function onAgain() {
@@ -284,7 +286,7 @@ export default function Trace() {
             <button
               type="button"
               className="btn secondary"
-              onClick={() => void onHear()}
+              onClick={onHear}
               disabled={phase !== 'practice'}
             >
               Hear it
