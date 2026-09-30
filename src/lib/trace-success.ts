@@ -1,4 +1,4 @@
-import { playExclusive, traceSuccessSrc } from './audio.ts'
+import { traceSuccessSrc } from './audio.ts'
 
 const DING_HZ = 1567.98
 const DONG_HZ = 1174.66
@@ -107,14 +107,26 @@ export function playDingDong(): Promise<void> {
   })
 }
 
+/** Pause the doorbell without touching Jung’s clip. */
+export function stopTraceChime() {
+  chimePlaying = false
+  if (!chime || chime.paused) return
+  chime.pause()
+}
+
 /**
- * Play the committed doorbell file. Call this directly from the Done click
- * so `play()` runs in that gesture. Resolves when the file ends. Falls back
- * to the synthesized chime only if playback fails.
+ * Play the doorbell on its own element. Call from the Done click.
+ * Does not pause Jung’s clip, so the two can overlap.
+ * Falls back to the synthesized chime only if the file fails.
  */
 export function playTraceSuccessNow(): Promise<void> {
   const audio = chimeElement()
   chimePlaying = true
+  try {
+    if (audio.currentTime > 0) audio.currentTime = 0
+  } catch {
+    /* The play() below still starts the file. */
+  }
 
   return new Promise((resolve) => {
     let settled = false
@@ -150,6 +162,13 @@ export function playTraceSuccessNow(): Promise<void> {
     audio.addEventListener('ended', onEnded, { once: true })
     audio.addEventListener('error', onFail, { once: true })
     // play() is invoked before this function returns to the click handler.
-    void playExclusive(audio).catch(onFail)
+    let pending: Promise<void> | undefined
+    try {
+      pending = audio.play()
+    } catch {
+      onFail()
+      return
+    }
+    void pending.catch(onFail)
   })
 }
