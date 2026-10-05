@@ -9,7 +9,7 @@ Students come to an in-person Hangul class at the store, then use this phone-fri
 ## What’s in this version
 
 - **Home** — this week’s focus, an access-code box, then links: Pronunciation, Trace, Quiz, This Week
-- **Pronunciation** — **모음(vowels)**, **자음(consonants)**, and **쌍자음(double consonants)** are free (Jung’s audio + Record / Play me). All 14 자음 and all 5 쌍자음 (ㄲㄸㅃㅆㅉ) have teacher clips. **음절(syllables)** is the full 140 CV chart; Play / Record need a class access code. All 10 vowel rows (ㅏㅑㅓㅕㅗㅛㅜㅠㅡㅣ, 140/140) have teacher clips.
+- **Pronunciation** — **모음(vowels)**, **이중모음(compound vowels)**, **자음(consonants)**, and **쌍자음(double consonants)** are free (Jung’s audio + Record / Play me). All 14 자음, all 5 쌍자음 (ㄲㄸㅃㅆㅉ), and all 11 이중모음 (ㅐㅔㅒㅖㅘㅙㅚㅝㅞㅟㅢ) have teacher clips. **음절(syllables)** is the full 140 CV chart; Play / Record need a class access code. All 10 vowel rows (ㅏㅑㅓㅕㅗㅛㅜㅠㅡㅣ, 140/140) have teacher clips.
 - **Trace** — finger tracing, one letter at a time. Pick a line: **Consonants ㄱ–ㅎ** (free), then **쌍자음**, **모음**, and one syllable line per vowel (ㅏ `가 ~ 하` through ㅣ `기 ~ 히`). Every line except the 14 consonants needs the same class code as the pronunciation syllable chart. Wobbly strokes are fine. Press **Done** after any ink and the letter turns green. The doorbell (`public/audio/trace-success.mp3`) and Jung’s clip start together; his voice plays once and is fetched when the letter appears, not after the chime. The next letter appears shortly after his clip ends. Arriving on a letter does not play it; **Hear it** does. **Done** on an empty canvas shows a red X and “Try again.” The finger stroke is half the gray letter’s stem width. Last position is remembered on this phone.
 - **Quiz** — flashcards. **모음(vowels)** and **자음(consonants)** (14 basic + 5 쌍자음) stay free; Play uses Jung’s clips. **Words (단어) · Easy 20** is also free (no access code). **Words (단어) · Class unlock** needs the same student access code as 음절(syllables). Word cards have no teacher MP3s yet, so they stay silent. Compound vowels and 음절(syllables) are not in the jamo decks.
 - **This Week** — free writing sheets (no code): 자음 PDF `/materials/hangul-consonant-practice.pdf` (2 pages ㄱ–ㅎ), 모음 PDF `/materials/hangul-vowel-practice.pdf`, and 단어 (animals) PDF `/materials/hangul-word-practice.pdf` (개 호랑이 토끼 다람쥐 새 개구리 나비 곰).
@@ -106,7 +106,7 @@ See `.env.example` for the full list.
 
 Drop additional MP3 files into `public/audio/` using the names below. Keep the same filenames — the app looks them up automatically. If a file is missing, students see **Audio coming soon** instead of a broken player.
 
-The 10 basic vowels, all 14 consonants, and all 140 음절(syllables) already use **Jung’s recordings**.
+The 10 basic vowels, all 11 이중모음, all 14 consonants, and all 140 음절(syllables) already use **Jung’s recordings**.
 
 Tap Play / Record on the phone itself (Safari or Chrome). Browsers require a tap to start audio or the microphone.
 
@@ -124,6 +124,26 @@ Tap Play / Record on the phone itself (Safari or Chrome). Browsers require a tap
 | ㅠ | yu | `vowel-yu.mp3` |
 | ㅡ | eu | `vowel-eu.mp3` |
 | ㅣ | i | `vowel-i.mp3` |
+
+### 이중모음(compound vowels) → `vowel-{slug}.mp3`
+
+Same folder and `vowel-*.mp3` lookup as the basic 모음. These eleven files are Jung’s recordings. Students see the American-read sound (EH, WAH, EUH-EE), not these filenames. Two letters can share a sound, so the filename is what keeps them apart.
+
+| Hangul | Students read | Example | File |
+| --- | --- | --- | --- |
+| ㅐ | EH | 개 GEH (dog) | `vowel-ae.mp3` |
+| ㅔ | EH | 게 GEH (crab) | `vowel-e.mp3` |
+| ㅒ | YEH | 얘 YEH (this kid) | `vowel-yae.mp3` |
+| ㅖ | YEH | 예 YEH (yes) | `vowel-ye.mp3` |
+| ㅘ | WAH | 와 WAH (wow) | `vowel-wa.mp3` |
+| ㅙ | WEH | 왜 WEH (why) | `vowel-wae.mp3` |
+| ㅚ | WEH | 외 WEH (outside) | `vowel-oe.mp3` |
+| ㅝ | WUH | 뭐 MWUH (what) | `vowel-wo.mp3` |
+| ㅞ | WEH | 웨 WEH | `vowel-we.mp3` |
+| ㅟ | WEE | 귀 GWEE (ear) | `vowel-wi.mp3` |
+| ㅢ | EUH-EE | 의사 EUH-EE-SAH (doctor) | `vowel-ui.mp3` |
+
+Replacing a clip: keep the filename, then refresh Pronunciation → **이중모음**. No code change is required.
 
 ### 자음(consonants) → `consonant-{slug}.mp3`
 

@@ -1,17 +1,18 @@
 import { useEffect, useState } from 'react'
 import JamoListenRow from '../components/JamoListenRow'
 import SyllablePractice from '../components/SyllablePractice'
-import { BASIC_CONSONANTS, BASIC_VOWELS, DOUBLE_CONSONANTS, type Jamo } from '../data/content'
+import { BASIC_CONSONANTS, BASIC_VOWELS, COMPOUND_VOWELS, DOUBLE_CONSONANTS, type Jamo } from '../data/content'
 import { probeTeacherAudio, teacherAudioSrc } from '../lib/audio'
 
-type Section = 'vowels' | 'consonants' | 'ssang' | 'syllables'
+type Section = 'vowels' | 'compound' | 'consonants' | 'ssang' | 'syllables'
 type ClipMode = 'checking' | 'ready' | 'soon'
 
-const TABS: { id: Section; label: string; sub: string }[] = [
-  { id: 'vowels', label: '모음', sub: '(vowels)' },
-  { id: 'consonants', label: '자음', sub: '(consonants)' },
-  { id: 'ssang', label: '쌍자음', sub: '(double consonants)' },
-  { id: 'syllables', label: '음절', sub: '(syllables)' },
+const TABS: { id: Section; label: string; sub: string; span: 'span-2' | 'span-3' }[] = [
+  { id: 'vowels', label: '모음', sub: '(vowels)', span: 'span-2' },
+  { id: 'compound', label: '이중모음', sub: '(compound)', span: 'span-2' },
+  { id: 'consonants', label: '자음', sub: '(consonants)', span: 'span-2' },
+  { id: 'ssang', label: '쌍자음', sub: '(double consonants)', span: 'span-3' },
+  { id: 'syllables', label: '음절', sub: '(syllables)', span: 'span-3' },
 ]
 
 function useClipMode(items: Jamo[]): ClipMode {
@@ -92,13 +93,13 @@ export default function Pronunciation() {
         </p>
       </header>
 
-      <div className="seg quad" role="tablist" aria-label="Pronunciation sections">
+      <div className="seg pronounce" role="tablist" aria-label="Pronunciation sections">
         {TABS.map((tab) => (
           <button
             key={tab.id}
             type="button"
             role="tab"
-            className={section === tab.id ? 'seg-btn on' : 'seg-btn'}
+            className={section === tab.id ? `seg-btn on ${tab.span}` : `seg-btn ${tab.span}`}
             aria-selected={section === tab.id}
             onClick={() => setSection(tab.id)}
           >
@@ -116,6 +117,20 @@ export default function Pronunciation() {
           </p>
           <div className="jamo-list">
             {BASIC_VOWELS.map((jamo) => (
+              <JamoListenRow key={jamo.char} jamo={jamo} />
+            ))}
+          </div>
+        </section>
+      ) : section === 'compound' ? (
+        <section className="card">
+          <h2>이중모음 (compound vowels)</h2>
+          <p className="tiny">Free — no access code. Same Play / Record as 모음(vowels).</p>
+          <p className="callout">
+            ㅐ/ㅔ sound the same (EH) today, and ㅙ/ㅚ/ㅞ all sound like WEH — different shapes, same
+            sound.
+          </p>
+          <div className="jamo-list">
+            {COMPOUND_VOWELS.map((jamo) => (
               <JamoListenRow key={jamo.char} jamo={jamo} />
             ))}
           </div>

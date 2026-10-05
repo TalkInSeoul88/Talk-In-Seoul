@@ -422,6 +422,35 @@ a {
   margin: 0.15rem 0 0;
 }
 
+.jamo-row-title .sound-hint {
+  font-size: 1rem;
+  color: var(--ink);
+}
+
+.sound-hint {
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+}
+
+.jamo-row-example {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.15rem 0.4rem;
+  margin: 0.18rem 0 0;
+}
+
+.jamo-row-example-word {
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.card .callout {
+  margin: 0.85rem 0 0.2rem;
+}
+
 .audio-bar {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -938,7 +967,7 @@ code {
   border-radius: 999px;
 }
 
-.seg:not(.triple):not(.quad) .seg-btn {
+.seg:not(.triple):not(.quad):not(.pronounce) .seg-btn {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -958,7 +987,8 @@ code {
 }
 
 .seg.triple,
-.seg.quad {
+.seg.quad,
+.seg.pronounce {
   border-radius: 1.15rem;
 }
 
@@ -968,6 +998,10 @@ code {
 
 .seg.quad {
   grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+.seg.pronounce {
+  grid-template-columns: repeat(6, 1fr);
 }
 
 .seg-btn {
@@ -982,7 +1016,8 @@ code {
 }
 
 .seg.triple .seg-btn,
-.seg.quad .seg-btn {
+.seg.quad .seg-btn,
+.seg.pronounce .seg-btn {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1005,6 +1040,28 @@ code {
   line-height: 1.15;
   max-width: 100%;
   text-wrap: balance;
+}
+
+.seg.pronounce .seg-btn {
+  font-size: 0.84rem;
+  padding: 0.32rem 0.2rem;
+  white-space: nowrap;
+}
+
+.seg.pronounce .span-2 {
+  grid-column: span 2;
+}
+
+.seg.pronounce .span-3 {
+  grid-column: span 3;
+}
+
+.seg.pronounce .seg-sub {
+  font-size: 0.56rem;
+  line-height: 1.15;
+  max-width: 100%;
+  text-wrap: balance;
+  white-space: normal;
 }
 
 .seg-sub {

@@ -19,6 +19,24 @@ These ten files are Jung’s recordings and must keep these names.
 | ㅡ | eu | `vowel-eu.mp3` |
 | ㅣ | i | `vowel-i.mp3` |
 
+## 이중모음(compound vowels) → `vowel-{slug}.mp3`
+
+Pronunciation has a free **이중모음** tab (same Play / Record as 모음). All 11 are Jung’s recordings, converted to MP3 like the other letter clips. Students read the American-read sound in the middle column. The filename is not shown in the app. Keep these names if a clip is replaced.
+
+| Hangul | Students read | Example | File |
+| --- | --- | --- | --- |
+| ㅐ | EH | 개 GEH (dog) | `vowel-ae.mp3` |
+| ㅔ | EH | 게 GEH (crab) | `vowel-e.mp3` |
+| ㅒ | YEH | 얘 YEH (this kid) | `vowel-yae.mp3` |
+| ㅖ | YEH | 예 YEH (yes) | `vowel-ye.mp3` |
+| ㅘ | WAH | 와 WAH (wow) | `vowel-wa.mp3` |
+| ㅙ | WEH | 왜 WEH (why) | `vowel-wae.mp3` |
+| ㅚ | WEH | 외 WEH (outside) | `vowel-oe.mp3` |
+| ㅝ | WUH | 뭐 MWUH (what) | `vowel-wo.mp3` |
+| ㅞ | WEH | 웨 WEH | `vowel-we.mp3` |
+| ㅟ | WEE | 귀 GWEE (ear) | `vowel-wi.mp3` |
+| ㅢ | EUH-EE | 의사 EUH-EE-SAH (doctor) | `vowel-ui.mp3` |
+
 ## 자음(consonants) → `consonant-{slug}.mp3`
 
 All 14 basic 자음 are Jung’s recordings. Play / Record appear automatically when the matching MP3 is present.
