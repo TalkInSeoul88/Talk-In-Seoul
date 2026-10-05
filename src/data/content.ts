@@ -6,12 +6,21 @@ export type TeacherClip = {
   audioId: string
 }
 
+/** Example word on a 이중모음 row. `sound` is American-read caps, never school romanization. */
+export type JamoExample = {
+  hangul: string
+  sound: string
+  meaning?: string
+}
+
 export type Jamo = TeacherClip & {
   nameKo: string
   cue: string
   kind: 'vowel' | 'consonant'
-  /** 쌍자음 (ㄲㄸㅃㅆㅉ). Omitted on the 10 vowels and 14 basic consonants. */
-  family?: 'ssang'
+  /** 쌍자음 or 이중모음. Omitted on the 10 basic vowels and 14 basic consonants. */
+  family?: 'ssang' | 'compound'
+  /** Shown under the sound hint. Only 이중모음 use this. */
+  example?: JamoExample
 }
 
 export const BASIC_VOWELS: Jamo[] = [
@@ -53,6 +62,56 @@ export const DOUBLE_CONSONANTS: Jamo[] = [
   { char: 'ㅉ', roman: 'jj', nameKo: '쌍지읒', cue: 'tense j — doubled ㅈ', kind: 'consonant', family: 'ssang', audioId: 'consonant-jj' },
 ]
 
+/**
+ * 이중모음 — free Pronunciation tab, same Play / Record as 모음.
+ * `roman` is what students read (EH, WAH, EUH-EE). `audioId` is
+ * public/audio/vowel-{slug}.mp3, same pattern as the basic 모음.
+ * Slugs stay unique when two letters share a sound (ㅐ and ㅔ are both EH).
+ * Not part of BASIC_VOWELS, so the 140 CV chart and Quiz decks stay as they are.
+ */
+export const COMPOUND_VOWELS: Jamo[] = [
+  { char: 'ㅐ', roman: 'EH', nameKo: '애', cue: '개 GEH (dog)', kind: 'vowel', family: 'compound', audioId: 'vowel-ae', example: { hangul: '개', sound: 'GEH', meaning: 'dog' } },
+  { char: 'ㅔ', roman: 'EH', nameKo: '에', cue: '게 GEH (crab)', kind: 'vowel', family: 'compound', audioId: 'vowel-e', example: { hangul: '게', sound: 'GEH', meaning: 'crab' } },
+  { char: 'ㅒ', roman: 'YEH', nameKo: '얘', cue: '얘 YEH (this kid)', kind: 'vowel', family: 'compound', audioId: 'vowel-yae', example: { hangul: '얘', sound: 'YEH', meaning: 'this kid' } },
+  { char: 'ㅖ', roman: 'YEH', nameKo: '예', cue: '예 YEH (yes)', kind: 'vowel', family: 'compound', audioId: 'vowel-ye', example: { hangul: '예', sound: 'YEH', meaning: 'yes' } },
+  { char: 'ㅘ', roman: 'WAH', nameKo: '와', cue: '와 WAH (wow)', kind: 'vowel', family: 'compound', audioId: 'vowel-wa', example: { hangul: '와', sound: 'WAH', meaning: 'wow' } },
+  { char: 'ㅙ', roman: 'WEH', nameKo: '왜', cue: '왜 WEH (why)', kind: 'vowel', family: 'compound', audioId: 'vowel-wae', example: { hangul: '왜', sound: 'WEH', meaning: 'why' } },
+  { char: 'ㅚ', roman: 'WEH', nameKo: '외', cue: '외 WEH (outside)', kind: 'vowel', family: 'compound', audioId: 'vowel-oe', example: { hangul: '외', sound: 'WEH', meaning: 'outside' } },
+  { char: 'ㅝ', roman: 'WUH', nameKo: '워', cue: '뭐 MWUH (what)', kind: 'vowel', family: 'compound', audioId: 'vowel-wo', example: { hangul: '뭐', sound: 'MWUH', meaning: 'what' } },
+  { char: 'ㅞ', roman: 'WEH', nameKo: '웨', cue: '웨 WEH', kind: 'vowel', family: 'compound', audioId: 'vowel-we', example: { hangul: '웨', sound: 'WEH' } },
+  { char: 'ㅟ', roman: 'WEE', nameKo: '위', cue: '귀 GWEE (ear)', kind: 'vowel', family: 'compound', audioId: 'vowel-wi', example: { hangul: '귀', sound: 'GWEE', meaning: 'ear' } },
+  { char: 'ㅢ', roman: 'EUH-EE', nameKo: '의', cue: '의사 EUH-EE-SAH (doctor)', kind: 'vowel', family: 'compound', audioId: 'vowel-ui', example: { hangul: '의사', sound: 'EUH-EE-SAH', meaning: 'doctor' } },
+]
+
+const COMPOUND_CHARS = 'ㅐㅔㅒㅖㅘㅙㅚㅝㅞㅟㅢ'
+
+function assertCompoundVowels() {
+  const chars = COMPOUND_VOWELS.map((item) => item.char).join('')
+  if (chars !== COMPOUND_CHARS) {
+    throw new Error(`Compound vowels must be the 11 이중모음, got ${chars}`)
+  }
+  if (COMPOUND_VOWELS.length !== 11) {
+    throw new Error(`Expected 11 compound vowels, got ${COMPOUND_VOWELS.length}`)
+  }
+  const ids = new Set(COMPOUND_VOWELS.map((item) => item.audioId))
+  if (ids.size !== 11) {
+    throw new Error('Duplicate compound vowel audioId values')
+  }
+  for (const item of COMPOUND_VOWELS) {
+    if (item.kind !== 'vowel' || item.family !== 'compound' || !item.example) {
+      throw new Error(`Compound vowel ${item.char} is missing its vowel shape`)
+    }
+    if (!item.audioId.startsWith('vowel-')) {
+      throw new Error(`Compound vowel ${item.char} must use a vowel- audio slot`)
+    }
+    if (BASIC_VOWELS.some((vowel) => vowel.char === item.char || vowel.audioId === item.audioId)) {
+      throw new Error(`Compound vowel ${item.char} collided with a basic 모음`)
+    }
+  }
+}
+
+assertCompoundVowels()
+
 /** Free Quiz deck: 10 basic 모음 + 19 자음 (14 basic + 5 쌍자음). No compound vowels, no 음절. */
 export const QUIZ_VOWELS: Jamo[] = BASIC_VOWELS
 export const QUIZ_CONSONANTS: Jamo[] = [...BASIC_CONSONANTS, ...DOUBLE_CONSONANTS]
@@ -60,7 +119,7 @@ export const QUIZ_FLASHCARDS: Jamo[] = [...QUIZ_VOWELS, ...QUIZ_CONSONANTS]
 
 const QUIZ_VOWEL_CHARS = 'ㅏㅑㅓㅕㅗㅛㅜㅠㅡㅣ'
 const QUIZ_CONSONANT_CHARS = 'ㄱㄴㄷㄹㅁㅂㅅㅇㅈㅊㅋㅌㅍㅎㄲㄸㅃㅆㅉ'
-const COMPOUND_VOWELS = 'ㅐㅒㅔㅖㅘㅙㅚㅝㅞㅟㅢ'
+const COMPOUND_VOWEL_CHARS = 'ㅐㅒㅔㅖㅘㅙㅚㅝㅞㅟㅢ'
 
 function assertQuizFlashcards() {
   const vowels = QUIZ_VOWELS.map((item) => item.char).join('')
@@ -74,7 +133,7 @@ function assertQuizFlashcards() {
   if (QUIZ_FLASHCARDS.length !== 29) {
     throw new Error(`Expected 29 free quiz cards, got ${QUIZ_FLASHCARDS.length}`)
   }
-  if (QUIZ_FLASHCARDS.some((item) => COMPOUND_VOWELS.includes(item.char))) {
+  if (QUIZ_FLASHCARDS.some((item) => COMPOUND_VOWEL_CHARS.includes(item.char))) {
     throw new Error('Quiz must not include compound vowels')
   }
   if (QUIZ_FLASHCARDS.some((item) => item.audioId.startsWith('syllable-'))) {
