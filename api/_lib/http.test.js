@@ -111,5 +111,39 @@ describe('admin codes API', () => {
 
     const denied = await handleAdminCodes(ctx('PATCH', { code: 'SAT-CLASS', expiresAt: '2031-01-01' }))
     assert.equal(denied.status, 401)
+
+    const kept = await handleAdminCodes(ctx('POST', { code: 'KEEP-ME', expiresAt: '2099-01-01' }, auth))
+    assert.equal(kept.status, 201)
+
+    const deniedDelete = await handleAdminCodes(ctx('DELETE', { code: 'SAT-CLASS' }))
+    assert.equal(deniedDelete.status, 401)
+    const stillThere = await handleRedeem(ctx('POST', { code: 'SAT-CLASS' }))
+    assert.equal(stillThere.status, 400)
+    assert.match(String(stillThere.body.error), /expired/)
+
+    const removed = await handleAdminCodes(ctx('DELETE', { code: 'sat-class' }, auth))
+    assert.equal(removed.status, 200)
+    assert.equal(removed.body.deleted, 'SAT-CLASS')
+
+    const gone = await handleRedeem(ctx('POST', { code: 'SAT-CLASS' }))
+    assert.equal(gone.status, 400)
+    assert.match(String(gone.body.error), /not found/)
+
+    const afterDelete = await handleAdminCodes(ctx('GET', {}, auth))
+    assert.equal(
+      afterDelete.body.codes.some((item) => item.code === 'SAT-CLASS'),
+      false,
+    )
+    assert.equal(
+      afterDelete.body.codes.some((item) => item.code === 'KEEP-ME'),
+      true,
+    )
+    const keptRedeem = await handleRedeem(ctx('POST', { code: 'KEEP-ME' }))
+    assert.equal(keptRedeem.status, 200)
+
+    const missingDelete = await handleAdminCodes(ctx('DELETE', { code: 'SAT-CLASS' }, auth))
+    assert.equal(missingDelete.status, 404)
+    const blankDelete = await handleAdminCodes(ctx('DELETE', {}, auth))
+    assert.equal(blankDelete.status, 400)
   })
 })

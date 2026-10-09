@@ -1318,12 +1318,42 @@ code {
   padding-top: 0.15rem;
 }
 
+.code-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+}
+
 .code-value {
   margin: 0;
   font-family: var(--serif);
   font-size: 1.55rem;
   letter-spacing: 0.03em;
   line-height: 1.15;
+}
+
+.trash-btn {
+  width: 2.75rem;
+  height: 2.75rem;
+  flex-shrink: 0;
+  border: 0;
+  border-radius: 0.85rem;
+  background: var(--wash);
+  color: var(--coral-deep);
+  display: grid;
+  place-items: center;
+  padding: 0;
+  touch-action: manipulation;
+}
+
+.trash-btn svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.trash-btn:disabled {
+  opacity: 0.45;
 }
 
 .code-expiry {

@@ -108,7 +108,20 @@ export async function handleAdminCodes(ctx) {
       return jsonResult(200, { code: publicCode(entry) })
     }
 
-    return jsonResult(405, { error: 'Use GET, POST, or PATCH.' })
+    if (ctx.method === 'DELETE') {
+      const body = ctx.body && typeof ctx.body === 'object' ? ctx.body : {}
+      const code = normalizeCode(asString(body.code))
+      if (!code) return jsonResult(400, { error: 'Missing code.' })
+
+      const store = await loadCodes()
+      const index = store.codes.findIndex((item) => item.code === code)
+      if (index === -1) return jsonResult(404, { error: 'That code was not found.' })
+      store.codes.splice(index, 1)
+      await saveCodes(store)
+      return jsonResult(200, { deleted: code })
+    }
+
+    return jsonResult(405, { error: 'Use GET, POST, PATCH, or DELETE.' })
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Could not save access codes.'
     return jsonResult(500, { error: message })
