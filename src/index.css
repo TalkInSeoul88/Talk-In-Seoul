@@ -1308,6 +1308,7 @@ code {
 }
 
 .code-card {
+  min-width: 0;
   padding: 0.95rem 0.2rem 0.15rem;
   border-top: 1px solid var(--line);
 }
@@ -1323,6 +1324,29 @@ code {
   font-size: 1.55rem;
   letter-spacing: 0.03em;
   line-height: 1.15;
+}
+
+.code-expiry {
+  margin-top: 0.65rem;
+}
+
+.code-expiry input[type='date'] {
+  /* 16px stops iPhone Safari from zooming the page when the calendar opens. */
+  font-size: 1rem;
+  line-height: 1.2;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.code-card .save-date {
+  margin-top: 0.55rem;
+  min-height: 2.9rem;
+}
+
+.code-card .save-date.is-saved:disabled {
+  opacity: 1;
+  background: var(--wash);
+  color: var(--ink);
 }
 
 .switch-row {

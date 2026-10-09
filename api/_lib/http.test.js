@@ -68,12 +68,48 @@ describe('admin codes API', () => {
     const redeemed = await handleRedeem(ctx('POST', { code: 'sat-class' }))
     assert.equal(redeemed.status, 200)
     assert.equal(redeemed.body.enrolled, true)
+    assert.equal(redeemed.body.expiresAt, '2099-12-31')
+
+    const dated = await handleAdminCodes(ctx('PATCH', { code: 'sat-class', expiresAt: '2030-01-08' }, auth))
+    assert.equal(dated.status, 200)
+    assert.equal(dated.body.code.expiresAt, '2030-01-08')
+    assert.equal(dated.body.code.active, true)
+    assert.equal(dated.body.code.status, 'active')
+
+    const redeemedLater = await handleRedeem(ctx('POST', { code: 'SAT-CLASS' }))
+    assert.equal(redeemedLater.status, 200)
+    assert.equal(redeemedLater.body.expiresAt, '2030-01-08')
 
     const stopped = await handleAdminCodes(ctx('PATCH', { code: 'SAT-CLASS', active: false }, auth))
     assert.equal(stopped.status, 200)
+    assert.equal(stopped.body.code.active, false)
+    assert.equal(stopped.body.code.expiresAt, '2030-01-08')
 
     const blocked = await handleRedeem(ctx('POST', { code: 'SAT-CLASS' }))
     assert.equal(blocked.status, 400)
     assert.match(String(blocked.body.error), /stopped/)
+
+    const restarted = await handleAdminCodes(ctx('PATCH', { code: 'SAT-CLASS', active: true }, auth))
+    assert.equal(restarted.status, 200)
+    const expired = await handleAdminCodes(ctx('PATCH', { code: 'SAT-CLASS', expiresAt: '2020-01-01' }, auth))
+    assert.equal(expired.status, 200)
+    assert.equal(expired.body.code.active, true)
+    assert.equal(expired.body.code.status, 'expired')
+
+    const blockedExpired = await handleRedeem(ctx('POST', { code: 'SAT-CLASS' }))
+    assert.equal(blockedExpired.status, 400)
+    assert.match(String(blockedExpired.body.error), /expired/)
+
+    const invalid = await handleAdminCodes(ctx('PATCH', { code: 'SAT-CLASS', expiresAt: '2020-13-40' }, auth))
+    assert.equal(invalid.status, 400)
+    const listed = await handleAdminCodes(ctx('GET', {}, auth))
+    const row = listed.body.codes.find((item) => item.code === 'SAT-CLASS')
+    assert.equal(row.expiresAt, '2020-01-01')
+
+    const missing = await handleAdminCodes(ctx('PATCH', { code: 'NO-SUCH', expiresAt: '2030-01-08' }, auth))
+    assert.equal(missing.status, 404)
+
+    const denied = await handleAdminCodes(ctx('PATCH', { code: 'SAT-CLASS', expiresAt: '2031-01-01' }))
+    assert.equal(denied.status, 401)
   })
 })

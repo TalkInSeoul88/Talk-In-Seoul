@@ -13,7 +13,7 @@ Students come to an in-person Hangul class at the store, then use this phone-fri
 - **Trace** — finger tracing, one letter at a time. Pick a line: **Consonants ㄱ–ㅎ** (free), then **쌍자음**, **모음**, and one syllable line per vowel (ㅏ `가 ~ 하` through ㅣ `기 ~ 히`). Every line except the 14 consonants needs the same class code as the pronunciation syllable chart. Wobbly strokes are fine. Press **Done** after any ink and the letter turns green. The doorbell (`public/audio/trace-success.mp3`) and Jung’s clip start together; his voice plays once and is fetched when the letter appears, not after the chime. The next letter appears shortly after his clip ends. Arriving on a letter does not play it; **Hear it** does. **Done** on an empty canvas shows a red X and “Try again.” The finger stroke is half the gray letter’s stem width. Last position is remembered on this phone.
 - **Quiz** — flashcards. **모음(vowels)** and **자음(consonants)** (14 basic + 5 쌍자음) stay free; Play uses Jung’s clips. **Words (단어) · Easy 20** is also free (no access code). **Words (단어) · Class unlock** needs the same student access code as 음절(syllables). Word cards have no teacher MP3s yet, so they stay silent. Compound vowels and 음절(syllables) are not in the jamo decks.
 - **This Week** — free writing sheets (no code): 자음 PDF `/materials/hangul-consonant-practice.pdf` (2 pages ㄱ–ㅎ), 모음 PDF `/materials/hangul-vowel-practice.pdf`, and 단어 (animals) PDF `/materials/hangul-word-practice.pdf` (개 호랑이 토끼 다람쥐 새 개구리 나비 곰).
-- **Admin** (`/admin`) — hidden from the student hamburger. Jung unlocks with a password, then issues / lists / starts / stops access codes with an expiry date
+- **Admin** (`/admin`) — hidden from the student hamburger. Jung unlocks with a password, then issues / lists / starts / stops access codes with an expiry date, and can change that date later
 
 Menu is a hamburger in the top-left. English is the primary UI language, with Korean labels where they feel natural. Students do **not** create an account. Without a code they can still use the free app.
 
@@ -59,7 +59,7 @@ Wrong password returns **401 JSON**. If `ADMIN_PASSWORD` is missing, the functio
 
 Optional: also set `ADMIN_SESSION_SECRET` to a random string. If you skip it, the admin session key is derived from `ADMIN_PASSWORD`.
 
-Then visit `https://talk-in-seoul.vercel.app/admin` (this URL is not in the student menu). Unlock, create a code, set the expiry, and use **On / Off** to start or stop it.
+Then visit `https://talk-in-seoul.vercel.app/admin` (this URL is not in the student menu). Unlock, create a code, set the expiry, and use **On / Off** to start or stop it. To change a code that is already issued, pick a new date on that row and tap **Save date**. Students are checked against the saved date.
 
 ### Local
 
