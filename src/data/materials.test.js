@@ -18,16 +18,16 @@ function assertPdf(relPath) {
 }
 
 test('writing PDFs are kept out of the public folder', () => {
-  assertPdf('api/_lib/sheets/hangul-consonant-practice.pdf')
-  assertPdf('api/_lib/sheets/hangul-vowel-practice.pdf')
-  assertPdf('api/_lib/sheets/hangul-word-practice.pdf')
+  assertPdf('content/materials/hangul-consonant-practice.pdf')
+  assertPdf('content/materials/hangul-vowel-practice.pdf')
+  assertPdf('content/materials/hangul-word-practice.pdf')
   assert.equal(existsSync(join(root, 'public/materials/hangul-consonant-practice.pdf')), false)
   assert.equal(existsSync(join(root, 'public/materials/hangul-vowel-practice.pdf')), false)
   assert.equal(existsSync(join(root, 'public/materials/hangul-word-practice.pdf')), false)
 })
 
 test('consonant writing PDF has both pages (ㄱ–ㅅ and ㅇ–ㅎ)', () => {
-  const bytes = readFileSync(join(root, 'api/_lib/sheets/hangul-consonant-practice.pdf'))
+  const bytes = readFileSync(join(root, 'content/materials/hangul-consonant-practice.pdf'))
   assert.match(bytes.toString('latin1'), /\/Count 2/)
 })
 

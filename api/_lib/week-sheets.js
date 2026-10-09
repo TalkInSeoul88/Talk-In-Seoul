@@ -2,7 +2,7 @@ import { readFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-const DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), 'sheets')
+const DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), '../../content/materials')
 
 /** Ids the This Week page may request. Files are not in public/. */
 export const WEEK_SHEETS = {
