@@ -29,6 +29,7 @@ export default function Homework() {
   const [loading, setLoading] = useState(enrollment.enrolled)
   const [error, setError] = useState<string | null>(null)
   const [gateError, setGateError] = useState<string | null>(null)
+  const [blocked, setBlocked] = useState<string | null>(null)
 
   useEffect(() => {
     if (!enrollment.enrolled || !enrollment.code) return
@@ -37,9 +38,14 @@ export default function Homework() {
     void (async () => {
       setLoading(true)
       setError(null)
+      setBlocked(null)
       try {
         const response = await fetch('/api/class/homework', { headers: { 'X-Access-Code': code } })
         if (cancelled) return
+        if (response.status === 403) {
+          setBlocked(await readError(response))
+          return
+        }
         if (response.status === 401) {
           setGateError(await readError(response))
           clear()
@@ -69,7 +75,9 @@ export default function Homework() {
       <header>
         <p className="kicker">Homework · 숙제</p>
         <h2 className="page-title">{enrollment.enrolled && courseName ? courseName : 'Homework'}</h2>
-        <p className="lede">Open a file to read it or save it on your phone.</p>
+        <p className="lede">
+          {blocked ? 'Practice stays open. Homework files stay closed.' : 'Open a file to read it or save it on your phone.'}
+        </p>
       </header>
 
       {!enrollment.enrolled ? (
@@ -80,6 +88,12 @@ export default function Homework() {
           inputId="homework-access-code"
           error={gateError}
         />
+      ) : blocked ? (
+        <section className="card">
+          <p className="kicker">8-week course</p>
+          <h2>Homework</h2>
+          <p className="lede homework-closed">{blocked}</p>
+        </section>
       ) : loading ? (
         <p className="tiny">Loading…</p>
       ) : error ? (

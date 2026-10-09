@@ -14,9 +14,9 @@ Students come to an in-person Hangul class at the store, then use this phone-fri
 - **Quiz** — flashcards. **모음(vowels)** and **자음(consonants)** (14 basic + 5 쌍자음) stay free; Play uses Jung’s clips. **Words (단어) · Easy 20** is also free (no access code). **Words (단어) · Class unlock** needs the same student access code as 음절(syllables). Word cards have no teacher MP3s yet, so they stay silent. Compound vowels and 음절(syllables) are not in the jamo decks.
 - **This Week** — free writing sheets (no code): 자음 PDF `/materials/hangul-consonant-practice.pdf` (2 pages ㄱ–ㅎ), 모음 PDF `/materials/hangul-vowel-practice.pdf`, and 단어 (animals) PDF `/materials/hangul-word-practice.pdf` (개 호랑이 토끼 다람쥐 새 개구리 나비 곰).
 - **Notices** (`/notices`) — reminders Jung posts (title, message, date, optional pin). Newest first, pinned on top. A notice can be for every student or for one course. Needs a class code.
-- **Homework** (`/homework`) — files for the student’s course, grouped Week 1, Week 2, and so on. PDF or photo. Needs a class code.
+- **Homework** (`/homework`) — files for the student’s course, grouped Week 1, Week 2, and so on. PDF or photo. Needs a class code with homework access on. A taste-class code still unlocks the rest of the app.
 - **Admin** (`/admin`) — hidden from the student hamburger. Jung unlocks with a password, then:
-  - **Codes** — issue a code, set its expiry, start or stop it, change that date later with **Save date**, and delete it after confirming
+  - **Codes** — issue a code, set its expiry, start or stop it, change that date later with **Save date**, turn **Homework access** on or off, and delete it after confirming
   - **Courses** — add a class (Beginner is already there, 8 weeks), change its name or week count, and choose which class a code is for
   - **Notices** — post, edit, or delete reminders
   - **Homework** — post, edit, or delete homework and add or remove files
@@ -65,7 +65,7 @@ Wrong password returns **401 JSON**. If `ADMIN_PASSWORD` is missing, the functio
 
 Optional: also set `ADMIN_SESSION_SECRET` to a random string. If you skip it, the admin session key is derived from `ADMIN_PASSWORD`.
 
-Then visit `https://talk-in-seoul.vercel.app/admin` (this URL is not in the student menu). Unlock, create a code, set the expiry, and use **On / Off** to start or stop it. To change a code that is already issued, pick a new date on that row and tap **Save date**. Students are checked against the saved date. The trash icon asks “Delete code …? Students using it will lose access.” and then removes that code so it no longer redeems. Course assignment for notices and homework lives in a separate classroom file (`codeCourses` in `talk-in-seoul/classroom.json`). Changing the expiry does not change that assignment. Deleting a code also drops its course assignment.
+Then visit `https://talk-in-seoul.vercel.app/admin` (this URL is not in the student menu). Unlock, create a code, set the expiry, and use **On / Off** to start or stop it. **Homework access** defaults to On. Turn it Off for a taste-class code: that code still unlocks pronunciation, syllables, and trace, and still sees notices, but homework and its files stay closed. Older codes with no homework field are treated as On, so current students do not change until you turn one Off. To change a code that is already issued, pick a new date on that row and tap **Save date**. Students are checked against the saved date. The trash icon asks “Delete code …? Students using it will lose access.” and then removes that code so it no longer redeems. Course assignment for notices and homework lives in a separate classroom file (`codeCourses` in `talk-in-seoul/classroom.json`). Changing the expiry or homework access does not change that assignment. Deleting a code also drops its course assignment.
 
 ### Local
 

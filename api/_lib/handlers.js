@@ -31,6 +31,7 @@ export async function handleAdminCodes(ctx) {
     }
 
     const {
+      allowsHomework,
       generateCode,
       normalizeCode,
       sortCodes,
@@ -47,6 +48,7 @@ export async function handleAdminCodes(ctx) {
         active: entry.active,
         createdAt: entry.createdAt,
         status: statusLabel(entry),
+        homeworkAccess: allowsHomework(entry),
       }
     }
 
@@ -68,10 +70,15 @@ export async function handleAdminCodes(ctx) {
       if (formatError) return jsonResult(400, { error: formatError })
       if (existing.has(code)) return jsonResult(409, { error: 'That code already exists.' })
 
+      const hasHomework = Object.prototype.hasOwnProperty.call(ctx.body ?? {}, 'homeworkAccess')
+      const homeworkAccess = hasHomework ? asBoolean(ctx.body.homeworkAccess) : true
+      if (homeworkAccess === null) return jsonResult(400, { error: 'Set homework access on or off.' })
+
       const entry = {
         code,
         expiresAt,
         active: true,
+        homeworkAccess,
         createdAt: new Date().toISOString(),
       }
       store.codes.push(entry)
@@ -86,12 +93,16 @@ export async function handleAdminCodes(ctx) {
 
       const hasActive = Object.prototype.hasOwnProperty.call(body, 'active')
       const hasExpiry = Object.prototype.hasOwnProperty.call(body, 'expiresAt')
-      if (!hasActive && !hasExpiry) {
-        return jsonResult(400, { error: 'Set active on or off, or pick a new expiry date.' })
+      const hasHomework = Object.prototype.hasOwnProperty.call(body, 'homeworkAccess')
+      if (!hasActive && !hasExpiry && !hasHomework) {
+        return jsonResult(400, { error: 'Set active on or off, pick a new expiry date, or set homework access.' })
       }
 
       const active = hasActive ? asBoolean(body.active) : null
       if (hasActive && active === null) return jsonResult(400, { error: 'Set active on or off.' })
+
+      const homeworkAccess = hasHomework ? asBoolean(body.homeworkAccess) : null
+      if (hasHomework && homeworkAccess === null) return jsonResult(400, { error: 'Set homework access on or off.' })
 
       const expiresAt = hasExpiry ? asString(body.expiresAt) : ''
       if (hasExpiry) {
@@ -104,6 +115,7 @@ export async function handleAdminCodes(ctx) {
       if (!entry) return jsonResult(404, { error: 'That code was not found.' })
       if (hasActive) entry.active = active
       if (hasExpiry) entry.expiresAt = expiresAt
+      if (hasHomework) entry.homeworkAccess = homeworkAccess
       await saveCodes(store)
       return jsonResult(200, { code: publicCode(entry) })
     }

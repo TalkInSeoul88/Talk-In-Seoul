@@ -10,6 +10,7 @@ import {
   handleStudentHomework,
   handleStudentNotices,
 } from './classroom-handlers.js'
+import { HOMEWORK_CLOSED } from './codes.js'
 import { classroomRoot } from './classroom-store.js'
 import { resetClassroomMemory } from './classroom-store.js'
 import { resetMemoryFiles } from './files.js'
@@ -228,6 +229,43 @@ describe('classroom notices and homework', () => {
       }),
     )
     assert.equal(blocked.status, 404)
+  })
+
+  it('keeps practice and notices open when homework access is off', async () => {
+    const homework = await handleAdminHomework(
+      ctx('POST', { courseId: 'beginner', week: 1, title: 'Week 1 review', instructions: 'Trace.', dueDate: '' }, auth),
+    )
+    const form = multipart({ homeworkId: homework.body.homework.id }, { name: 'sheet.png', type: 'image/png', data: PNG })
+    const uploaded = await handleAdminHomeworkFile(
+      ctx('POST', {}, auth, { rawBody: form.rawBody, contentType: form.contentType }),
+    )
+    assert.equal(uploaded.status, 201)
+    await handleAdminNotices(
+      ctx('POST', { title: 'Saturday', body: 'See you at the store.', date: '2026-10-10', pinned: false, courseId: null }, auth),
+    )
+
+    const closed = await handleAdminCodes(ctx('PATCH', { code: 'POP-NEXT', homeworkAccess: false }, auth))
+    assert.equal(closed.status, 200)
+    assert.equal(closed.body.code.homeworkAccess, false)
+
+    const notices = await handleStudentNotices(ctx('GET', {}, (name) => (name === 'x-access-code' ? 'POP-NEXT' : '')))
+    assert.equal(notices.status, 200)
+    assert.equal(notices.body.notices.some((item) => item.title === 'Saturday'), true)
+
+    const listed = await handleStudentHomework(ctx('GET', {}, (name) => (name === 'x-access-code' ? 'POP-NEXT' : '')))
+    assert.equal(listed.status, 403)
+    assert.equal(listed.body.error, HOMEWORK_CLOSED)
+
+    const file = await handleStudentFile(
+      ctx('GET', {}, () => '', { query: { id: uploaded.body.file.id, code: 'POP-NEXT' } }),
+    )
+    assert.equal(file.status, 403)
+    assert.equal(file.body.error, HOMEWORK_CLOSED)
+    assert.equal(file.bytes, undefined)
+
+    const open = await handleStudentHomework(ctx('GET', {}, (name) => (name === 'x-access-code' ? 'POP-WEEK' : '')))
+    assert.equal(open.status, 200)
+    assert.equal(open.body.weeks[0].items[0].files[0].name, 'sheet.png')
   })
 
   it('edits and deletes a notice, and blocks a missing code', async () => {

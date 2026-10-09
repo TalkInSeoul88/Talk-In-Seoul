@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import { after, before, describe, it } from 'node:test'
 import { handleAdminCodes, handleAdminLogin, handleRedeem } from './handlers.js'
-import { resetMemoryStore } from './store.js'
+import { loadCodes, resetMemoryStore, saveCodes } from './store.js'
 
 function ctx(method, body = {}, header = () => '') {
   return { method, body, header }
@@ -145,5 +145,63 @@ describe('admin codes API', () => {
     assert.equal(missingDelete.status, 404)
     const blankDelete = await handleAdminCodes(ctx('DELETE', {}, auth))
     assert.equal(blankDelete.status, 400)
+  })
+
+  it('defaults homework access on and leaves old records untouched until it is set', async () => {
+    const login = await handleAdminLogin(ctx('POST', { password: 'store-owner-secret' }))
+    const auth = () => `Bearer ${login.body.token}`
+
+    const created = await handleAdminCodes(ctx('POST', { code: 'NEW-ON', expiresAt: '2099-12-31' }, auth))
+    assert.equal(created.status, 201)
+    assert.equal(created.body.code.homeworkAccess, true)
+    const taste = await handleAdminCodes(
+      ctx('POST', { code: 'TASTE-5', expiresAt: '2099-12-31', homeworkAccess: false }, auth),
+    )
+    assert.equal(taste.body.code.homeworkAccess, false)
+    const bad = await handleAdminCodes(
+      ctx('POST', { code: 'BAD-FLAG', expiresAt: '2099-12-31', homeworkAccess: 'off' }, auth),
+    )
+    assert.equal(bad.status, 400)
+
+    await saveCodes({
+      version: 1,
+      codes: [
+        ...(await loadCodes()).codes,
+        {
+          code: 'OLD-CODE',
+          expiresAt: '2099-06-01',
+          active: true,
+          createdAt: '2020-01-01T00:00:00.000Z',
+        },
+      ],
+    })
+
+    const listed = await handleAdminCodes(ctx('GET', {}, auth))
+    const oldRow = listed.body.codes.find((item) => item.code === 'OLD-CODE')
+    assert.equal(oldRow.homeworkAccess, true)
+    assert.equal(Object.prototype.hasOwnProperty.call((await loadCodes()).codes.find((item) => item.code === 'OLD-CODE'), 'homeworkAccess'), false)
+
+    const dated = await handleAdminCodes(ctx('PATCH', { code: 'OLD-CODE', expiresAt: '2099-07-01' }, auth))
+    assert.equal(dated.status, 200)
+    assert.equal(dated.body.code.homeworkAccess, true)
+    assert.equal(dated.body.code.expiresAt, '2099-07-01')
+    const stillMissing = (await loadCodes()).codes.find((item) => item.code === 'OLD-CODE')
+    assert.equal(Object.prototype.hasOwnProperty.call(stillMissing, 'homeworkAccess'), false)
+
+    const redeemed = await handleRedeem(ctx('POST', { code: 'OLD-CODE' }))
+    assert.equal(redeemed.status, 200)
+
+    const off = await handleAdminCodes(ctx('PATCH', { code: 'OLD-CODE', homeworkAccess: false }, auth))
+    assert.equal(off.status, 200)
+    assert.equal(off.body.code.homeworkAccess, false)
+    assert.equal((await loadCodes()).codes.find((item) => item.code === 'OLD-CODE').homeworkAccess, false)
+    const stillRedeemed = await handleRedeem(ctx('POST', { code: 'OLD-CODE' }))
+    assert.equal(stillRedeemed.status, 200)
+
+    const on = await handleAdminCodes(ctx('PATCH', { code: 'TASTE-5', homeworkAccess: true }, auth))
+    assert.equal(on.body.code.homeworkAccess, true)
+    const stopped = await handleAdminCodes(ctx('PATCH', { code: 'TASTE-5', active: false }, auth))
+    assert.equal(stopped.body.code.homeworkAccess, true)
+    assert.equal(stopped.body.code.active, false)
   })
 })

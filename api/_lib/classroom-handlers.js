@@ -17,6 +17,7 @@ import {
   MAX_FILES,
 } from './classroom.js'
 import { loadClassroom, saveClassroom } from './classroom-store.js'
+import { HOMEWORK_CLOSED } from './codes.js'
 import {
   attachmentHeaders,
   deleteFileBytes,
@@ -527,6 +528,7 @@ export async function handleStudentHomework(ctx) {
   if (ctx.method !== 'GET') return json(405, { error: 'Use GET.' })
   const student = await requireStudent(ctx)
   if (!student.ok) return json(student.status, { error: student.error })
+  if (!student.homeworkAccess) return json(403, { error: HOMEWORK_CLOSED })
   try {
     const data = await loadClassroom()
     const course = courseForCode(data, student.code)
@@ -548,6 +550,7 @@ export async function handleStudentFile(ctx) {
   if (ctx.method !== 'GET') return json(405, { error: 'Use GET.' })
   const student = await requireStudent(ctx)
   if (!student.ok) return json(student.status, { error: student.error })
+  if (!student.homeworkAccess) return json(403, { error: HOMEWORK_CLOSED })
   try {
     const data = await loadClassroom()
     const found = findFile(data, String(ctx.query?.id || ''))
