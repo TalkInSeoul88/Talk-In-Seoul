@@ -84,6 +84,15 @@ export async function loadClassroom() {
   }
 }
 
+export async function forgetCodeCourse(code) {
+  if (!code) return false
+  const data = await loadClassroom()
+  if (!data.codeCourses || !Object.prototype.hasOwnProperty.call(data.codeCourses, code)) return false
+  delete data.codeCourses[code]
+  await saveClassroom(data)
+  return true
+}
+
 export async function saveClassroom(store) {
   const mode = storeMode()
   if (mode === 'memory') {

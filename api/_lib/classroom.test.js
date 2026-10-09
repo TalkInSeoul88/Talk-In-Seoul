@@ -99,6 +99,35 @@ describe('classroom notices and homework', () => {
     assert.equal(cleared.body.courseId, null)
   })
 
+  it('keeps the course when the expiry changes and drops it when the code is deleted', async () => {
+    const created = await handleAdminCourses(ctx('POST', { name: 'Intermediate', weeks: 10 }, auth))
+    const courseId = created.body.course.id
+    await handleAdminCourses(ctx('PATCH', { code: 'POP-WEEK', courseId }, auth))
+    await handleAdminCourses(ctx('PATCH', { code: 'POP-NEXT', courseId }, auth))
+
+    const dated = await handleAdminCodes(ctx('PATCH', { code: 'POP-WEEK', expiresAt: '2031-06-01' }, auth))
+    assert.equal(dated.status, 200)
+    assert.equal(dated.body.code.expiresAt, '2031-06-01')
+
+    const stopped = await handleAdminCodes(ctx('PATCH', { code: 'POP-WEEK', active: false }, auth))
+    assert.equal(stopped.status, 200)
+    assert.equal(stopped.body.code.active, false)
+
+    let listed = await handleAdminCourses(ctx('GET', {}, auth))
+    assert.equal(listed.body.codeCourses['POP-WEEK'], courseId)
+    assert.equal(listed.body.codeCourses['POP-NEXT'], courseId)
+
+    const removed = await handleAdminCodes(ctx('DELETE', { code: 'POP-NEXT' }, auth))
+    assert.equal(removed.status, 200)
+    listed = await handleAdminCourses(ctx('GET', {}, auth))
+    assert.equal(listed.body.codeCourses['POP-NEXT'], undefined)
+    assert.equal(listed.body.codeCourses['POP-WEEK'], courseId)
+
+    const codes = await handleAdminCodes(ctx('GET', {}, auth))
+    assert.equal(codes.body.codes.some((item) => item.code === 'POP-NEXT'), false)
+    assert.equal(codes.body.codes.some((item) => item.code === 'POP-WEEK'), true)
+  })
+
   it('rejects a week count that would hide homework', async () => {
     const created = await handleAdminHomework(
       ctx('POST', { courseId: 'beginner', week: 6, title: 'Review', instructions: 'Read page 1.', dueDate: '' }, auth),

@@ -59,6 +59,11 @@ export default function Admin() {
   const [createError, setCreateError] = useState<string | null>(null)
   const [creating, setCreating] = useState(false)
   const [busyCode, setBusyCode] = useState<string | null>(null)
+  const [expiryDrafts, setExpiryDrafts] = useState<Record<string, string>>({})
+  const [expiryBusy, setExpiryBusy] = useState<string | null>(null)
+  const [expiryErrors, setExpiryErrors] = useState<Record<string, string>>({})
+  const [savedExpiry, setSavedExpiry] = useState<string | null>(null)
+  const [deletingCode, setDeletingCode] = useState<string | null>(null)
 
   const headers = useMemo(() => {
     const value: Record<string, string> = { 'Content-Type': 'application/json' }
@@ -174,6 +179,46 @@ export default function Admin() {
     }
   }
 
+  async function saveExpiry(code: string, expiresAt: string) {
+    if (!expiresAt) return
+    setExpiryBusy(code)
+    setExpiryErrors((current) => {
+      if (!current[code]) return current
+      const next = { ...current }
+      delete next[code]
+      return next
+    })
+    setSavedExpiry((current) => (current === code ? null : current))
+    try {
+      const response = await fetch('/api/admin/codes', {
+        method: 'PATCH',
+        headers,
+        body: JSON.stringify({ code, expiresAt }),
+      })
+      if (response.status === 401) {
+        setToken(null)
+        return
+      }
+      if (!response.ok) {
+        const message = await parseError(response)
+        setExpiryErrors((current) => ({ ...current, [code]: message }))
+        return
+      }
+      setExpiryDrafts((current) => {
+        if (!(code in current)) return current
+        const next = { ...current }
+        delete next[code]
+        return next
+      })
+      setSavedExpiry(code)
+      await loadCodes()
+    } catch {
+      setExpiryErrors((current) => ({ ...current, [code]: 'Could not save that date.' }))
+    } finally {
+      setExpiryBusy(null)
+    }
+  }
+
   async function setActive(code: string, active: boolean) {
     setBusyCode(code)
     setListError(null)
@@ -196,6 +241,46 @@ export default function Admin() {
       setListError('Could not update that code.')
     } finally {
       setBusyCode(null)
+    }
+  }
+
+  async function deleteCode(code: string) {
+    const confirmed = window.confirm(`Delete code ${code}? Students using it will lose access.`)
+    if (!confirmed) return
+    setDeletingCode(code)
+    setListError(null)
+    try {
+      const response = await fetch('/api/admin/codes', {
+        method: 'DELETE',
+        headers,
+        body: JSON.stringify({ code }),
+      })
+      if (response.status === 401) {
+        setToken(null)
+        return
+      }
+      if (!response.ok) {
+        setListError(await parseError(response))
+        return
+      }
+      setExpiryDrafts((current) => {
+        if (!(code in current)) return current
+        const next = { ...current }
+        delete next[code]
+        return next
+      })
+      setExpiryErrors((current) => {
+        if (!current[code]) return current
+        const next = { ...current }
+        delete next[code]
+        return next
+      })
+      setSavedExpiry((current) => (current === code ? null : current))
+      await loadCodes()
+    } catch {
+      setListError('Could not delete that code.')
+    } finally {
+      setDeletingCode(null)
     }
   }
 
@@ -251,7 +336,10 @@ export default function Admin() {
               <header>
                 <p className="kicker">Access codes</p>
                 <h2 className="page-title">Issue a class code</h2>
-                <p className="lede">Three fields only: the code, the expiry, then On or Off.</p>
+                <p className="lede">
+                  Three fields only: the code, the expiry, then On or Off. On a code already issued, pick a
+                  new date and tap Save date.
+                </p>
               </header>
 
               <form className="card" onSubmit={(event) => void createCode(event)}>
@@ -306,37 +394,81 @@ export default function Admin() {
                   </p>
                 ) : (
                   <div className="code-list">
-                    {codes.map((item) => (
-                      <article key={item.code} className="code-card">
-                        <p className="code-value">{item.code}</p>
-                        <p className="tiny">
-                          Through {formatDay(item.expiresAt)} ·{' '}
-                          {item.status === 'active'
-                            ? 'Active'
-                            : item.status === 'expired'
-                              ? 'Expired'
-                              : 'Stopped'}
-                        </p>
-                        <div className="switch-row">
+                    {codes.map((item) => {
+                      const draft = expiryDrafts[item.code] ?? item.expiresAt
+                      const dirty = draft !== item.expiresAt
+                      const rowBusy = busyCode === item.code || expiryBusy === item.code || deletingCode === item.code
+                      const justSaved = savedExpiry === item.code && !dirty
+                      return (
+                        <article key={item.code} className="code-card">
+                          <div className="code-head">
+                            <p className="code-value">{item.code}</p>
+                            <button
+                              type="button"
+                              className="trash-btn"
+                              aria-label={`Delete code ${item.code}`}
+                              disabled={rowBusy}
+                              onClick={() => void deleteCode(item.code)}
+                            >
+                              <TrashIcon />
+                            </button>
+                          </div>
+                          <p className="tiny">
+                            Through {formatDay(item.expiresAt)} ·{' '}
+                            {item.status === 'active'
+                              ? 'Active'
+                              : item.status === 'expired'
+                                ? 'Expired'
+                                : 'Stopped'}
+                          </p>
+                          <label className="field code-expiry">
+                            <span>Expiry date</span>
+                            <input
+                              type="date"
+                              value={draft}
+                              disabled={rowBusy}
+                              aria-label={`Expiry date for ${item.code}`}
+                              onChange={(event) => {
+                                const next = event.target.value
+                                setSavedExpiry((current) => (current === item.code ? null : current))
+                                setExpiryDrafts((current) => ({ ...current, [item.code]: next }))
+                              }}
+                            />
+                          </label>
+                          {expiryErrors[item.code] && (
+                            <p className="form-error" role="alert">
+                              {expiryErrors[item.code]}
+                            </p>
+                          )}
                           <button
                             type="button"
-                            className={item.active && item.status !== 'expired' ? 'btn' : 'btn secondary'}
-                            disabled={busyCode === item.code}
-                            onClick={() => void setActive(item.code, true)}
+                            className={justSaved ? 'btn save-date is-saved' : 'btn save-date'}
+                            disabled={rowBusy || !dirty || !draft}
+                            onClick={() => void saveExpiry(item.code, draft)}
                           >
-                            On
+                            {expiryBusy === item.code ? 'Saving…' : justSaved ? 'Saved' : 'Save date'}
                           </button>
-                          <button
-                            type="button"
-                            className={!item.active ? 'btn' : 'btn secondary'}
-                            disabled={busyCode === item.code}
-                            onClick={() => void setActive(item.code, false)}
-                          >
-                            Off
-                          </button>
-                        </div>
-                      </article>
-                    ))}
+                          <div className="switch-row">
+                            <button
+                              type="button"
+                              className={item.active && item.status !== 'expired' ? 'btn' : 'btn secondary'}
+                              disabled={rowBusy}
+                              onClick={() => void setActive(item.code, true)}
+                            >
+                              On
+                            </button>
+                            <button
+                              type="button"
+                              className={!item.active ? 'btn' : 'btn secondary'}
+                              disabled={rowBusy}
+                              onClick={() => void setActive(item.code, false)}
+                            >
+                              Off
+                            </button>
+                          </div>
+                        </article>
+                      )
+                    })}
                   </div>
                 )}
               </section>
@@ -345,5 +477,16 @@ export default function Admin() {
         </div>
       </main>
     </div>
+  )
+}
+
+function TrashIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+      <path strokeLinecap="round" d="M4 7h16" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M6.5 7.5l.7 12a1.5 1.5 0 0 0 1.5 1.4h6.6a1.5 1.5 0 0 0 1.5-1.4l.7-12" />
+      <path strokeLinecap="round" d="M10 11v6M14 11v6" />
+    </svg>
   )
 }
