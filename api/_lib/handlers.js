@@ -72,7 +72,7 @@ export async function handleAdminCodes(ctx) {
 
       const hasHomework = Object.prototype.hasOwnProperty.call(ctx.body ?? {}, 'homeworkAccess')
       const homeworkAccess = hasHomework ? asBoolean(ctx.body.homeworkAccess) : true
-      if (homeworkAccess === null) return jsonResult(400, { error: 'Set homework access on or off.' })
+      if (homeworkAccess === null) return jsonResult(400, { error: 'Set full course access on or off.' })
 
       const entry = {
         code,
@@ -95,14 +95,14 @@ export async function handleAdminCodes(ctx) {
       const hasExpiry = Object.prototype.hasOwnProperty.call(body, 'expiresAt')
       const hasHomework = Object.prototype.hasOwnProperty.call(body, 'homeworkAccess')
       if (!hasActive && !hasExpiry && !hasHomework) {
-        return jsonResult(400, { error: 'Set active on or off, pick a new expiry date, or set homework access.' })
+        return jsonResult(400, { error: 'Set active on or off, pick a new expiry date, or set full course access.' })
       }
 
       const active = hasActive ? asBoolean(body.active) : null
       if (hasActive && active === null) return jsonResult(400, { error: 'Set active on or off.' })
 
       const homeworkAccess = hasHomework ? asBoolean(body.homeworkAccess) : null
-      if (hasHomework && homeworkAccess === null) return jsonResult(400, { error: 'Set homework access on or off.' })
+      if (hasHomework && homeworkAccess === null) return jsonResult(400, { error: 'Set full course access on or off.' })
 
       const expiresAt = hasExpiry ? asString(body.expiresAt) : ''
       if (hasExpiry) {

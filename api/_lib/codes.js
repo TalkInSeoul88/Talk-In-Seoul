@@ -58,7 +58,7 @@ export function isExpired(expiresAt, now = new Date()) {
   return expiresAt < chicagoToday(now)
 }
 
-export const HOMEWORK_CLOSED = 'Homework is for 8-week course students. Ask Jung to join!'
+export const COURSE_CLOSED = 'This is for 8-week course students. Ask Jung to join!'
 
 export function allowsHomework(entry) {
   return Boolean(entry) && entry.homeworkAccess !== false

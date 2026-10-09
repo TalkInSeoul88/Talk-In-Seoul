@@ -6,11 +6,13 @@ import {
   handleAdminHomework,
   handleAdminHomeworkFile,
   handleAdminNotices,
+  handleStudentAccess,
   handleStudentFile,
   handleStudentHomework,
+  handleStudentMaterial,
   handleStudentNotices,
 } from './classroom-handlers.js'
-import { HOMEWORK_CLOSED } from './codes.js'
+import { COURSE_CLOSED } from './codes.js'
 import { classroomRoot } from './classroom-store.js'
 import { resetClassroomMemory } from './classroom-store.js'
 import { resetMemoryFiles } from './files.js'
@@ -254,14 +256,37 @@ describe('classroom notices and homework', () => {
 
     const listed = await handleStudentHomework(ctx('GET', {}, (name) => (name === 'x-access-code' ? 'POP-NEXT' : '')))
     assert.equal(listed.status, 403)
-    assert.equal(listed.body.error, HOMEWORK_CLOSED)
+    assert.equal(listed.body.error, COURSE_CLOSED)
 
     const file = await handleStudentFile(
       ctx('GET', {}, () => '', { query: { id: uploaded.body.file.id, code: 'POP-NEXT' } }),
     )
     assert.equal(file.status, 403)
-    assert.equal(file.body.error, HOMEWORK_CLOSED)
+    assert.equal(file.body.error, COURSE_CLOSED)
     assert.equal(file.bytes, undefined)
+
+    const access = await handleStudentAccess(ctx('GET', {}, (name) => (name === 'x-access-code' ? 'POP-NEXT' : '')))
+    assert.equal(access.status, 200)
+    assert.equal(access.body.courseAccess, false)
+    const openAccess = await handleStudentAccess(ctx('GET', {}, (name) => (name === 'x-access-code' ? 'POP-WEEK' : '')))
+    assert.equal(openAccess.body.courseAccess, true)
+
+    const sheet = await handleStudentMaterial(
+      ctx('GET', {}, () => '', { query: { id: 'week-1-consonant-writing', code: 'POP-NEXT' } }),
+    )
+    assert.equal(sheet.status, 403)
+    assert.equal(sheet.body.error, COURSE_CLOSED)
+    assert.equal(sheet.bytes, undefined)
+    const guessed = await handleStudentMaterial(
+      ctx('GET', {}, () => '', { query: { id: 'week-1-word-writing' } }),
+    )
+    assert.equal(guessed.status, 401)
+    assert.equal(guessed.bytes, undefined)
+    const opened = await handleStudentMaterial(
+      ctx('GET', {}, () => '', { query: { id: 'week-1-consonant-writing', code: 'POP-WEEK' } }),
+    )
+    assert.equal(opened.status, 200)
+    assert.equal(Buffer.from(opened.bytes).subarray(0, 5).toString(), '%PDF-')
 
     const open = await handleStudentHomework(ctx('GET', {}, (name) => (name === 'x-access-code' ? 'POP-WEEK' : '')))
     assert.equal(open.status, 200)

@@ -1,11 +1,13 @@
-import UnlockControl from '../components/UnlockControl'
+import CourseLocked from '../components/CourseLocked'
 import { WEEK_1_LESSON } from '../data/content'
-import { CLASS_MATERIALS, PUBLIC_MATERIALS, type WeekMaterial } from '../data/materials'
+import { CLASS_MATERIALS, PUBLIC_MATERIALS, weekSheetHref, type WeekMaterial } from '../data/materials'
+import { useCourseGate } from '../lib/course-access.ts'
 import { useEnrollment } from '../lib/enrollment.tsx'
 
 export default function ThisWeek() {
   const { enrollment } = useEnrollment()
-  const enrolled = enrollment.enrolled
+  const course = useCourseGate()
+  const open = course.state === 'open' && Boolean(course.code)
 
   return (
     <div className="stack">
@@ -14,52 +16,39 @@ export default function ThisWeek() {
         <h2 className="page-title">
           {WEEK_1_LESSON.weekLabel} · {WEEK_1_LESSON.title}
         </h2>
-        <p className="lede">{WEEK_1_LESSON.summary}</p>
+        <p className="lede">{open ? WEEK_1_LESSON.summary : 'Writing sheets for the 8-week course.'}</p>
       </header>
 
-      <section>
-        <p className="kicker">Materials</p>
-        <h2 className="section-title">This Week</h2>
-        <p className="tiny material-note">Open to view or print. No access code needed.</p>
-        <nav className="home-links" aria-label="Free this week materials">
-          {PUBLIC_MATERIALS.map((item) => (
-            <MaterialLink key={item.id} item={item} />
-          ))}
-        </nav>
-      </section>
-
-      {CLASS_MATERIALS.length > 0 ? (
-        <section className="card">
-          <p className="kicker">Class materials</p>
-          <h2>{enrolled ? 'Unlocked' : 'Code required'}</h2>
-          {enrolled ? (
-            <nav className="home-links class-material-links" aria-label="Class materials">
-              {CLASS_MATERIALS.map((item) => (
-                <MaterialLink key={item.id} item={item} />
-              ))}
-            </nav>
-          ) : (
-            <>
-              <p className="tiny material-note">These sheets unlock with a class access code.</p>
-              <nav className="home-links class-material-links" aria-label="Locked class materials">
+      {course.state === 'loading' ? (
+        <p className="tiny">Loading…</p>
+      ) : open && course.code ? (
+        <section>
+          <p className="kicker">Materials</p>
+          <h2 className="section-title">This Week</h2>
+          <p className="tiny material-note">Open to view or print.</p>
+          <nav className="home-links" aria-label="This week materials">
+            {PUBLIC_MATERIALS.map((item) => (
+              <MaterialLink key={item.id} item={{ ...item, href: weekSheetHref(item.id, course.code as string) }} />
+            ))}
+          </nav>
+          {CLASS_MATERIALS.length > 0 ? (
+            <div className="card">
+              <p className="kicker">Class materials</p>
+              <nav className="home-links class-material-links" aria-label="Class materials">
                 {CLASS_MATERIALS.map((item) => (
-                  <div key={item.id} className="home-link material-locked">
-                    <span>
-                      <strong>{item.title}</strong>
-                      <span className="tiny">Unlock with a class access code.</span>
-                    </span>
-                    <span className="material-kind">Locked</span>
-                  </div>
+                  <MaterialLink key={item.id} item={item} />
                 ))}
               </nav>
-              <div className="unlock-bar">
-                <p className="tiny">Access code needed</p>
-                <UnlockControl inputId="this-week-access-code" />
-              </div>
-            </>
-          )}
+            </div>
+          ) : null}
         </section>
-      ) : null}
+      ) : (
+        <CourseLocked
+          title="This Week"
+          inputId="this-week-course-code"
+          enrolled={enrollment.enrolled}
+        />
+      )}
     </div>
   )
 }

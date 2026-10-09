@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import ClassLocked from '../components/ClassLocked'
+import CourseLocked from '../components/CourseLocked'
 import { formatExpiry } from '../lib/enrollment.ts'
 import { useEnrollment } from '../lib/enrollment.tsx'
 import { formatSize, readError } from '../lib/http.ts'
@@ -76,24 +76,14 @@ export default function Homework() {
         <p className="kicker">Homework · 숙제</p>
         <h2 className="page-title">{enrollment.enrolled && courseName ? courseName : 'Homework'}</h2>
         <p className="lede">
-          {blocked ? 'Practice stays open. Homework files stay closed.' : 'Open a file to read it or save it on your phone.'}
+          {blocked ? 'Pronunciation and notices stay open.' : 'Open a file to read it or save it on your phone.'}
         </p>
       </header>
 
       {!enrollment.enrolled ? (
-        <ClassLocked
-          kicker="Homework"
-          title="Code required"
-          detail="Homework unlocks with a class access code."
-          inputId="homework-access-code"
-          error={gateError}
-        />
+        <CourseLocked title="Homework" inputId="homework-access-code" enrolled={false} error={gateError} />
       ) : blocked ? (
-        <section className="card">
-          <p className="kicker">8-week course</p>
-          <h2>Homework</h2>
-          <p className="lede homework-closed">{blocked}</p>
-        </section>
+        <CourseLocked title="Homework" inputId="homework-course-code" enrolled message={blocked} />
       ) : loading ? (
         <p className="tiny">Loading…</p>
       ) : error ? (

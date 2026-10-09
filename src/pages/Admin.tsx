@@ -241,7 +241,7 @@ export default function Admin() {
       }
       await loadCodes()
     } catch {
-      setListError('Could not update homework access.')
+      setListError('Could not update full course access.')
     } finally {
       setBusyCode(null)
     }
@@ -365,8 +365,9 @@ export default function Admin() {
                 <p className="kicker">Access codes</p>
                 <h2 className="page-title">Issue a class code</h2>
                 <p className="lede">
-                  Set the code, the expiry, and homework access. On or Off starts or stops the whole code.
-                  Homework access off still unlocks practice, but not homework.
+                  Set the code, the expiry, and full course access. On or Off starts or stops the whole code.
+                  Full course access off still unlocks pronunciation and notices, but not Homework, This Week, or
+                  Trace.
                 </p>
               </header>
 
@@ -393,7 +394,7 @@ export default function Admin() {
                   />
                 </label>
                 <p className="switch-label" id="new-homework-label">
-                  Homework access
+                  Full course access (Homework, This Week, Trace)
                 </p>
                 <div className="switch-row" role="group" aria-labelledby="new-homework-label">
                   <button
@@ -498,7 +499,7 @@ export default function Admin() {
                             {expiryBusy === item.code ? 'Saving…' : justSaved ? 'Saved' : 'Save date'}
                           </button>
                           <p className="switch-label" id={`homework-access-${item.code}`}>
-                            Homework access
+                            Full course access (Homework, This Week, Trace)
                           </p>
                           <div className="switch-row" role="group" aria-labelledby={`homework-access-${item.code}`}>
                             <button

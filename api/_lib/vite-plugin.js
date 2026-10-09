@@ -5,8 +5,10 @@ import {
   handleAdminHomeworkFile,
   handleAdminNotices,
   handleBlobUpload,
+  handleStudentAccess,
   handleStudentFile,
   handleStudentHomework,
+  handleStudentMaterial,
   handleStudentNotices,
 } from './classroom-handlers.js'
 import { handleAdminCodes, handleAdminLogin, handleRedeem } from './handlers.js'
@@ -25,6 +27,8 @@ const HANDLERS = {
   '/api/class/notices': handleStudentNotices,
   '/api/class/homework': handleStudentHomework,
   '/api/class/file': handleStudentFile,
+  '/api/class/access': handleStudentAccess,
+  '/api/class/material': handleStudentMaterial,
 }
 
 export function talkApiPlugin() {
