@@ -52,15 +52,67 @@ function headerFrom(req, res, name) {
   return value
 }
 
+function readQuery(req) {
+  try {
+    const url = new URL(req.url || '/', 'http://localhost')
+    return Object.fromEntries(url.searchParams)
+  } catch {
+    return {}
+  }
+}
+
 export async function toContext(req, res) {
+  const contentType = headerFrom(req, res, 'content-type') || ''
+  const multipart = contentType.toLowerCase().includes('multipart/form-data')
+  let rawBody = null
+  let body = {}
+  if (multipart) {
+    rawBody = await readRaw(req, res)
+  } else {
+    body = await readBody(req, res)
+  }
   return {
     method: String(req.method || 'GET').toUpperCase(),
-    body: await readBody(req, res),
+    body,
+    rawBody,
+    contentType,
+    query: readQuery(req),
+    request: req,
     header: (name) => headerFrom(req, res, name),
   }
 }
 
+async function readRaw(req, res) {
+  if (Buffer.isBuffer(req.body)) return req.body
+  if (!isNodeResponse(res) && req && typeof req.arrayBuffer === 'function') {
+    try {
+      return Buffer.from(await req.arrayBuffer())
+    } catch {
+      return Buffer.alloc(0)
+    }
+  }
+  try {
+    return await readStream(req)
+  } catch {
+    return Buffer.alloc(0)
+  }
+}
+
 export function sendResult(req, res, result) {
+  if (result && result.bytes) {
+    const status = result.status || 200
+    const headers = result.headers || {}
+    if (isNodeResponse(res)) {
+      res.statusCode = status
+      for (const [key, value] of Object.entries(headers)) res.setHeader(key, value)
+      res.end(result.bytes)
+      return undefined
+    }
+    const bytes = result.bytes
+    const copy = new Uint8Array(bytes.byteLength)
+    copy.set(bytes)
+    return new Response(copy, { status, headers })
+  }
   const status = result.status || 500
   const body = result.body || { error: 'Server error' }
   if (isNodeResponse(res)) {

@@ -13,7 +13,7 @@ export default function Home() {
         <h2 className="page-title">Hangul basics this week</h2>
         <p className="lede">
           Listen to Jung, trace the free consonants, flip the free 모음, 자음, and Easy 20 단어 cards, then
-          check This Week for anything from class.
+          open Notices and Homework for anything from class.
         </p>
       </header>
 

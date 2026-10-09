@@ -67,3 +67,17 @@ export function verifyAdminToken(token, now = Date.now()) {
   if (!Number.isFinite(expMs) || expMs < now) return false
   return true
 }
+
+export function issueFileGrant(fileId, now = Date.now()) {
+  const exp = String(now + TOKEN_TTL_MS)
+  const payload = `file.${fileId}.${exp}`
+  return { exp, sig: hmac(payload) }
+}
+
+export function verifyFileGrant(fileId, exp, sig, now = Date.now()) {
+  if (!fileId || !exp || !sig) return false
+  const expMs = Number(exp)
+  if (!Number.isFinite(expMs) || expMs < now) return false
+  const payload = `file.${fileId}.${exp}`
+  return match(sig, hmac(payload))
+}

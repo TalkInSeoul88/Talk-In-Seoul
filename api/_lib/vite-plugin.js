@@ -1,10 +1,30 @@
+import {
+  handleAdminCourses,
+  handleAdminFile,
+  handleAdminHomework,
+  handleAdminHomeworkFile,
+  handleAdminNotices,
+  handleBlobUpload,
+  handleStudentFile,
+  handleStudentHomework,
+  handleStudentNotices,
+} from './classroom-handlers.js'
 import { handleAdminCodes, handleAdminLogin, handleRedeem } from './handlers.js'
 import { toContext, sendResult } from './vercel-handler.js'
 
 const HANDLERS = {
   '/api/admin/login': handleAdminLogin,
   '/api/admin/codes': handleAdminCodes,
+  '/api/admin/courses': handleAdminCourses,
+  '/api/admin/notices': handleAdminNotices,
+  '/api/admin/homework': handleAdminHomework,
+  '/api/admin/homework-file': handleAdminHomeworkFile,
+  '/api/admin/blob-upload': handleBlobUpload,
+  '/api/admin/file': handleAdminFile,
   '/api/access/redeem': handleRedeem,
+  '/api/class/notices': handleStudentNotices,
+  '/api/class/homework': handleStudentHomework,
+  '/api/class/file': handleStudentFile,
 }
 
 export function talkApiPlugin() {
