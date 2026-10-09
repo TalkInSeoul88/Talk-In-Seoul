@@ -80,20 +80,48 @@ export async function handleAdminCodes(ctx) {
     }
 
     if (ctx.method === 'PATCH') {
-      const code = normalizeCode(asString(ctx.body?.code))
-      const active = asBoolean(ctx.body?.active)
+      const body = ctx.body && typeof ctx.body === 'object' ? ctx.body : {}
+      const code = normalizeCode(asString(body.code))
       if (!code) return jsonResult(400, { error: 'Missing code.' })
-      if (active === null) return jsonResult(400, { error: 'Set active on or off.' })
+
+      const hasActive = Object.prototype.hasOwnProperty.call(body, 'active')
+      const hasExpiry = Object.prototype.hasOwnProperty.call(body, 'expiresAt')
+      if (!hasActive && !hasExpiry) {
+        return jsonResult(400, { error: 'Set active on or off, or pick a new expiry date.' })
+      }
+
+      const active = hasActive ? asBoolean(body.active) : null
+      if (hasActive && active === null) return jsonResult(400, { error: 'Set active on or off.' })
+
+      const expiresAt = hasExpiry ? asString(body.expiresAt) : ''
+      if (hasExpiry) {
+        const expiryError = validateExpiry(expiresAt)
+        if (expiryError) return jsonResult(400, { error: expiryError })
+      }
 
       const store = await loadCodes()
       const entry = store.codes.find((item) => item.code === code)
       if (!entry) return jsonResult(404, { error: 'That code was not found.' })
-      entry.active = active
+      if (hasActive) entry.active = active
+      if (hasExpiry) entry.expiresAt = expiresAt
       await saveCodes(store)
       return jsonResult(200, { code: publicCode(entry) })
     }
 
-    return jsonResult(405, { error: 'Use GET, POST, or PATCH.' })
+    if (ctx.method === 'DELETE') {
+      const body = ctx.body && typeof ctx.body === 'object' ? ctx.body : {}
+      const code = normalizeCode(asString(body.code))
+      if (!code) return jsonResult(400, { error: 'Missing code.' })
+
+      const store = await loadCodes()
+      const index = store.codes.findIndex((item) => item.code === code)
+      if (index === -1) return jsonResult(404, { error: 'That code was not found.' })
+      store.codes.splice(index, 1)
+      await saveCodes(store)
+      return jsonResult(200, { deleted: code })
+    }
+
+    return jsonResult(405, { error: 'Use GET, POST, PATCH, or DELETE.' })
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Could not save access codes.'
     return jsonResult(500, { error: message })
