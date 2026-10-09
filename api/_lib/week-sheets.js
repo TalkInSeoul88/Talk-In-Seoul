@@ -1,24 +1,12 @@
-import { readFile } from 'node:fs/promises'
-import path from 'node:path'
-import { fileURLToPath } from 'node:url'
+import { WEEK_SHEET_BYTES } from './week-sheet-bytes.js'
 
-const DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), '../../content/materials')
-
-/** Ids the This Week page may request. Files are not in public/. */
-export const WEEK_SHEETS = {
-  'week-1-consonant-writing': 'hangul-consonant-practice.pdf',
-  'week-1-vowel-writing': 'hangul-vowel-practice.pdf',
-  'week-1-word-writing': 'hangul-word-practice.pdf',
-}
+/** Ids the This Week page may request. Bytes are not in public/. */
+export const WEEK_SHEETS = Object.fromEntries(
+  Object.entries(WEEK_SHEET_BYTES).map(([id, sheet]) => [id, sheet.name]),
+)
 
 export async function readWeekSheet(id) {
-  const name = WEEK_SHEETS[String(id || '')]
-  if (!name || name.includes('/') || name.includes('..')) return null
-  try {
-    const bytes = await readFile(path.join(DIR, name))
-    return { name, bytes }
-  } catch (error) {
-    if (error && error.code === 'ENOENT') return null
-    throw error
-  }
+  const sheet = WEEK_SHEET_BYTES[String(id || '')]
+  if (!sheet) return null
+  return { name: sheet.name, bytes: Buffer.from(sheet.base64, 'base64') }
 }

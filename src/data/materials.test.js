@@ -31,6 +31,20 @@ test('consonant writing PDF has both pages (ㄱ–ㅅ and ㅇ–ㅎ)', () => {
   assert.match(bytes.toString('latin1'), /\/Count 2/)
 })
 
+test('the server copy of each sheet matches the source PDF', async () => {
+  const { WEEK_SHEET_BYTES } = await import('../../api/_lib/week-sheet-bytes.js')
+  const expected = {
+    'week-1-consonant-writing': 'content/materials/hangul-consonant-practice.pdf',
+    'week-1-vowel-writing': 'content/materials/hangul-vowel-practice.pdf',
+    'week-1-word-writing': 'content/materials/hangul-word-practice.pdf',
+  }
+  for (const [id, rel] of Object.entries(expected)) {
+    const file = readFileSync(join(root, rel))
+    const served = Buffer.from(WEEK_SHEET_BYTES[id].base64, 'base64')
+    assert.equal(served.equals(file), true, id)
+  }
+})
+
 test('This Week sheets are course-only and not linked as public files', () => {
   assert.match(materialsSrc, /export const PUBLIC_MATERIALS/)
   assert.match(materialsSrc, /Week 1 — Consonant writing practice \(자음\)/)

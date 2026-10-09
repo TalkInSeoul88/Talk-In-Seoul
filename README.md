@@ -89,8 +89,7 @@ This is a Vite SPA plus serverless files under `/api`. Production login is `api/
   "functions": {
     "api/admin/*.js": { "includeFiles": "api/_lib/**" },
     "api/access/*.js": { "includeFiles": "api/_lib/**" },
-    "api/class/*.js": { "includeFiles": "api/_lib/**" },
-    "api/class/material.js": { "includeFiles": "{api/_lib,content/materials}/**" }
+    "api/class/*.js": { "includeFiles": "api/_lib/**" }
   }
 }
 ```

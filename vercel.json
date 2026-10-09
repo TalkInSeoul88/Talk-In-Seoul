@@ -11,9 +11,6 @@
     },
     "api/class/*.js": {
       "includeFiles": "api/_lib/**"
-    },
-    "api/class/material.js": {
-      "includeFiles": "{api/_lib,content/materials}/**"
     }
   }
 }
