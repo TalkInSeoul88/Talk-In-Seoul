@@ -506,35 +506,6 @@ export async function handleBlobUpload(ctx) {
   }
 }
 
-export async function handleStudentAccess(ctx) {
-  if (ctx.method !== 'GET') return json(405, { error: 'Use GET.' })
-  const student = await requireStudent(ctx)
-  if (!student.ok) return json(student.status, { error: student.error })
-  return json(200, { courseAccess: Boolean(student.homeworkAccess) })
-}
-
-export async function handleStudentMaterial(ctx) {
-  if (ctx.method !== 'GET') return json(405, { error: 'Use GET.' })
-  const student = await requireStudent(ctx)
-  if (!student.ok) return json(student.status, { error: student.error })
-  if (!student.homeworkAccess) return json(403, { error: COURSE_CLOSED })
-  try {
-    const sheet = await readWeekSheet(ctx.query?.id)
-    if (!sheet) return json(404, { error: 'That file was not found.' })
-    return {
-      status: 200,
-      bytes: sheet.bytes,
-      headers: attachmentHeaders({
-        name: sheet.name,
-        bytes: sheet.bytes,
-        contentType: 'application/pdf',
-      }),
-    }
-  } catch (error) {
-    return failure(error)
-  }
-}
-
 export async function handleStudentNotices(ctx) {
   if (ctx.method !== 'GET') return json(405, { error: 'Use GET.' })
   const student = await requireStudent(ctx)
@@ -543,6 +514,7 @@ export async function handleStudentNotices(ctx) {
     const data = await loadClassroom()
     const course = courseForCode(data, student.code)
     return json(200, {
+      courseAccess: Boolean(student.homeworkAccess),
       course: course ? publicCourse(course) : null,
       notices: noticesForCourse(data, course?.id || '').map((item) => ({
         ...presentNotice(item),
@@ -581,6 +553,23 @@ export async function handleStudentFile(ctx) {
   const student = await requireStudent(ctx)
   if (!student.ok) return json(student.status, { error: student.error })
   if (!student.homeworkAccess) return json(403, { error: COURSE_CLOSED })
+  if (ctx.query?.sheet) {
+    try {
+      const sheet = await readWeekSheet(ctx.query.sheet)
+      if (!sheet) return json(404, { error: 'That file was not found.' })
+      return {
+        status: 200,
+        bytes: sheet.bytes,
+        headers: attachmentHeaders({
+          name: sheet.name,
+          bytes: sheet.bytes,
+          contentType: 'application/pdf',
+        }),
+      }
+    } catch (error) {
+      return failure(error)
+    }
+  }
   try {
     const data = await loadClassroom()
     const found = findFile(data, String(ctx.query?.id || ''))

@@ -51,7 +51,7 @@ test('This Week sheets are course-only and not linked as public files', () => {
   assert.match(materialsSrc, /Week 1 — Vowel writing practice \(모음\)/)
   assert.match(materialsSrc, /Word writing practice \(단어\) — animals/)
   assert.match(materialsSrc, /개 호랑이 토끼 다람쥐 새 개구리 나비 곰/)
-  assert.match(materialsSrc, /\/api\/class\/material/)
+  assert.match(materialsSrc, /sheet: id/)
   assert.doesNotMatch(materialsSrc, /\/materials\/hangul-/)
   assert.doesNotMatch(materialsSrc, /hangul-word-practice-week1/)
 

@@ -15,7 +15,7 @@ export function useCourseGate() {
     let cancelled = false
     void (async () => {
       try {
-        const response = await fetch('/api/class/access', { headers: { 'X-Access-Code': code } })
+        const response = await fetch('/api/class/notices', { headers: { 'X-Access-Code': code } })
         if (cancelled) return
         if (response.status === 401) {
           clear()

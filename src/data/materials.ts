@@ -28,8 +28,7 @@ export const PUBLIC_MATERIALS: WeekMaterial[] = [
 ]
 
 export function weekSheetHref(id: string, code: string): string {
-  const params = new URLSearchParams({ id, code })
-  return `/api/class/material?${params.toString()}`
+  return `/api/class/file?${new URLSearchParams({ sheet: id, code }).toString()}`
 }
 
 /** Shown only after a student redeems a class access code. Empty until Jung adds class-only sheets. */

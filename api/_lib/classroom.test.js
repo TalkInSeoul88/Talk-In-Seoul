@@ -6,10 +6,8 @@ import {
   handleAdminHomework,
   handleAdminHomeworkFile,
   handleAdminNotices,
-  handleStudentAccess,
   handleStudentFile,
   handleStudentHomework,
-  handleStudentMaterial,
   handleStudentNotices,
 } from './classroom-handlers.js'
 import { COURSE_CLOSED } from './codes.js'
@@ -265,25 +263,25 @@ describe('classroom notices and homework', () => {
     assert.equal(file.body.error, COURSE_CLOSED)
     assert.equal(file.bytes, undefined)
 
-    const access = await handleStudentAccess(ctx('GET', {}, (name) => (name === 'x-access-code' ? 'POP-NEXT' : '')))
+    const access = await handleStudentNotices(ctx('GET', {}, (name) => (name === 'x-access-code' ? 'POP-NEXT' : '')))
     assert.equal(access.status, 200)
     assert.equal(access.body.courseAccess, false)
-    const openAccess = await handleStudentAccess(ctx('GET', {}, (name) => (name === 'x-access-code' ? 'POP-WEEK' : '')))
+    const openAccess = await handleStudentNotices(ctx('GET', {}, (name) => (name === 'x-access-code' ? 'POP-WEEK' : '')))
     assert.equal(openAccess.body.courseAccess, true)
 
-    const sheet = await handleStudentMaterial(
-      ctx('GET', {}, () => '', { query: { id: 'week-1-consonant-writing', code: 'POP-NEXT' } }),
+    const sheet = await handleStudentFile(
+      ctx('GET', {}, () => '', { query: { sheet: 'week-1-consonant-writing', code: 'POP-NEXT' } }),
     )
     assert.equal(sheet.status, 403)
     assert.equal(sheet.body.error, COURSE_CLOSED)
     assert.equal(sheet.bytes, undefined)
-    const guessed = await handleStudentMaterial(
-      ctx('GET', {}, () => '', { query: { id: 'week-1-word-writing' } }),
+    const guessed = await handleStudentFile(
+      ctx('GET', {}, () => '', { query: { sheet: 'week-1-word-writing' } }),
     )
     assert.equal(guessed.status, 401)
     assert.equal(guessed.bytes, undefined)
-    const opened = await handleStudentMaterial(
-      ctx('GET', {}, () => '', { query: { id: 'week-1-consonant-writing', code: 'POP-WEEK' } }),
+    const opened = await handleStudentFile(
+      ctx('GET', {}, () => '', { query: { sheet: 'week-1-consonant-writing', code: 'POP-WEEK' } }),
     )
     assert.equal(opened.status, 200)
     assert.equal(Buffer.from(opened.bytes).subarray(0, 5).toString(), '%PDF-')
