@@ -1,5 +1,7 @@
 export const STUDENT_NAV = [
   { to: '/', label: 'Home', ko: '홈' },
+  { to: '/notices', label: 'Notices', ko: '알림' },
+  { to: '/homework', label: 'Homework', ko: '숙제' },
   { to: '/pronunciation', label: 'Pronunciation', ko: '발음' },
   { to: '/trace', label: 'Trace', ko: '쓰기' },
   { to: '/quiz', label: 'Quiz', ko: '퀴즈' },
@@ -7,6 +9,18 @@ export const STUDENT_NAV = [
 ] as const
 
 export const HOME_LINKS = [
+  {
+    to: '/notices',
+    label: 'Notices',
+    ko: '알림',
+    detail: 'Reminders from Jung. Needs a class code.',
+  },
+  {
+    to: '/homework',
+    label: 'Homework',
+    ko: '숙제',
+    detail: 'Files for your class, week by week. Needs a class code.',
+  },
   {
     to: '/pronunciation',
     label: 'Pronunciation',

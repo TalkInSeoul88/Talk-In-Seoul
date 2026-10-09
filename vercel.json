@@ -8,6 +8,9 @@
     },
     "api/access/*.js": {
       "includeFiles": "api/_lib/**"
+    },
+    "api/class/*.js": {
+      "includeFiles": "api/_lib/**"
     }
   }
 }

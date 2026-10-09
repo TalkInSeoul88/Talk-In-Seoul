@@ -13,11 +13,17 @@ Students come to an in-person Hangul class at the store, then use this phone-fri
 - **Trace** — finger tracing, one letter at a time. Pick a line: **Consonants ㄱ–ㅎ** (free), then **쌍자음**, **모음**, and one syllable line per vowel (ㅏ `가 ~ 하` through ㅣ `기 ~ 히`). Every line except the 14 consonants needs the same class code as the pronunciation syllable chart. Wobbly strokes are fine. Press **Done** after any ink and the letter turns green. The doorbell (`public/audio/trace-success.mp3`) and Jung’s clip start together; his voice plays once and is fetched when the letter appears, not after the chime. The next letter appears shortly after his clip ends. Arriving on a letter does not play it; **Hear it** does. **Done** on an empty canvas shows a red X and “Try again.” The finger stroke is half the gray letter’s stem width. Last position is remembered on this phone.
 - **Quiz** — flashcards. **모음(vowels)** and **자음(consonants)** (14 basic + 5 쌍자음) stay free; Play uses Jung’s clips. **Words (단어) · Easy 20** is also free (no access code). **Words (단어) · Class unlock** needs the same student access code as 음절(syllables). Word cards have no teacher MP3s yet, so they stay silent. Compound vowels and 음절(syllables) are not in the jamo decks.
 - **This Week** — free writing sheets (no code): 자음 PDF `/materials/hangul-consonant-practice.pdf` (2 pages ㄱ–ㅎ), 모음 PDF `/materials/hangul-vowel-practice.pdf`, and 단어 (animals) PDF `/materials/hangul-word-practice.pdf` (개 호랑이 토끼 다람쥐 새 개구리 나비 곰).
-- **Admin** (`/admin`) — hidden from the student hamburger. Jung unlocks with a password, then issues / lists / starts / stops access codes with an expiry date, can change that date later, and can delete a code after confirming
+- **Notices** (`/notices`) — reminders Jung posts (title, message, date, optional pin). Newest first, pinned on top. A notice can be for every student or for one course. Needs a class code.
+- **Homework** (`/homework`) — files for the student’s course, grouped Week 1, Week 2, and so on. PDF or photo. Needs a class code.
+- **Admin** (`/admin`) — hidden from the student hamburger. Jung unlocks with a password, then:
+  - **Codes** — issue a code, set its expiry, start or stop it, change that date later with **Save date**, and delete it after confirming
+  - **Courses** — add a class (Beginner is already there, 8 weeks), change its name or week count, and choose which class a code is for
+  - **Notices** — post, edit, or delete reminders
+  - **Homework** — post, edit, or delete homework and add or remove files
 
 Menu is a hamburger in the top-left. English is the primary UI language, with Korean labels where they feel natural. Students do **not** create an account. Without a code they can still use the free app.
 
-Old `/lesson` and `/practice` URLs go to Pronunciation. `/homework` goes to This Week.
+Old `/lesson` and `/practice` URLs go to Pronunciation.
 
 ## Run locally
 
@@ -59,7 +65,7 @@ Wrong password returns **401 JSON**. If `ADMIN_PASSWORD` is missing, the functio
 
 Optional: also set `ADMIN_SESSION_SECRET` to a random string. If you skip it, the admin session key is derived from `ADMIN_PASSWORD`.
 
-Then visit `https://talk-in-seoul.vercel.app/admin` (this URL is not in the student menu). Unlock, create a code, set the expiry, and use **On / Off** to start or stop it. To change a code that is already issued, pick a new date on that row and tap **Save date**. Students are checked against the saved date. The trash icon asks “Delete code …? Students using it will lose access.” and then removes that code so it no longer redeems. Course assignment for notices and homework lives in a separate classroom file (`codeCourses` in `talk-in-seoul/classroom.json`) and is left as-is.
+Then visit `https://talk-in-seoul.vercel.app/admin` (this URL is not in the student menu). Unlock, create a code, set the expiry, and use **On / Off** to start or stop it. To change a code that is already issued, pick a new date on that row and tap **Save date**. Students are checked against the saved date. The trash icon asks “Delete code …? Students using it will lose access.” and then removes that code so it no longer redeems. Course assignment for notices and homework lives in a separate classroom file (`codeCourses` in `talk-in-seoul/classroom.json`). Changing the expiry does not change that assignment. Deleting a code also drops its course assignment.
 
 ### Local
 
@@ -82,7 +88,8 @@ This is a Vite SPA plus serverless files under `/api`. Production login is `api/
   "rewrites": [{ "source": "/((?!api/|materials/|audio/).*)", "destination": "/index.html" }],
   "functions": {
     "api/admin/*.js": { "includeFiles": "api/_lib/**" },
-    "api/access/*.js": { "includeFiles": "api/_lib/**" }
+    "api/access/*.js": { "includeFiles": "api/_lib/**" },
+    "api/class/*.js": { "includeFiles": "api/_lib/**" }
   }
 }
 ```
@@ -99,6 +106,21 @@ Access codes must survive deploys. This app stores them as one JSON file in **Ve
 4. Vercel injects `BLOB_STORE_ID` (OIDC on Vercel) and/or `BLOB_READ_WRITE_TOKEN`. You can also paste `BLOB_READ_WRITE_TOKEN` yourself under Environment Variables.
 
 After that, codes Jung creates on `/admin` persist across deploys. Students redeem a code on Home; a valid, active, unexpired code marks that phone as enrolled.
+
+Notices, courses, homework text, and homework files use **the same Blob store**. No new environment variable is required once Blob is connected for Production and Preview.
+
+- Classroom JSON lives at `talk-in-seoul/classroom.json`.
+- Files live under `talk-in-seoul/files/`.
+- Preview deployments use `talk-in-seoul/preview/…` instead, so homework or notices posted on a preview URL do **not** show up on the production site.
+- Access codes are still the one shared list (`talk-in-seoul/access-codes.json`). Creating, stopping, or changing a code on a preview URL changes production codes too. Use the production admin for real codes.
+
+The first time the classroom file is read, the app creates a **Beginner** course with **8 weeks**. Add Intermediate (or any other class) at `/admin/courses` and set how many weeks it has. You do not need a code change for a new level.
+
+On Courses, each access code can be pointed at a class. That choice is stored next to the homework, not inside the code itself, so it does not change the code’s expiry. A code with no class selected sees Beginner homework, plus notices marked for all students.
+
+Homework files can be a PDF or a photo (JPG, PNG, WEBP, GIF, HEIC), up to 12 MB. On Vercel, a file over 4 MB uploads straight to Blob so it is not stopped by the function body limit. Students open the file in Safari and can use the share sheet to save it.
+
+If the Blob store is public-only, set `BLOB_ACCESS=public` as well (same as for codes).
 
 See `.env.example` for the full list.
 
@@ -181,4 +203,4 @@ Vowels (same as above): a ya eo yeo o yo u yu eu i.
 
 ## Out of scope
 
-Payments / Stripe, store cart, Instagram, booking, email signup, native App Store / Play Store apps, a full CMS, AI pronunciation scoring, cloud upload of student audio, PDF upload, Google Docs, and hard 20/20 free gates.
+Payments / Stripe, store cart, Instagram, booking, email signup, native App Store / Play Store apps, a full CMS, AI pronunciation scoring, cloud upload of student audio, Google Docs, and hard 20/20 free gates.

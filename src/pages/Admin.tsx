@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useState, type FormEvent } from 'react'
+import AdminNav from '../components/AdminNav'
+import { useAdminToken } from '../lib/admin-session.ts'
 
 type CodeRow = {
   code: string
@@ -7,8 +9,6 @@ type CodeRow = {
   createdAt: string
   status: 'active' | 'stopped' | 'expired'
 }
-
-const TOKEN_KEY = 'talk-in-seoul:admin-token'
 
 function todayPlus(days: number): string {
   const date = new Date()
@@ -45,14 +45,14 @@ async function parseError(response: Response): Promise<string> {
 }
 
 export default function Admin() {
-  const [token, setToken] = useState<string | null>(() => sessionStorage.getItem(TOKEN_KEY))
+  const [token, setToken] = useAdminToken()
   const [password, setPassword] = useState('')
   const [unlockError, setUnlockError] = useState<string | null>(null)
   const [unlocking, setUnlocking] = useState(false)
 
   const [codes, setCodes] = useState<CodeRow[]>([])
   const [listError, setListError] = useState<string | null>(null)
-  const [loadingList, setLoadingList] = useState(() => Boolean(sessionStorage.getItem(TOKEN_KEY)))
+  const [loadingList, setLoadingList] = useState(() => Boolean(token))
 
   const [newCode, setNewCode] = useState('')
   const [expiresAt, setExpiresAt] = useState(() => todayPlus(90))
@@ -80,7 +80,6 @@ export default function Admin() {
         headers: { Authorization: `Bearer ${nextToken}` },
       })
       if (response.status === 401) {
-        sessionStorage.removeItem(TOKEN_KEY)
         setToken(null)
         return
       }
@@ -108,7 +107,6 @@ export default function Admin() {
         })
         if (cancelled) return
         if (response.status === 401) {
-          sessionStorage.removeItem(TOKEN_KEY)
           setToken(null)
           return
         }
@@ -127,7 +125,7 @@ export default function Admin() {
     return () => {
       cancelled = true
     }
-  }, [token])
+  }, [token, setToken])
 
   async function unlock(event: FormEvent) {
     event.preventDefault()
@@ -144,7 +142,6 @@ export default function Admin() {
         setUnlockError(payload.error || 'Could not unlock admin.')
         return
       }
-      sessionStorage.setItem(TOKEN_KEY, payload.token)
       setLoadingList(true)
       setToken(payload.token)
       setPassword('')
@@ -166,7 +163,6 @@ export default function Admin() {
         body: JSON.stringify({ code: newCode, expiresAt }),
       })
       if (response.status === 401) {
-        sessionStorage.removeItem(TOKEN_KEY)
         setToken(null)
         return
       }
@@ -200,7 +196,6 @@ export default function Admin() {
         body: JSON.stringify({ code, expiresAt }),
       })
       if (response.status === 401) {
-        sessionStorage.removeItem(TOKEN_KEY)
         setToken(null)
         return
       }
@@ -234,7 +229,6 @@ export default function Admin() {
         body: JSON.stringify({ code, active }),
       })
       if (response.status === 401) {
-        sessionStorage.removeItem(TOKEN_KEY)
         setToken(null)
         return
       }
@@ -262,7 +256,6 @@ export default function Admin() {
         body: JSON.stringify({ code }),
       })
       if (response.status === 401) {
-        sessionStorage.removeItem(TOKEN_KEY)
         setToken(null)
         return
       }
@@ -292,7 +285,6 @@ export default function Admin() {
   }
 
   function lock() {
-    sessionStorage.removeItem(TOKEN_KEY)
     setToken(null)
     setCodes([])
   }
@@ -340,6 +332,7 @@ export default function Admin() {
             </>
           ) : (
             <>
+              <AdminNav />
               <header>
                 <p className="kicker">Access codes</p>
                 <h2 className="page-title">Issue a class code</h2>

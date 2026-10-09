@@ -118,6 +118,12 @@ export async function handleAdminCodes(ctx) {
       if (index === -1) return jsonResult(404, { error: 'That code was not found.' })
       store.codes.splice(index, 1)
       await saveCodes(store)
+      try {
+        const { forgetCodeCourse } = await import('./classroom-store.js')
+        await forgetCodeCourse(code)
+      } catch {
+        // The code is already gone. A classroom-file problem should not undo that.
+      }
       return jsonResult(200, { deleted: code })
     }
 
