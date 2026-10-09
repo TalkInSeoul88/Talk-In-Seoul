@@ -8,6 +8,7 @@ type CodeRow = {
   active: boolean
   createdAt: string
   status: 'active' | 'stopped' | 'expired'
+  homeworkAccess: boolean
 }
 
 function todayPlus(days: number): string {
@@ -56,6 +57,7 @@ export default function Admin() {
 
   const [newCode, setNewCode] = useState('')
   const [expiresAt, setExpiresAt] = useState(() => todayPlus(90))
+  const [newHomework, setNewHomework] = useState(true)
   const [createError, setCreateError] = useState<string | null>(null)
   const [creating, setCreating] = useState(false)
   const [busyCode, setBusyCode] = useState<string | null>(null)
@@ -160,7 +162,7 @@ export default function Admin() {
       const response = await fetch('/api/admin/codes', {
         method: 'POST',
         headers,
-        body: JSON.stringify({ code: newCode, expiresAt }),
+        body: JSON.stringify({ code: newCode, expiresAt, homeworkAccess: newHomework }),
       })
       if (response.status === 401) {
         setToken(null)
@@ -171,6 +173,7 @@ export default function Admin() {
         return
       }
       setNewCode('')
+      setNewHomework(true)
       await loadCodes()
     } catch {
       setCreateError('Could not save that code.')
@@ -216,6 +219,31 @@ export default function Admin() {
       setExpiryErrors((current) => ({ ...current, [code]: 'Could not save that date.' }))
     } finally {
       setExpiryBusy(null)
+    }
+  }
+
+  async function setHomeworkAccess(code: string, homeworkAccess: boolean) {
+    setBusyCode(code)
+    setListError(null)
+    try {
+      const response = await fetch('/api/admin/codes', {
+        method: 'PATCH',
+        headers,
+        body: JSON.stringify({ code, homeworkAccess }),
+      })
+      if (response.status === 401) {
+        setToken(null)
+        return
+      }
+      if (!response.ok) {
+        setListError(await parseError(response))
+        return
+      }
+      await loadCodes()
+    } catch {
+      setListError('Could not update full course access.')
+    } finally {
+      setBusyCode(null)
     }
   }
 
@@ -337,8 +365,9 @@ export default function Admin() {
                 <p className="kicker">Access codes</p>
                 <h2 className="page-title">Issue a class code</h2>
                 <p className="lede">
-                  Three fields only: the code, the expiry, then On or Off. On a code already issued, pick a
-                  new date and tap Save date.
+                  Set the code, the expiry, and full course access. On or Off starts or stops the whole code.
+                  Full course access off still unlocks pronunciation and notices, but not Homework, This Week, or
+                  Trace.
                 </p>
               </header>
 
@@ -364,6 +393,27 @@ export default function Admin() {
                     required
                   />
                 </label>
+                <p className="switch-label" id="new-homework-label">
+                  Full course access (Homework, This Week, Trace)
+                </p>
+                <div className="switch-row" role="group" aria-labelledby="new-homework-label">
+                  <button
+                    type="button"
+                    className={newHomework ? 'btn' : 'btn secondary'}
+                    aria-pressed={newHomework}
+                    onClick={() => setNewHomework(true)}
+                  >
+                    On
+                  </button>
+                  <button
+                    type="button"
+                    className={!newHomework ? 'btn' : 'btn secondary'}
+                    aria-pressed={!newHomework}
+                    onClick={() => setNewHomework(false)}
+                  >
+                    Off
+                  </button>
+                </div>
                 {createError && (
                   <p className="form-error" role="alert">
                     {createError}
@@ -448,7 +498,33 @@ export default function Admin() {
                           >
                             {expiryBusy === item.code ? 'Saving…' : justSaved ? 'Saved' : 'Save date'}
                           </button>
-                          <div className="switch-row">
+                          <p className="switch-label" id={`homework-access-${item.code}`}>
+                            Full course access (Homework, This Week, Trace)
+                          </p>
+                          <div className="switch-row" role="group" aria-labelledby={`homework-access-${item.code}`}>
+                            <button
+                              type="button"
+                              className={item.homeworkAccess !== false ? 'btn' : 'btn secondary'}
+                              aria-pressed={item.homeworkAccess !== false}
+                              disabled={rowBusy}
+                              onClick={() => void setHomeworkAccess(item.code, true)}
+                            >
+                              On
+                            </button>
+                            <button
+                              type="button"
+                              className={item.homeworkAccess === false ? 'btn' : 'btn secondary'}
+                              aria-pressed={item.homeworkAccess === false}
+                              disabled={rowBusy}
+                              onClick={() => void setHomeworkAccess(item.code, false)}
+                            >
+                              Off
+                            </button>
+                          </div>
+                          <p className="switch-label" id={`code-active-${item.code}`}>
+                            Code
+                          </p>
+                          <div className="switch-row" role="group" aria-labelledby={`code-active-${item.code}`}>
                             <button
                               type="button"
                               className={item.active && item.status !== 'expired' ? 'btn' : 'btn secondary'}

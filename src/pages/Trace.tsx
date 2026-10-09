@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import CourseLocked from '../components/CourseLocked'
 import TracePad from '../components/TracePad'
 import UnlockControl from '../components/UnlockControl'
 import {
@@ -8,6 +9,7 @@ import {
   nextTraceLine,
   type TraceLine,
 } from '../data/trace-lines'
+import { useCourseGate } from '../lib/course-access.ts'
 import { useEnrollment } from '../lib/enrollment.tsx'
 import { stopActiveAudio } from '../lib/audio'
 import { loadTraceProgress, rememberedIndex, saveTraceProgress } from '../lib/trace-progress'
@@ -30,6 +32,7 @@ function initialPlace(): { view: 'picker' | 'line'; lineId: string; index: numbe
 
 export default function Trace() {
   const { enrollment } = useEnrollment()
+  const course = useCourseGate()
   const [place] = useState(initialPlace)
   const [view, setView] = useState(place.view)
   const [lineId, setLineId] = useState(place.lineId)
@@ -52,19 +55,19 @@ export default function Trace() {
   }, [phase])
 
   useEffect(() => {
-    if (view !== 'line') return
+    if (course.state !== 'open' || view !== 'line') return
     const prev = loadTraceProgress()
     saveTraceProgress({
       lineId,
       index: clampIndex(line, index),
       byLine: { ...(prev?.byLine ?? {}) },
     })
-  }, [view, lineId, index, line])
+  }, [course.state, view, lineId, index, line])
 
   useEffect(() => {
-    if (view !== 'line' || locked || !item) return
+    if (course.state !== 'open' || view !== 'line' || locked || !item) return
     preloadLetter(item)
-  }, [view, locked, item])
+  }, [course.state, view, locked, item])
 
   useEffect(() => {
     return () => {
@@ -181,6 +184,23 @@ export default function Trace() {
 
   const practicing = view === 'line' && !locked && phase !== 'complete' && item
 
+  if (course.state !== 'open') {
+    return (
+      <div className="trace-app">
+        <header>
+          <p className="kicker">Trace · 쓰기</p>
+          <h2 className="page-title">Trace</h2>
+          <p className="lede">Finger tracing for the 8-week course.</p>
+        </header>
+        {course.state === 'loading' ? (
+          <p className="tiny">Loading…</p>
+        ) : (
+          <CourseLocked title="Trace" inputId="trace-course-code" enrolled={enrollment.enrolled} />
+        )}
+      </div>
+    )
+  }
+
   return (
     <div className={practicing ? 'trace-app is-practice' : 'trace-app'}>
       {view === 'picker' ? (
@@ -188,10 +208,7 @@ export default function Trace() {
           <header>
             <p className="kicker">Trace · 쓰기</p>
             <h2 className="page-title">Pick one line</h2>
-            <p className="lede">
-              Trace the gray letter with your finger. Consonants ㄱ–ㅎ are free. Vowels, double
-              consonants, and syllable lines use your class code.
-            </p>
+            <p className="lede">Trace the gray letter with your finger. Pick a line.</p>
           </header>
           <div className="trace-lines">
             {TRACE_LINES.map((entry) => {

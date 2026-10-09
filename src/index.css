@@ -1395,11 +1395,23 @@ code {
   color: var(--ink);
 }
 
+.switch-label {
+  margin: 0.85rem 0 0;
+  font-size: 0.92rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
 .switch-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.55rem;
-  margin-top: 0.75rem;
+  margin-top: 0.4rem;
+}
+
+.homework-closed {
+  margin-top: 0.35rem;
+  margin-bottom: 0;
 }
 
 .switch-row .btn {

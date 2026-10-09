@@ -19,7 +19,7 @@ export const HOME_LINKS = [
     to: '/homework',
     label: 'Homework',
     ko: '숙제',
-    detail: 'Files for your class, week by week. Needs a class code.',
+    detail: 'Files for the 8-week course, week by week.',
   },
   {
     to: '/pronunciation',
@@ -31,7 +31,7 @@ export const HOME_LINKS = [
     to: '/trace',
     label: 'Trace',
     ko: '쓰기',
-    detail: 'Free consonants ㄱ–ㅎ. Vowels, double consonants, and syllable lines with a class code.',
+    detail: 'Finger tracing for the 8-week course.',
   },
   {
     to: '/quiz',
@@ -43,6 +43,6 @@ export const HOME_LINKS = [
     to: '/this-week',
     label: 'This Week',
     ko: '이번 주',
-    detail: 'Free 자음, 모음, and 단어 (animals) sheets.',
+    detail: 'Writing sheets for the 8-week course.',
   },
 ] as const

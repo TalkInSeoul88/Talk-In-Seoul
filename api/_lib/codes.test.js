@@ -2,6 +2,7 @@ import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 import {
   chicagoToday,
+  allowsHomework,
   generateCode,
   isExpired,
   normalizeCode,
@@ -58,6 +59,13 @@ describe('access codes', () => {
     assert.match(redeemProblem(code({ active: false })) ?? '', /stopped/)
     assert.match(redeemProblem(code({ expiresAt: '2020-01-01' })) ?? '', /expired/)
     assert.equal(redeemProblem(code({})), null)
+  })
+
+  it('treats a missing homework flag as on', () => {
+    assert.equal(allowsHomework(code({})), true)
+    assert.equal(allowsHomework(code({ homeworkAccess: true })), true)
+    assert.equal(allowsHomework(code({ homeworkAccess: false })), false)
+    assert.equal(allowsHomework(null), false)
   })
 
   it('labels expired ahead of the active toggle', () => {

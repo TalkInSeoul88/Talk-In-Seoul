@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import ClassLocked from '../components/ClassLocked'
+import CourseLocked from '../components/CourseLocked'
 import { formatExpiry } from '../lib/enrollment.ts'
 import { useEnrollment } from '../lib/enrollment.tsx'
 import { formatSize, readError } from '../lib/http.ts'
@@ -29,6 +29,7 @@ export default function Homework() {
   const [loading, setLoading] = useState(enrollment.enrolled)
   const [error, setError] = useState<string | null>(null)
   const [gateError, setGateError] = useState<string | null>(null)
+  const [blocked, setBlocked] = useState<string | null>(null)
 
   useEffect(() => {
     if (!enrollment.enrolled || !enrollment.code) return
@@ -37,9 +38,14 @@ export default function Homework() {
     void (async () => {
       setLoading(true)
       setError(null)
+      setBlocked(null)
       try {
         const response = await fetch('/api/class/homework', { headers: { 'X-Access-Code': code } })
         if (cancelled) return
+        if (response.status === 403) {
+          setBlocked(await readError(response))
+          return
+        }
         if (response.status === 401) {
           setGateError(await readError(response))
           clear()
@@ -69,17 +75,15 @@ export default function Homework() {
       <header>
         <p className="kicker">Homework · 숙제</p>
         <h2 className="page-title">{enrollment.enrolled && courseName ? courseName : 'Homework'}</h2>
-        <p className="lede">Open a file to read it or save it on your phone.</p>
+        <p className="lede">
+          {blocked ? 'Pronunciation and notices stay open.' : 'Open a file to read it or save it on your phone.'}
+        </p>
       </header>
 
       {!enrollment.enrolled ? (
-        <ClassLocked
-          kicker="Homework"
-          title="Code required"
-          detail="Homework unlocks with a class access code."
-          inputId="homework-access-code"
-          error={gateError}
-        />
+        <CourseLocked title="Homework" inputId="homework-access-code" enrolled={false} error={gateError} />
+      ) : blocked ? (
+        <CourseLocked title="Homework" inputId="homework-course-code" enrolled message={blocked} />
       ) : loading ? (
         <p className="tiny">Loading…</p>
       ) : error ? (
