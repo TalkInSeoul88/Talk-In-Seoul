@@ -13,11 +13,12 @@ Students come to an in-person Hangul class at the store, then use this phone-fri
 - **Trace** — finger tracing for the 8-week course, one letter at a time. Pick a line: **Consonants ㄱ–ㅎ**, then **쌍자음**, **모음**, and one syllable line per vowel (ㅏ `가 ~ 하` through ㅣ `기 ~ 히`). A taste-class code does not open Trace. Wobbly strokes are fine. Press **Done** after any ink and the letter turns green. The doorbell (`public/audio/trace-success.mp3`) and Jung’s clip start together; his voice plays once and is fetched when the letter appears, not after the chime. The next letter appears shortly after his clip ends. Arriving on a letter does not play it; **Hear it** does. **Done** on an empty canvas shows a red X and “Try again.” The finger stroke is half the gray letter’s stem width. Last position is remembered on this phone.
 - **Quiz** — flashcards. **모음(vowels)** and **자음(consonants)** (14 basic + 5 쌍자음) stay free; Play uses Jung’s clips. **Words (단어) · Easy 20** is also free (no access code). **Words (단어) · Class unlock** needs the same student access code as 음절(syllables). Word cards have no teacher MP3s yet, so they stay silent. Compound vowels and 음절(syllables) are not in the jamo decks.
 - **This Week** — writing sheets for the 8-week course: 자음 (2 pages ㄱ–ㅎ), 모음, and 단어 (animals: 개 호랑이 토끼 다람쥐 새 개구리 나비 곰). A taste-class code does not open them, and the PDF addresses are not public.
+- **My Progress** (`/progress`) — Beginner checklist in the hamburger menu. Each step shows what you learn. **Class progress** is a filled dot, “Covered in class,” for every step through the week Jung set. **My review** is the student’s own check. Any class code can open it, including a taste-class code.
 - **Notices** (`/notices`) — reminders Jung posts (title, message, date, optional pin). Newest first, pinned on top. A notice can be for every student or for one course. Needs a class code.
 - **Homework** (`/homework`) — files for the student’s course, grouped Week 1, Week 2, and so on. PDF or photo. Needs full course access. A taste-class code still unlocks pronunciation and notices.
 - **Admin** (`/admin`) — hidden from the student hamburger. Jung unlocks with a password, then:
   - **Codes** — issue a code, set its expiry, start or stop it, change that date later with **Save date**, turn **Full course access (Homework, This Week, Trace)** on or off, and delete it after confirming
-  - **Courses** — add a class (Beginner is already there, 8 weeks), change its name or week count, and choose which class a code is for
+  - **Courses** — add a class (Beginner is already there, 8 weeks), change its name or week count, set **Class is at** (Taste Korean Day or Week 1–8), and choose which class a code is for
   - **Notices** — post, edit, or delete reminders
   - **Homework** — post, edit, or delete homework and add or remove files
 
@@ -111,7 +112,7 @@ Notices, courses, homework text, and homework files use **the same Blob store**.
 
 - Classroom JSON lives at `talk-in-seoul/classroom.json`.
 - Files live under `talk-in-seoul/files/`.
-- Preview deployments use `talk-in-seoul/preview/…` instead, so homework or notices posted on a preview URL do **not** show up on the production site.
+- Preview deployments use `talk-in-seoul/preview/…` instead, so homework, notices, class progress, and My review checks saved on a preview URL do **not** change the production classroom.
 - Access codes are still the one shared list (`talk-in-seoul/access-codes.json`). Creating, stopping, or changing a code on a preview URL changes production codes too. Use the production admin for real codes.
 
 The first time the classroom file is read, the app creates a **Beginner** course with **8 weeks**. Add Intermediate (or any other class) at `/admin/courses` and set how many weeks it has. You do not need a code change for a new level.

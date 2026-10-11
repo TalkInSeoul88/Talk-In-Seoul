@@ -1908,6 +1908,136 @@ code {
   color: var(--ink-soft);
 }
 
+.progress-total {
+  margin: 0 0 0.45rem;
+  font-weight: 700;
+}
+
+.progress-celebrate {
+  margin: 0.15rem 0 0;
+  color: var(--coral-deep);
+  font-weight: 700;
+}
+
+.review-list {
+  list-style: none;
+  margin: 0.15rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.7rem;
+}
+
+.review-step {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 0.7rem;
+  align-items: start;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  padding: 0.9rem 0.8rem 0.95rem;
+}
+
+.review-step:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  left: 1.22rem;
+  top: 1.85rem;
+  bottom: -0.7rem;
+  width: 2px;
+  background: var(--line);
+}
+
+.class-dot {
+  width: 0.95rem;
+  height: 0.95rem;
+  margin-top: 0.28rem;
+  border-radius: 999px;
+  border: 2px solid #cfcfcf;
+  background: var(--paper);
+  position: relative;
+  z-index: 1;
+}
+
+.review-step.is-covered .class-dot {
+  background: var(--coral);
+  border-color: var(--coral);
+}
+
+.review-copy h2 {
+  margin: 0;
+  font-size: 1.02rem;
+}
+
+.review-learn {
+  margin: 0.18rem 0 0;
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.review-count,
+.class-badge {
+  margin: 0.18rem 0 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.review-step.is-covered .class-badge {
+  color: var(--coral-deep);
+}
+
+.review-check {
+  width: 4.5rem;
+  min-height: 4.5rem;
+  border-radius: 1rem;
+  border: 2px solid var(--line);
+  background: var(--paper);
+  color: var(--on-coral);
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 0.2rem;
+  padding: 0.35rem 0.25rem;
+  touch-action: manipulation;
+}
+
+.review-check.is-on {
+  background: var(--coral);
+  border-color: var(--coral);
+}
+
+.review-check svg,
+.review-check-box {
+  width: 1.35rem;
+  height: 1.35rem;
+}
+
+.review-check-box {
+  border: 2px solid #d0d0d0;
+  border-radius: 0.35rem;
+}
+
+.review-check.is-on .review-check-box {
+  display: none;
+}
+
+.review-check-label {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  line-height: 1.15;
+  color: var(--muted);
+  text-align: center;
+}
+
+.review-check.is-on .review-check-label {
+  color: var(--on-coral);
+}
+
 .action-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
