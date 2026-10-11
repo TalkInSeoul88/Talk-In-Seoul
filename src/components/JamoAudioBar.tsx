@@ -27,9 +27,10 @@ function storeClip(id: string, blob: Blob): string {
 type Props = {
   jamo: TeacherClip
   revealLabel?: boolean
+  soonText?: string
 }
 
-export default function JamoAudioBar({ jamo, revealLabel = true }: Props) {
+export default function JamoAudioBar({ jamo, revealLabel = true, soonText = 'Audio coming soon' }: Props) {
   const src = teacherAudioSrc(jamo)
   const teacherRef = useRef<HTMLAudioElement>(null)
   const mineRef = useRef<HTMLAudioElement>(null)
@@ -190,7 +191,7 @@ export default function JamoAudioBar({ jamo, revealLabel = true }: Props) {
       )}
 
       {teacherStatus === 'missing' ? (
-        <p className="audio-soon">Audio coming soon</p>
+        <p className="audio-soon">{soonText}</p>
       ) : (
         <button
           type="button"
