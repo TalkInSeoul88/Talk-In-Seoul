@@ -289,3 +289,69 @@ Filenames stay ASCII even when the sound palatalizes (시 → `syllable-si.mp3`)
 ## Quiz 단어 (words)
 
 Easy 20 and Class unlock flashcards are Hangul → romanization + English. There are **no** `word-*.mp3` files yet. Do not add silent placeholder MP3s. Quiz Play stays on the 모음/자음 cards that already have Jung’s clips.
+
+## Bottom Sounds, Numbers, Conversation
+
+Same folder and lookup as the vowels: `/audio/{audioId}.mp3`. These three menu sections are open with or without a class code. If the file is missing, the row says **Recording coming soon** and Record still works. Do not add silent placeholders.
+
+| # | Say | File |
+| --- | --- | --- |
+| 1 | 간장 (gan-jang) soy sauce | `batchim-gan-jang.mp3` |
+| 2 | 나방 (na-bang) moth | `batchim-na-bang.mp3` |
+| 3 | 다람쥐 (da-ram-jwi) squirrel | `batchim-da-ram-jwi.mp3` |
+| 4 | 마늘 (ma-neul) garlic | `batchim-ma-neul.mp3` |
+| 5 | 방 (bang) room | `batchim-bang.mp3` |
+| 6 | 사슴 (sa-seum) deer | `batchim-sa-seum.mp3` |
+| 7 | 아들 (a-deul) son | `batchim-a-deul.mp3` |
+| 8 | 자동차 (ja-dong-cha) car | `batchim-ja-dong-cha.mp3` |
+| 9 | 책 (chaek) book | `batchim-chaek.mp3` |
+| 10 | 콩 (kong) bean | `batchim-kong.mp3` |
+| 11 | 탑 (tap) tower | `batchim-tap.mp3` |
+| 12 | 팔 (pal) arm | `batchim-pal.mp3` |
+| 13 | 하늘 (ha-neul) sky | `batchim-ha-neul.mp3` |
+| 14 | 밥 (bap) rice | `batchim-bap.mp3` |
+| 15 | 물 (mul) water | `batchim-mul.mp3` |
+| 16 | 집 (jip) house | `batchim-jip.mp3` |
+| 17 | 김밥 (gim-bap) kimbap | `batchim-gim-bap.mp3` |
+| 18 | 라면 (ra-myeon) ramen | `batchim-ra-myeon.mp3` |
+| 19 | 사랑 (sa-rang) love | `batchim-sa-rang.mp3` |
+| 20 | 공 (gong) ball | `batchim-gong.mp3` |
+| 21 | 하나 (ha-na) 1 | `number-ha-na.mp3` |
+| 22 | 둘 (dul) 2 | `number-dul.mp3` |
+| 23 | 셋 (set) 3 | `number-set.mp3` |
+| 24 | 넷 (net) 4 | `number-net.mp3` |
+| 25 | 다섯 (da-seot) 5 | `number-da-seot.mp3` |
+| 26 | 여섯 (yeo-seot) 6 | `number-yeo-seot.mp3` |
+| 27 | 일곱 (il-gop) 7 | `number-il-gop.mp3` |
+| 28 | 여덟 (yeo-deol) 8 | `number-yeo-deol.mp3` |
+| 29 | 아홉 (a-hop) 9 | `number-a-hop.mp3` |
+| 30 | 열 (yeol) 10 | `number-yeol.mp3` |
+| 31 | 일 (il) 1 | `number-il.mp3` |
+| 32 | 이 (i) 2 | `number-i.mp3` |
+| 33 | 삼 (sam) 3 | `number-sam.mp3` |
+| 34 | 사 (sa) 4 | `number-sa.mp3` |
+| 35 | 오 (o) 5 | `number-o.mp3` |
+| 36 | 육 (yuk) 6 | `number-yuk.mp3` |
+| 37 | 칠 (chil) 7 | `number-chil.mp3` |
+| 38 | 팔 (pal) 8 | `number-pal.mp3` |
+| 39 | 구 (gu) 9 | `number-gu.mp3` |
+| 40 | 십 (sip) 10 | `number-sip.mp3` |
+| 41 | 십일 (si-bil) 11 | `number-si-bil.mp3` |
+| 42 | 이십이 (i-si-bi) 22 | `number-i-si-bi.mp3` |
+| 43 | 삼십삼 (sam-sip-sam) 33 | `number-sam-sip-sam.mp3` |
+| 44 | 사십사 (sa-sip-sa) 44 | `number-sa-sip-sa.mp3` |
+| 45 | 오십오 (o-sip-o) 55 | `number-o-sip-o.mp3` |
+| 46 | 육십육 (yuk-sip-yuk) 66 | `number-yuk-sip-yuk.mp3` |
+| 47 | 칠십칠 (chil-sip-chil) 77 | `number-chil-sip-chil.mp3` |
+| 48 | 팔십팔 (pal-sip-pal) 88 | `number-pal-sip-pal.mp3` |
+| 49 | 구십구 (gu-sip-gu) 99 | `number-gu-sip-gu.mp3` |
+| 50 | 안녕하세요 (an-nyeong-ha-se-yo) Hello | `phrase-an-nyeong-ha-se-yo.mp3` |
+| 51 | 이거 얼마예요? (i-geo eol-ma-ye-yo) How much is this? | `phrase-i-geo-eol-ma-ye-yo.mp3` |
+| 52 | 이거 주세요 (i-geo ju-se-yo) This one, please | `phrase-i-geo-ju-se-yo.mp3` |
+| 53 | 감사합니다 (gam-sa-ham-ni-da) Thank you | `phrase-gam-sa-ham-ni-da.mp3` |
+| 54 | 네 (ne) Yes | `phrase-ne.mp3` |
+| 55 | 아니요 (a-ni-yo) No | `phrase-a-ni-yo.mp3` |
+| 56 | 맛있어요 (ma-si-sseo-yo) It's delicious | `phrase-ma-si-sseo-yo.mp3` |
+| 57 | 화장실 어디예요? (hwa-jang-sil eo-di-ye-yo) Where is the restroom? | `phrase-hwa-jang-sil-eo-di-ye-yo.mp3` |
+| 58 | 다시 말해 주세요 (da-si mal-hae ju-se-yo) Please say it again | `phrase-da-si-mal-hae-ju-se-yo.mp3` |
+| 59 | 안녕히 계세요 (an-nyeong-hi gye-se-yo) Goodbye | `phrase-an-nyeong-hi-gye-se-yo.mp3` |
