@@ -1,5 +1,6 @@
 export const STUDENT_NAV = [
   { to: '/', label: 'Home', ko: '홈' },
+  { to: '/progress', label: 'My Progress', ko: '진도' },
   { to: '/notices', label: 'Notices', ko: '알림' },
   { to: '/homework', label: 'Homework', ko: '숙제' },
   { to: '/pronunciation', label: 'Pronunciation', ko: '발음' },

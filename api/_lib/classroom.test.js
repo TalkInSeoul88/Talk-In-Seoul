@@ -11,7 +11,7 @@ import {
   handleStudentNotices,
 } from './classroom-handlers.js'
 import { COURSE_CLOSED } from './codes.js'
-import { classroomRoot } from './classroom-store.js'
+import { classroomBlobPath, classroomRoot } from './classroom-store.js'
 import { resetClassroomMemory } from './classroom-store.js'
 import { resetMemoryFiles } from './files.js'
 import { handleAdminCodes, handleAdminLogin } from './handlers.js'
@@ -329,7 +329,70 @@ describe('classroom notices and homework', () => {
 
     process.env.VERCEL_ENV = 'preview'
     assert.equal(classroomRoot(), 'talk-in-seoul/preview')
+    assert.equal(classroomBlobPath(), 'talk-in-seoul/preview/classroom.json')
     delete process.env.VERCEL_ENV
     assert.equal(classroomRoot(), 'talk-in-seoul')
+    assert.equal(classroomBlobPath(), 'talk-in-seoul/classroom.json')
+  })
+
+  it('stores class progress for the course and review checks per code', async () => {
+    await handleAdminCodes(ctx('PATCH', { code: 'POP-NEXT', homeworkAccess: false }, auth))
+    const student = (method, code, body = {}, query = { progress: '1' }) =>
+      handleStudentNotices(ctx(method, body, (name) => (name === 'x-access-code' ? code : ''), { query }))
+
+    const before = await student('GET', 'POP-NEXT')
+    assert.equal(before.status, 200)
+    assert.equal(before.body.total, 9)
+    assert.equal(before.body.reviewedCount, 0)
+    assert.equal(before.body.classTitle, null)
+    assert.equal(before.body.steps[0].title, 'Taste Korean Day')
+    assert.equal(before.body.steps[0].learn, 'First meet + hello. 저는 ___예요. (jeo-neun ___ ye-yo)')
+    assert.equal(before.body.steps[0].count, '1 of 9')
+    assert.equal(before.body.steps.every((step) => step.covered === false), true)
+
+    const marked = await handleAdminCourses(ctx('PATCH', { id: 'beginner', classAt: 'week-3' }, auth))
+    assert.equal(marked.status, 200)
+    assert.equal(marked.body.classAt, 'week-3')
+    const listed = await handleAdminCourses(ctx('GET', {}, auth))
+    assert.equal(listed.body.classProgress.beginner, 'week-3')
+    assert.equal(listed.body.steps.beginner.length, 9)
+
+    const covered = await student('GET', 'POP-NEXT')
+    assert.deepEqual(
+      covered.body.steps.filter((step) => step.covered).map((step) => step.id),
+      ['taste-day', 'week-1', 'week-2', 'week-3'],
+    )
+    assert.equal(covered.body.classTitle, 'Week 3')
+    assert.equal(covered.body.steps[3].covered, true)
+    assert.equal(covered.body.steps[4].covered, false)
+
+    const checked = await student('PATCH', 'POP-NEXT', { stepId: 'week-8', done: true })
+    assert.equal(checked.status, 200)
+    assert.equal(checked.body.reviewedCount, 1)
+    assert.equal(checked.body.steps.find((step) => step.id === 'week-8').reviewed, true)
+    assert.equal(checked.body.steps.find((step) => step.id === 'week-8').covered, false)
+
+    const other = await student('GET', 'POP-WEEK')
+    assert.equal(other.body.reviewedCount, 0)
+    assert.equal(other.body.steps.filter((step) => step.covered).length, 4)
+
+    const off = await student('PATCH', 'POP-NEXT', { stepId: 'week-8', done: false })
+    assert.equal(off.body.reviewedCount, 0)
+
+    const badStep = await student('PATCH', 'POP-NEXT', { stepId: 'nope', done: true })
+    assert.equal(badStep.status, 400)
+    const badClass = await handleAdminCourses(ctx('PATCH', { id: 'beginner', classAt: 'nope' }, auth))
+    assert.equal(badClass.status, 400)
+    const cleared = await handleAdminCourses(ctx('PATCH', { id: 'beginner', classAt: '' }, auth))
+    assert.equal(cleared.body.classAt, null)
+    const open = await student('GET', 'POP-WEEK')
+    assert.equal(open.body.steps.some((step) => step.covered), false)
+
+    const notices = await student('GET', 'POP-NEXT', {}, {})
+    assert.equal(notices.status, 200)
+    assert.equal(notices.body.courseAccess, false)
+    assert.equal(notices.body.steps, undefined)
+    const homework = await handleStudentHomework(ctx('GET', {}, (name) => (name === 'x-access-code' ? 'POP-NEXT' : '')))
+    assert.equal(homework.status, 403)
   })
 })
