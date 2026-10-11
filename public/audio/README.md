@@ -355,3 +355,18 @@ Same folder and lookup as the vowels: `/audio/{audioId}.mp3`. These three menu s
 | 57 | 화장실 어디예요? (hwah-jahng-sheel uh-dee-yeh-yoh) Where is the restroom? | `phrase-hwa-jang-sil-eo-di-ye-yo.mp3` |
 | 58 | 다시 말해 주세요 (dah-shee mahl-heh joo-seh-yoh) Please say it again | `phrase-da-si-mal-hae-ju-se-yo.mp3` |
 | 59 | 안녕히 계세요 (ahn-nyuhng-hee gyeh-seh-yoh) Goodbye | `phrase-an-nyeong-hi-gye-se-yo.mp3` |
+
+## Basic Grammar · Taste of Grammar
+
+Same folder: `/audio/grammar-<lesson>-<line>.mp3`. Lessons 1 and 2 are free. Lessons 3–8 are not written in this file, so a student page cannot pick them up from here. If the file is missing, the row says **Recording coming soon**.
+
+| # | Say | File |
+| --- | --- | --- |
+| 1 | 저는 (juh-neun) 밥을 (bah-beul) 먹어요 (muh-guh-yoh) I eat rice. | `grammar-1-1.mp3` |
+| 2 | 저는 (juh-neun) 물을 (moo-reul) 마셔요 (mah-syuh-yoh) I drink water. | `grammar-1-2.mp3` |
+| 3 | 저는 (juh-neun) 김밥을 (geem-bah-beul) 좋아해요 (joh-ah-heh-yoh) I like kimbap. | `grammar-1-3.mp3` |
+| 4 | 물 (mool) 주세요 (joo-seh-yoh) Water, please. | `grammar-2-1.mp3` |
+| 5 | 김밥 (geem-bahp) 주세요 (joo-seh-yoh) Kimbap, please. | `grammar-2-2.mp3` |
+| 6 | 이거 (ee-guh) 주세요 (joo-seh-yoh) This one, please. | `grammar-2-3.mp3` |
+
+Course lines use `grammar-3-1.mp3` through `grammar-8-3.mp3` (three files per lesson, in lesson order).

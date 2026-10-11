@@ -19,6 +19,7 @@ import {
 import { loadClassroom, saveClassroom } from './classroom-store.js'
 import { coveredThrough, stepsForCourse } from './course-progress.js'
 import { COURSE_CLOSED } from './codes.js'
+import { GRAMMAR_LOCKED, LOCKED_LESSONS } from './grammar.js'
 import { readWeekSheet } from './week-sheets.js'
 import {
   attachmentHeaders,
@@ -612,7 +613,16 @@ export async function handleStudentNotices(ctx) {
   }
 }
 
+export async function handleStudentGrammar(ctx) {
+  if (ctx.method !== 'GET') return json(405, { error: 'Use GET.' })
+  const student = await requireStudent(ctx)
+  if (!student.ok) return json(student.status, { error: student.error })
+  if (!student.homeworkAccess) return json(403, { error: GRAMMAR_LOCKED })
+  return json(200, { lessons: LOCKED_LESSONS })
+}
+
 export async function handleStudentHomework(ctx) {
+  if (ctx.query?.grammar === '1') return handleStudentGrammar(ctx)
   if (ctx.method !== 'GET') return json(405, { error: 'Use GET.' })
   const student = await requireStudent(ctx)
   if (!student.ok) return json(student.status, { error: student.error })

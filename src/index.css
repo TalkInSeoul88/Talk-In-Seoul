@@ -2068,3 +2068,41 @@ code {
 .clip-detail {
   margin: 0.15rem 0 0.15rem;
 }
+
+.grammar-card h2 {
+  display: flex;
+  gap: 0.45rem;
+  align-items: baseline;
+  font-size: 1.15rem;
+  line-height: 1.35;
+}
+
+.grammar-index {
+  color: var(--coral-deep);
+  font-variant-numeric: tabular-nums;
+}
+
+.grammar-explain {
+  margin: 0.35rem 0 0.85rem;
+}
+
+.grammar-sentence {
+  padding-top: 0.15rem;
+}
+
+.grammar-lock {
+  display: flex;
+  gap: 0.55rem;
+  align-items: flex-start;
+  margin: 0.45rem 0 0;
+  color: var(--ink-soft);
+  font-weight: 650;
+}
+
+.grammar-lock-icon {
+  width: 1.35rem;
+  height: 1.35rem;
+  flex: none;
+  margin-top: 0.12rem;
+  color: var(--coral-deep);
+}

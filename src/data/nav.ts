@@ -7,6 +7,7 @@ export const STUDENT_NAV = [
   { to: '/batchim', label: 'Bottom Sounds', ko: '받침' },
   { to: '/numbers', label: 'Numbers', ko: '숫자' },
   { to: '/conversation', label: 'Conversation', ko: '대화' },
+  { to: '/grammar', label: 'Basic Grammar', ko: '문법' },
   { to: '/trace', label: 'Trace', ko: '쓰기' },
   { to: '/quiz', label: 'Quiz', ko: '퀴즈' },
   { to: '/this-week', label: 'This Week', ko: '이번 주' },
