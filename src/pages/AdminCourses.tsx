@@ -3,6 +3,7 @@ import AdminGate from '../components/AdminGate'
 import { readError } from '../lib/http.ts'
 
 type Course = { id: string; name: string; weeks: number }
+type StepOption = { id: string; title: string }
 type CodeRow = { code: string; status: string; expiresAt: string }
 
 export default function AdminCourses() {
@@ -12,6 +13,8 @@ export default function AdminCourses() {
 function CoursesEditor({ token }: { token: string }) {
   const [courses, setCourses] = useState<Course[]>([])
   const [codeCourses, setCodeCourses] = useState<Record<string, string>>({})
+  const [classProgress, setClassProgress] = useState<Record<string, string>>({})
+  const [steps, setSteps] = useState<Record<string, StepOption[]>>({})
   const [codes, setCodes] = useState<CodeRow[]>([])
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
@@ -31,10 +34,17 @@ function CoursesEditor({ token }: { token: string }) {
     }
     if (!courseRes.ok) throw new Error(await readError(courseRes))
     if (!codeRes.ok) throw new Error(await readError(codeRes))
-    const coursePayload = (await courseRes.json()) as { courses: Course[]; codeCourses: Record<string, string> }
+    const coursePayload = (await courseRes.json()) as {
+      courses: Course[]
+      codeCourses: Record<string, string>
+      classProgress?: Record<string, string>
+      steps?: Record<string, StepOption[]>
+    }
     const codePayload = (await codeRes.json()) as { codes: CodeRow[] }
     setCourses(coursePayload.courses)
     setCodeCourses(coursePayload.codeCourses || {})
+    setClassProgress(coursePayload.classProgress || {})
+    setSteps(coursePayload.steps || {})
     setCodes(codePayload.codes)
   }
 
@@ -109,6 +119,35 @@ function CoursesEditor({ token }: { token: string }) {
     await load()
   }
 
+  async function setClassAt(course: Course, classAt: string) {
+    const previous = classProgress[course.id] || ''
+    setError(null)
+    setClassProgress((current) => {
+      const next = { ...current }
+      if (classAt) next[course.id] = classAt
+      else delete next[course.id]
+      return next
+    })
+    try {
+      const response = await fetch('/api/admin/courses', {
+        method: 'PATCH',
+        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: course.id, classAt: classAt || null }),
+      })
+      if (!response.ok) {
+        setClassProgress((current) => {
+          const next = { ...current }
+          if (previous) next[course.id] = previous
+          else delete next[course.id]
+          return next
+        })
+        setError(await readError(response))
+      }
+    } catch {
+      setError('Could not save class progress.')
+    }
+  }
+
   async function assign(code: string, courseId: string) {
     setError(null)
     const response = await fetch('/api/admin/courses', {
@@ -134,7 +173,7 @@ function CoursesEditor({ token }: { token: string }) {
         <p className="kicker">Courses</p>
         <h2 className="page-title">Classes</h2>
         <p className="lede">
-          Beginner is ready with 8 weeks. Add Intermediate later, or change how many weeks a class has.
+          Beginner is ready with 8 weeks. Set Class is at so students see what you covered. Add Intermediate later, or change how many weeks a class has.
         </p>
       </header>
       {error && (
@@ -168,9 +207,12 @@ function CoursesEditor({ token }: { token: string }) {
         <CourseCard
           key={`${course.id}:${course.name}:${course.weeks}`}
           course={course}
+          steps={steps[course.id] || []}
+          classAt={classProgress[course.id] || ''}
           canDelete={courses.length > 1}
           onSave={saveCourse}
           onDelete={removeCourse}
+          onClassAt={setClassAt}
         />
       ))}
 
@@ -213,14 +255,20 @@ function CoursesEditor({ token }: { token: string }) {
 
 function CourseCard({
   course,
+  steps,
+  classAt,
   canDelete,
   onSave,
   onDelete,
+  onClassAt,
 }: {
   course: Course
+  steps: StepOption[]
+  classAt: string
   canDelete: boolean
   onSave: (course: Course, name: string, weeks: string) => Promise<void>
   onDelete: (course: Course) => Promise<void>
+  onClassAt: (course: Course, classAt: string) => Promise<void>
 }) {
   const [name, setName] = useState(course.name)
   const [weeks, setWeeks] = useState(String(course.weeks))
@@ -244,6 +292,28 @@ function CourseCard({
         <span>Weeks</span>
         <input inputMode="numeric" value={weeks} onChange={(event) => setWeeks(event.target.value)} />
       </label>
+      <label className="field">
+        <span>Class is at</span>
+        {steps.length === 0 ? (
+          <p className="tiny" style={{ margin: 0 }}>
+            No step list for this class yet.
+          </p>
+        ) : (
+          <select
+            aria-label={`Class is at for ${course.name}`}
+            value={classAt}
+            onChange={(event) => void onClassAt(course, event.target.value)}
+          >
+            <option value="">Not yet</option>
+            {steps.map((step) => (
+              <option key={step.id} value={step.id}>
+                {step.title}
+              </option>
+            ))}
+          </select>
+        )}
+      </label>
+      <p className="tiny">Students see Covered in class through this step. Their own checks stay separate.</p>
       <div className="action-row">
         <button className="btn" type="submit" disabled={busy}>
           {busy ? 'Saving…' : 'Save'}

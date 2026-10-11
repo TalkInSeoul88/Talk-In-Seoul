@@ -17,6 +17,7 @@ import {
   MAX_FILES,
 } from './classroom.js'
 import { loadClassroom, saveClassroom } from './classroom-store.js'
+import { coveredThrough, stepsForCourse } from './course-progress.js'
 import { COURSE_CLOSED } from './codes.js'
 import { readWeekSheet } from './week-sheets.js'
 import {
@@ -113,6 +114,10 @@ export async function handleAdminCourses(ctx) {
       return json(200, {
         courses: data.courses.map(publicCourse),
         codeCourses: data.codeCourses,
+        classProgress: data.classProgress,
+        steps: Object.fromEntries(
+          data.courses.map((course) => [course.id, stepsForCourse(course).map(({ id, title }) => ({ id, title }))]),
+        ),
         store: storeMode(),
       })
     }
@@ -178,9 +183,24 @@ export async function handleAdminCourses(ctx) {
         }
         course.weeks = weeks.weeks
       }
+      if (Object.prototype.hasOwnProperty.call(ctx.body ?? {}, 'classAt')) {
+        const raw = ctx.body.classAt
+        if (!data.classProgress || typeof data.classProgress !== 'object' || Array.isArray(data.classProgress)) {
+          data.classProgress = {}
+        }
+        if (raw === null || raw === '') {
+          delete data.classProgress[course.id]
+        } else {
+          const stepId = String(raw)
+          if (!stepsForCourse(course).some((step) => step.id === stepId)) {
+            return json(400, { error: 'Pick a class step.' })
+          }
+          data.classProgress[course.id] = stepId
+        }
+      }
       course.updatedAt = now
       await saveClassroom(data)
-      return json(200, { course: publicCourse(course) })
+      return json(200, { course: publicCourse(course), classAt: data.classProgress[course.id] || null })
     }
 
     if (ctx.method === 'DELETE') {
@@ -194,6 +214,12 @@ export async function handleAdminCourses(ctx) {
       data.notices = data.notices.filter((item) => item.courseId !== id)
       for (const [code, courseId] of Object.entries(data.codeCourses)) {
         if (courseId === id) delete data.codeCourses[code]
+      }
+      if (data.classProgress) delete data.classProgress[id]
+      if (data.progressByCode && typeof data.progressByCode === 'object') {
+        for (const entry of Object.values(data.progressByCode)) {
+          if (entry && typeof entry === 'object') delete entry[id]
+        }
       }
       data.courses = data.courses.filter((item) => item.id !== id)
       await saveClassroom(data)
@@ -506,7 +532,67 @@ export async function handleBlobUpload(ctx) {
   }
 }
 
+function reviewedIds(data, code, courseId, steps) {
+  const raw = data.progressByCode?.[code]?.[courseId]
+  if (!Array.isArray(raw)) return []
+  const allowed = new Set(raw)
+  return steps.map((step) => step.id).filter((id) => allowed.has(id))
+}
+
+function presentProgress(data, code, course) {
+  const steps = course ? stepsForCourse(course) : []
+  const classAt = course && steps.some((step) => step.id === data.classProgress?.[course.id]) ? data.classProgress[course.id] : null
+  const covered = new Set(coveredThrough(steps, classAt).map((step) => step.id))
+  const reviewed = new Set(course ? reviewedIds(data, code, course.id, steps) : [])
+  return {
+    course: course ? publicCourse(course) : null,
+    classAt,
+    classTitle: steps.find((step) => step.id === classAt)?.title || null,
+    steps: steps.map((step, index) => ({
+      id: step.id,
+      title: step.title,
+      learn: step.learn,
+      covered: covered.has(step.id),
+      reviewed: reviewed.has(step.id),
+      count: `${index + 1} of ${steps.length}`,
+    })),
+    reviewedCount: reviewed.size,
+    total: steps.length,
+  }
+}
+
+export async function handleStudentProgress(ctx) {
+  if (ctx.method !== 'GET' && ctx.method !== 'PATCH') return json(405, { error: 'Use GET or PATCH.' })
+  const student = await requireStudent(ctx)
+  if (!student.ok) return json(student.status, { error: student.error })
+  try {
+    const data = await loadClassroom()
+    const course = courseForCode(data, student.code)
+    const steps = stepsForCourse(course)
+    if (ctx.method === 'PATCH') {
+      if (typeof ctx.body?.done !== 'boolean') return json(400, { error: 'Set the review on or off.' })
+      const stepId = String(ctx.body?.stepId || '')
+      if (!steps.some((step) => step.id === stepId)) return json(400, { error: 'That step is not on this course.' })
+      const current = reviewedIds(data, student.code, course.id, steps)
+      const next = ctx.body.done ? [...current, stepId] : current.filter((id) => id !== stepId)
+      const ordered = steps.map((step) => step.id).filter((id) => next.includes(id))
+      if (!data.progressByCode || typeof data.progressByCode !== 'object' || Array.isArray(data.progressByCode)) {
+        data.progressByCode = {}
+      }
+      if (!data.progressByCode[student.code] || typeof data.progressByCode[student.code] !== 'object') {
+        data.progressByCode[student.code] = {}
+      }
+      data.progressByCode[student.code][course.id] = ordered
+      await saveClassroom(data)
+    }
+    return json(200, presentProgress(data, student.code, course))
+  } catch (error) {
+    return failure(error)
+  }
+}
+
 export async function handleStudentNotices(ctx) {
+  if (ctx.query?.progress === '1') return handleStudentProgress(ctx)
   if (ctx.method !== 'GET') return json(405, { error: 'Use GET.' })
   const student = await requireStudent(ctx)
   if (!student.ok) return json(student.status, { error: student.error })
