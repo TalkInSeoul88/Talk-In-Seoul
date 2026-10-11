@@ -20,6 +20,8 @@ export function emptyClassroom(now = new Date().toISOString()) {
     notices: [],
     homework: [],
     codeCourses: {},
+    classProgress: {},
+    progressByCode: {},
   }
 }
 

@@ -34,7 +34,45 @@ function parseClassroom(text) {
   if (!parsed.codeCourses || typeof parsed.codeCourses !== 'object' || Array.isArray(parsed.codeCourses)) {
     parsed.codeCourses = {}
   }
+  parsed.classProgress = cleanClassProgress(parsed.classProgress)
+  parsed.progressByCode = cleanProgressByCode(parsed.progressByCode)
   return parsed
+}
+
+function cleanClassProgress(value) {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return {}
+  const clean = {}
+  for (const [courseId, stepId] of Object.entries(value)) {
+    if (typeof stepId !== 'string') continue
+    const id = stepId.trim()
+    if (!id || id.length > 80) continue
+    clean[courseId] = id
+  }
+  return clean
+}
+
+function cleanProgressByCode(value) {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return {}
+  const clean = {}
+  for (const [code, courses] of Object.entries(value)) {
+    if (!courses || typeof courses !== 'object' || Array.isArray(courses)) continue
+    const next = {}
+    for (const [courseId, steps] of Object.entries(courses)) {
+      if (!Array.isArray(steps)) continue
+      const ids = []
+      const seen = new Set()
+      for (const item of steps) {
+        if (typeof item !== 'string') continue
+        const id = item.trim()
+        if (!id || id.length > 80 || seen.has(id)) continue
+        seen.add(id)
+        ids.push(id)
+      }
+      next[courseId] = ids
+    }
+    clean[code] = next
+  }
+  return clean
 }
 
 async function readBlob() {
