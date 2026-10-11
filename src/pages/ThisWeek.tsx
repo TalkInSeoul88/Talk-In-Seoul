@@ -23,10 +23,9 @@ export default function ThisWeek() {
         <p className="tiny">Loading…</p>
       ) : open && course.code ? (
         <section>
-          <p className="kicker">Materials</p>
-          <h2 className="section-title">This Week</h2>
+          <h2 className="section-title">Study Material</h2>
           <p className="tiny material-note">Open to view or print.</p>
-          <nav className="home-links" aria-label="This week materials">
+          <nav className="home-links" aria-label="Study material">
             {PUBLIC_MATERIALS.map((item) => (
               <MaterialLink key={item.id} item={{ ...item, href: weekSheetHref(item.id, course.code as string) }} />
             ))}
