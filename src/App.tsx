@@ -7,6 +7,7 @@ import AdminHomework from './pages/AdminHomework'
 import AdminNotices from './pages/AdminNotices'
 import Batchim from './pages/Batchim'
 import Conversation from './pages/Conversation'
+import Grammar from './pages/Grammar'
 import Homework from './pages/Homework'
 import Home from './pages/Home'
 import Notices from './pages/Notices'
@@ -29,6 +30,7 @@ export default function App() {
             <Route path="/batchim" element={<Batchim />} />
             <Route path="/numbers" element={<Numbers />} />
             <Route path="/conversation" element={<Conversation />} />
+            <Route path="/grammar" element={<Grammar />} />
             <Route path="/trace" element={<Trace />} />
             <Route path="/quiz" element={<Quiz />} />
             <Route path="/this-week" element={<ThisWeek />} />
