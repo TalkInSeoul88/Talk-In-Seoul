@@ -13,8 +13,8 @@ export default function Numbers() {
       <section className="card">
         <h2>Two ways to count</h2>
         <p className="tiny" style={{ marginBottom: 0 }}>
-          Korean has two number sets — native 하나 (ha-na), 둘 (dul), 셋 (set)… for counting things and
-          age; and 일 (il), 이 (i), 삼 (sam)… for prices, dates, phone numbers, minutes.
+          Korean has two number sets — native 하나 (hah-nah), 둘 (dool), 셋 (seht)… for counting things and
+          age; and 일 (eel), 이 (ee), 삼 (sahm)… for prices, dates, phone numbers, minutes.
         </p>
       </section>
 
@@ -40,7 +40,7 @@ export default function Numbers() {
 
       <section className="card">
         <h2>The pattern</h2>
-        <p className="callout">Tens digit + 십 (sip) + ones digit.</p>
+        <p className="callout">Tens digit + 십 (sheep) + ones digit.</p>
         <div className="jamo-list">
           {NUMBER_PATTERN.map((item) => (
             <ClipRow key={item.audioId} item={item} />

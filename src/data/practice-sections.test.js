@@ -23,7 +23,7 @@ test('batchim words are the 20 easy words, without 우유', () => {
   )
   assert.deepEqual(
     BATCHIM_WORDS.map((item) => item.roman),
-    ['gan-jang', 'na-bang', 'da-ram-jwi', 'ma-neul', 'bang', 'sa-seum', 'a-deul', 'ja-dong-cha', 'chaek', 'kong', 'tap', 'pal', 'ha-neul', 'bap', 'mul', 'jip', 'gim-bap', 'ra-myeon', 'sa-rang', 'gong'],
+    ['gahn-jahng', 'nah-bahng', 'dah-rahm-jwee', 'mah-neul', 'bahng', 'sah-seum', 'ah-deul', 'jah-dohng-chah', 'chehk', 'kohng', 'tahp', 'pahl', 'hah-neul', 'bahp', 'mool', 'jeep', 'geem-bahp', 'rah-myuhn', 'sah-rahng', 'gohng'],
   )
   assert.equal(BATCHIM_WORDS.some((item) => item.hangul.includes('우유')), false)
   assert.deepEqual(batchimLetters('간장'), ['ㄴ', 'ㅇ'])
@@ -37,41 +37,45 @@ test('batchim words are the 20 easy words, without 우유', () => {
 test('numbers and phrases match the teaching list', () => {
   assert.deepEqual(
     NATIVE_NUMBERS.map((item) => `${item.hangul} ${item.roman}`),
-    ['하나 ha-na', '둘 dul', '셋 set', '넷 net', '다섯 da-seot', '여섯 yeo-seot', '일곱 il-gop', '여덟 yeo-deol', '아홉 a-hop', '열 yeol'],
+    ['하나 hah-nah', '둘 dool', '셋 seht', '넷 neht', '다섯 dah-suht', '여섯 yuh-suht', '일곱 eel-gohp', '여덟 yuh-duhl', '아홉 ah-hohp', '열 yuhl'],
   )
   assert.deepEqual(
     SINO_NUMBERS.map((item) => `${item.hangul} ${item.roman}`),
-    ['일 il', '이 i', '삼 sam', '사 sa', '오 o', '육 yuk', '칠 chil', '팔 pal', '구 gu', '십 sip'],
+    ['일 eel', '이 ee', '삼 sahm', '사 sah', '오 oh', '육 yook', '칠 cheel', '팔 pahl', '구 goo', '십 sheep'],
   )
   assert.deepEqual(
     NUMBER_PATTERN.map((item) => `${item.hangul} ${item.english} ${item.roman}`),
     [
-      '십일 11 si-bil',
-      '이십이 22 i-si-bi',
-      '삼십삼 33 sam-sip-sam',
-      '사십사 44 sa-sip-sa',
-      '오십오 55 o-sip-o',
-      '육십육 66 yuk-sip-yuk',
-      '칠십칠 77 chil-sip-chil',
-      '팔십팔 88 pal-sip-pal',
-      '구십구 99 gu-sip-gu',
+      '십일 11 shee-beel',
+      '이십이 22 ee-shee-bee',
+      '삼십삼 33 sahm-sheep-sahm',
+      '사십사 44 sah-sheep-sah',
+      '오십오 55 oh-sheep-oh',
+      '육십육 66 yook-sheep-yook',
+      '칠십칠 77 cheel-sheep-cheel',
+      '팔십팔 88 pahl-sheep-pahl',
+      '구십구 99 goo-sheep-goo',
     ],
   )
   assert.deepEqual(
     CONVERSATION_PHRASES.map((item) => `${item.hangul}|${item.roman}|${item.english}`),
     [
-      '안녕하세요|an-nyeong-ha-se-yo|Hello',
-      '이거 얼마예요?|i-geo eol-ma-ye-yo|How much is this?',
-      '이거 주세요|i-geo ju-se-yo|This one, please',
-      '감사합니다|gam-sa-ham-ni-da|Thank you',
-      '네|ne|Yes',
-      '아니요|a-ni-yo|No',
-      "맛있어요|ma-si-sseo-yo|It's delicious",
-      '화장실 어디예요?|hwa-jang-sil eo-di-ye-yo|Where is the restroom?',
-      '다시 말해 주세요|da-si mal-hae ju-se-yo|Please say it again',
-      '안녕히 계세요|an-nyeong-hi gye-se-yo|Goodbye',
+      '안녕하세요|ahn-nyuhng-hah-seh-yoh|Hello',
+      '이거 얼마예요?|ee-guh uhl-mah-yeh-yoh|How much is this?',
+      '이거 주세요|ee-guh joo-seh-yoh|This one, please',
+      '감사합니다|gahm-sah-hahm-nee-dah|Thank you',
+      '네|neh|Yes',
+      '아니요|ah-nee-yoh|No',
+      "맛있어요|mah-shee-ssuh-yoh|It's delicious",
+      '화장실 어디예요?|hwah-jahng-sheel uh-dee-yeh-yoh|Where is the restroom?',
+      '다시 말해 주세요|dah-shee mahl-heh joo-seh-yoh|Please say it again',
+      '안녕히 계세요|ahn-nyuhng-hee gyeh-seh-yoh|Goodbye',
     ],
   )
+  const numbers = readFileSync(join(root, 'src/pages/Numbers.tsx'), 'utf8')
+  assert.match(numbers, /하나 \(hah-nah\), 둘 \(dool\), 셋 \(seht\)/)
+  assert.match(numbers, /일 \(eel\), 이 \(ee\), 삼 \(sahm\)/)
+  assert.match(numbers, /십 \(sheep\)/)
 })
 
 test('every new clip has a unique public audio filename and lowercase pronunciation', () => {
