@@ -366,8 +366,8 @@ export default function Admin() {
                 <h2 className="page-title">Issue a class code</h2>
                 <p className="lede">
                   Set the code, the expiry, and full course access. On or Off starts or stops the whole code.
-                  Full course access off still unlocks pronunciation and notices, but not Homework, This Week, or
-                  Trace.
+                  Full course access off still unlocks pronunciation, Sound Workout, and notices, but not Homework, This
+                  Week, Trace, or Real Talk weeks 5–7.
                 </p>
               </header>
 
@@ -394,7 +394,7 @@ export default function Admin() {
                   />
                 </label>
                 <p className="switch-label" id="new-homework-label">
-                  Full course access (Homework, This Week, Trace)
+                  Full course access (Homework, This Week, Trace, Real Talk)
                 </p>
                 <div className="switch-row" role="group" aria-labelledby="new-homework-label">
                   <button
@@ -499,7 +499,7 @@ export default function Admin() {
                             {expiryBusy === item.code ? 'Saving…' : justSaved ? 'Saved' : 'Save date'}
                           </button>
                           <p className="switch-label" id={`homework-access-${item.code}`}>
-                            Full course access (Homework, This Week, Trace)
+                            Full course access (Homework, This Week, Trace, Real Talk)
                           </p>
                           <div className="switch-row" role="group" aria-labelledby={`homework-access-${item.code}`}>
                             <button

@@ -45,6 +45,8 @@ export default function JamoAudioBar({ jamo, revealLabel = true, soonText = 'Aud
   const [mineUrl, setMineUrl] = useState<string | null>(() => clipUrl(jamo.audioId))
   const [minePlaying, setMinePlaying] = useState(false)
   const [recordError, setRecordError] = useState<string | null>(null)
+  const [comparePhase, setComparePhase] = useState<'off' | 'jung' | 'you'>('off')
+  const compareRef = useRef(false)
   const canRecord = recorderSupported()
 
   useEffect(() => {
@@ -69,6 +71,19 @@ export default function JamoAudioBar({ jamo, revealLabel = true, soonText = 'Aud
     }
   }, [])
 
+  function stopCompare() {
+    compareRef.current = false
+    setComparePhase('off')
+    if (teacherRef.current) {
+      teacherRef.current.pause()
+      teacherRef.current.currentTime = 0
+    }
+    if (mineRef.current) {
+      mineRef.current.pause()
+      mineRef.current.currentTime = 0
+    }
+  }
+
   function haltRecorder() {
     if (stopTimerRef.current) {
       window.clearTimeout(stopTimerRef.current)
@@ -86,6 +101,7 @@ export default function JamoAudioBar({ jamo, revealLabel = true, soonText = 'Aud
   async function toggleTeacher() {
     const audio = teacherRef.current
     if (!audio || teacherStatus !== 'ready') return
+    if (compareRef.current) stopCompare()
     if (!audio.paused) {
       audio.pause()
       audio.currentTime = 0
@@ -109,6 +125,7 @@ export default function JamoAudioBar({ jamo, revealLabel = true, soonText = 'Aud
     }
     const clipId = jamo.audioId
     setRecordError(null)
+    stopCompare()
     stopActiveAudio()
     teacherRef.current?.pause()
     setTeacherPlaying(false)
@@ -146,9 +163,51 @@ export default function JamoAudioBar({ jamo, revealLabel = true, soonText = 'Aud
     }
   }
 
+  async function playMine() {
+    const mine = mineRef.current
+    if (!mine) {
+      compareRef.current = false
+      setComparePhase('off')
+      return
+    }
+    setComparePhase('you')
+    mine.currentTime = 0
+    try {
+      await playExclusive(mine)
+    } catch {
+      compareRef.current = false
+      setComparePhase('off')
+      setRecordError('Could not play your recording.')
+    }
+  }
+
+  async function toggleCompare() {
+    if (comparePhase !== 'off') {
+      stopCompare()
+      return
+    }
+    if (!mineUrl) return
+    setRecordError(null)
+    stopActiveAudio()
+    compareRef.current = true
+    const teacher = teacherRef.current
+    if (teacher && teacherStatus === 'ready') {
+      setComparePhase('jung')
+      teacher.currentTime = 0
+      try {
+        await playExclusive(teacher)
+      } catch {
+        await playMine()
+      }
+      return
+    }
+    await playMine()
+  }
+
   async function toggleMine() {
     const audio = mineRef.current
     if (!audio || !mineUrl) return
+    if (compareRef.current) stopCompare()
     if (minePlaying && !audio.paused) {
       audio.pause()
       audio.currentTime = 0
@@ -174,7 +233,10 @@ export default function JamoAudioBar({ jamo, revealLabel = true, soonText = 'Aud
           preload="auto"
           playsInline
           onPlaying={() => setTeacherPlaying(true)}
-          onEnded={() => setTeacherPlaying(false)}
+          onEnded={() => {
+            setTeacherPlaying(false)
+            if (compareRef.current) void playMine()
+          }}
           onPause={() => setTeacherPlaying(false)}
         />
       )}
@@ -185,7 +247,13 @@ export default function JamoAudioBar({ jamo, revealLabel = true, soonText = 'Aud
           preload="metadata"
           playsInline
           onPlaying={() => setMinePlaying(true)}
-          onEnded={() => setMinePlaying(false)}
+          onEnded={() => {
+            setMinePlaying(false)
+            if (compareRef.current) {
+              compareRef.current = false
+              setComparePhase('off')
+            }
+          }}
           onPause={() => setMinePlaying(false)}
         />
       )}
@@ -240,6 +308,19 @@ export default function JamoAudioBar({ jamo, revealLabel = true, soonText = 'Aud
         >
           {minePlaying ? 'Pause' : 'Play me'}
           <span>내 목소리</span>
+        </button>
+      )}
+
+      {mineUrl && (
+        <button
+          type="button"
+          className={`audio-chip compare ${comparePhase !== 'off' ? 'on' : ''}`}
+          onClick={() => void toggleCompare()}
+          aria-pressed={comparePhase !== 'off'}
+          aria-label={comparePhase === 'off' ? `Compare your voice with Jung for ${jamo.char}` : 'Stop compare'}
+        >
+          {comparePhase === 'jung' ? 'Jung…' : comparePhase === 'you' ? 'You…' : 'Compare'}
+          <span>{comparePhase === 'off' ? 'Jung, then you' : 'On this phone'}</span>
         </button>
       )}
 

@@ -19,6 +19,7 @@ import {
 import { loadClassroom, saveClassroom } from './classroom-store.js'
 import { coveredThrough, stepsForCourse } from './course-progress.js'
 import { COURSE_CLOSED } from './codes.js'
+import { LOCKED_TALKS, REAL_TALK_LOCKED } from './real-talk.js'
 import { readWeekSheet } from './week-sheets.js'
 import {
   attachmentHeaders,
@@ -612,7 +613,16 @@ export async function handleStudentNotices(ctx) {
   }
 }
 
+export async function handleStudentRealTalk(ctx) {
+  if (ctx.method !== 'GET') return json(405, { error: 'Use GET.' })
+  const student = await requireStudent(ctx)
+  if (!student.ok) return json(student.status, { error: student.error })
+  if (!student.homeworkAccess) return json(403, { error: REAL_TALK_LOCKED })
+  return json(200, { weeks: LOCKED_TALKS })
+}
+
 export async function handleStudentHomework(ctx) {
+  if (ctx.query?.realtalk === '1') return handleStudentRealTalk(ctx)
   if (ctx.method !== 'GET') return json(405, { error: 'Use GET.' })
   const student = await requireStudent(ctx)
   if (!student.ok) return json(student.status, { error: student.error })

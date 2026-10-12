@@ -355,3 +355,55 @@ Same folder and lookup as the vowels: `/audio/{audioId}.mp3`. These three menu s
 | 57 | 화장실 어디예요? (hwah-jahng-sheel uh-dee-yeh-yoh) Where is the restroom? | `phrase-hwa-jang-sil-eo-di-ye-yo.mp3` |
 | 58 | 다시 말해 주세요 (dah-shee mahl-heh joo-seh-yoh) Please say it again | `phrase-da-si-mal-hae-ju-se-yo.mp3` |
 | 59 | 안녕히 계세요 (ahn-nyuhng-hee gyeh-seh-yoh) Goodbye | `phrase-an-nyeong-hi-gye-se-yo.mp3` |
+
+## Sound Workout and Real Talk
+
+Same lookup: `/audio/{audioId}.mp3`. If the file is missing, the row says **Recording coming soon**. Do not add silent placeholders.
+
+Sound Workout is open to every student. Real Talk weeks 3 and 4 are open. Weeks 5–7 are served only to a full-course code, so this public list names those files without the lines.
+
+Reused clips (already in this folder): `batchim-mul.mp3` 물 (mool), `batchim-bang.mp3` 방 (bahng), `batchim-pal.mp3` 팔 (pahl), `syllable-ba.mp3` 바 (bah), `syllable-pa.mp3` 파 (pah), and the matching `phrase-*.mp3` lines (안녕하세요, 이거 주세요, 네, 감사합니다, 이거 얼마예요?, 맛있어요).
+
+### New Sound Workout clips
+
+| Say | File |
+| --- | --- |
+| 다다다 (dah-dah-dah) | `sound-dah-dah-dah.mp3` |
+| 라라라 (rah-rah-rah) | `sound-rah-rah-rah.mp3` |
+| 나라 (nah-rah) country | `sound-nah-rah.mp3` |
+| 다리 (dah-ree) leg | `sound-dah-ree.mp3` |
+| 발 (bahl) foot | `sound-bahl.mp3` |
+| 물이 (moo-ree) | `sound-moo-ree.mp3` |
+| 빨리 빨리 (ppahl-lee ppahl-lee) hurry, hurry | `sound-ppahl-lee.mp3` |
+| 빠 (ppah) | `sound-ppah.mp3` |
+| 불 (bool) fire | `sound-bool.mp3` |
+| 풀 (pool) grass | `sound-pool.mp3` |
+| 뿔 (ppool) horn | `sound-ppool.mp3` |
+| 팡 (pahng) pop! | `sound-pahng.mp3` |
+| 빵 (ppahng) bread | `sound-ppahng.mp3` |
+| 비자 (bee-jah) visa | `sound-bee-jah.mp3` |
+| 피자 (pee-jah) pizza | `sound-pee-jah.mp3` |
+
+### Real Talk weeks 3–4 (free)
+
+| Say | File |
+| --- | --- |
+| 이거 뭐예요? (ee-guh mwuh-yeh-yoh) What is this? | `realtalk-ee-guh-mwuh-yeh-yoh.mp3` |
+| 빵이에요 (ppahng-ee-eh-yoh) It’s bread. | `realtalk-ppahng-ee-eh-yoh.mp3` |
+| 와, 싸요! (wah ssah-yoh) Wow, cheap! | `realtalk-wah-ssah-yoh.mp3` |
+
+### Real Talk weeks 5–7 (full course only)
+
+Record these filenames. The lines stay off the public page until a full-course code asks for them.
+
+`realtalk-gwah-jah-yeh-yoh.mp3`
+`realtalk-gwah-jah-joo-seh-yoh.mp3`
+`realtalk-yuh-gee-yoh.mp3`
+`realtalk-geem-bahp-joo-seh-yoh.mp3`
+`realtalk-neh-mah-shee-ssuh-yoh.mp3`
+`realtalk-ee-guh-meh-wuh-yoh.mp3`
+`realtalk-neh-meh-wuh-yoh.mp3`
+`realtalk-ah-nee-yoh-ahn-meh-wuh-yoh.mp3`
+`realtalk-geem-bahp-hah-nah-joo-seh-yoh.mp3`
+`realtalk-geem-bahp-doo-geh-joo-seh-yoh.mp3`
+`realtalk-oh-dahl-luh-yeh-yoh.mp3`
