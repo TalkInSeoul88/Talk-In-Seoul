@@ -38,7 +38,7 @@ export default function AccessCodeCard() {
       <p className="tiny">
         Enter it once. No account. Without a code you can still use Home, 모음(vowels),
         자음(consonants), 쌍자음(double consonants), and Easy 20 단어. Notices unlock with this
-        code. Homework, This Week, and Trace need an 8-week course code.
+        code. Homework, This Week, Trace, and Real Talk weeks 5–7 need an 8-week course code.
       </p>
       <form className="access-form" onSubmit={(event) => void onSubmit(event)}>
         <label className="field">

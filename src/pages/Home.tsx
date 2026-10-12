@@ -13,7 +13,7 @@ export default function Home() {
         <h2 className="page-title">Hangul basics this week</h2>
         <p className="lede">
           Listen to Jung and flip the free 모음, 자음, and Easy 20 단어 cards. Notices are for class.
-          Homework, This Week, and Trace are for the 8-week course.
+          Homework, This Week, Trace, and Real Talk weeks 5–7 are for the 8-week course.
         </p>
       </header>
 
