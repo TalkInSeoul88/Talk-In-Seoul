@@ -565,6 +565,10 @@ a {
   color: rgba(255, 255, 255, 0.86);
 }
 
+.audio-chip.compare {
+  grid-column: 1 / -1;
+}
+
 .audio-chip:disabled {
   opacity: 0.5;
 }
@@ -2067,4 +2071,145 @@ code {
 
 .clip-detail {
   margin: 0.15rem 0 0.15rem;
+}
+
+.grammar-explain {
+  margin: 0 0 0.85rem;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+}
+
+.grammar-sentence {
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.grammar-sentence:last-child {
+  border-bottom: 0;
+  padding-bottom: 0.15rem;
+}
+
+.grammar-card h2 {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55rem;
+}
+
+.grammar-index {
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.65rem;
+  height: 1.65rem;
+  padding: 0 0.35rem;
+  border-radius: 999px;
+  background: var(--wash);
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.grammar-lock {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  margin: 0.35rem 0 0;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+}
+
+.grammar-lock-icon {
+  width: 1.15rem;
+  height: 1.15rem;
+  flex-shrink: 0;
+  margin-top: 0.18rem;
+  color: var(--coral-deep);
+}
+
+.ladder-rung {
+  padding: 0.95rem 0 0.2rem;
+  border-top: 1px solid var(--line);
+}
+
+.ladder-rung:first-child {
+  border-top: 0;
+  padding-top: 0.15rem;
+}
+
+.ladder-rung h3 {
+  margin: 0 0 0.3rem;
+  font-size: 0.98rem;
+}
+
+.sound-tip {
+  margin: 0 0 0.2rem;
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+}
+
+.who-label {
+  margin: 0 0 0.12rem;
+  color: var(--coral-deep);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.listen-pick {
+  display: grid;
+  gap: 0.55rem;
+  margin: 0.35rem 0 0.15rem;
+}
+
+.listen-pick .btn {
+  margin-top: 0;
+}
+
+.pick-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.pick-choice {
+  border: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--ink);
+  border-radius: 999px;
+  padding: 0.45rem 0.85rem;
+  min-height: 2.75rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.pick-choice span {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+.pick-choice:disabled {
+  opacity: 0.5;
+}
+
+.pick-choice.is-right {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
+  opacity: 1;
+}
+
+.pick-choice.is-right span {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.pick-choice.is-wrong {
+  border-color: var(--coral);
+  color: var(--coral-deep);
+  opacity: 1;
+}
+
+.pick-result {
+  margin: 0;
 }
