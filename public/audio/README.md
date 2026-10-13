@@ -391,6 +391,7 @@ Reused clips (already in this folder): `batchim-mul.mp3` 물 (mool), `batchim-ba
 | 이거 뭐예요? (ee-guh mwuh-yeh-yoh) What is this? | `realtalk-ee-guh-mwuh-yeh-yoh.mp3` |
 | 빵이에요 (ppahng-ee-eh-yoh) It’s bread. | `realtalk-ppahng-ee-eh-yoh.mp3` |
 | 와, 싸요! (wah ssah-yoh) Wow, cheap! | `realtalk-wah-ssah-yoh.mp3` |
+| 네 (neh) Yes. Week 3 cashier, and the same word on later Real Talk cards. | `realtalk-neh.mp3` |
 
 ### Real Talk weeks 5–7 (full course only)
 
@@ -400,6 +401,7 @@ Record these filenames. The lines stay off the public page until a full-course c
 `realtalk-gwah-jah-joo-seh-yoh.mp3`
 `realtalk-yuh-gee-yoh.mp3`
 `realtalk-geem-bahp-joo-seh-yoh.mp3`
+`realtalk-mah-shee-ssuh-yoh-question.mp3`
 `realtalk-neh-mah-shee-ssuh-yoh.mp3`
 `realtalk-ee-guh-meh-wuh-yoh.mp3`
 `realtalk-neh-meh-wuh-yoh.mp3`

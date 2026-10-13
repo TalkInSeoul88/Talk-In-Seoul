@@ -68,13 +68,13 @@ export const LOCKED_TALKS = [
         english: 'Kimbap, please.',
         audioId: 'realtalk-geem-bahp-joo-seh-yoh',
       },
-      { who: 'cashier', hangul: '네', roman: 'neh', english: 'Yes.', audioId: 'phrase-ne' },
+      { who: 'cashier', hangul: '네', roman: 'neh', english: 'Yes.', audioId: 'realtalk-neh' },
       {
         who: 'cashier',
         hangul: '맛있어요?',
         roman: 'mah-shee-ssuh-yoh',
         english: 'Is it good?',
-        audioId: 'phrase-ma-si-sseo-yo',
+        audioId: 'realtalk-mah-shee-ssuh-yoh-question',
       },
       {
         who: 'you',

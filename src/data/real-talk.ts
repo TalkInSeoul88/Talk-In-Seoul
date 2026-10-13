@@ -48,7 +48,7 @@ export const FREE_TALKS: TalkWeek[] = [
         english: 'This one, please. Point while you say it.',
         audioId: 'phrase-i-geo-ju-se-yo',
       },
-      { who: 'cashier', hangul: '네', roman: 'neh', english: 'Yes. Hands it over.', audioId: 'phrase-ne' },
+      { who: 'cashier', hangul: '네', roman: 'neh', english: 'Yes. Hands it over.', audioId: 'realtalk-neh' },
       {
         who: 'you',
         hangul: '감사합니다',

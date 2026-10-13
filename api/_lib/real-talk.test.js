@@ -69,7 +69,11 @@ describe('real talk weeks', () => {
       [5, 6, 7],
     )
     assert.equal(open.body.weeks[0].lines.some((line) => line.hangul === '과자 주세요'), true)
-    assert.equal(open.body.weeks[1].lines.some((line) => line.audioId === 'phrase-ma-si-sseo-yo'), true)
+    const week6 = open.body.weeks[1].lines
+    assert.equal(week6.find((line) => line.hangul === '네')?.audioId, 'realtalk-neh')
+    assert.equal(week6.find((line) => line.hangul === '맛있어요?')?.audioId, 'realtalk-mah-shee-ssuh-yoh-question')
+    assert.equal(week6.find((line) => line.hangul === '네, 맛있어요!')?.audioId, 'realtalk-neh-mah-shee-ssuh-yoh')
+    assert.equal(open.body.weeks[2].lines.find((line) => line.hangul === '네, 매워요')?.audioId, 'realtalk-neh-meh-wuh-yoh')
     assert.equal(open.body.weeks[2].lines.some((line) => line.hangul === '김밥 하나 주세요'), true)
     assert.equal(LOCKED_TALKS.length, 3)
   })

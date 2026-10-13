@@ -85,7 +85,7 @@ test('free Real Talk weeks reuse phrase clips and stay in the client', () => {
   )
   assert.deepEqual(FREE_TALKS.map((week) => week.week), [3, 4])
   const ids = FREE_TALKS.flatMap((week) => week.lines.map((line) => line.audioId))
-  for (const id of ['phrase-an-nyeong-ha-se-yo', 'phrase-i-geo-ju-se-yo', 'phrase-ne', 'phrase-gam-sa-ham-ni-da', 'phrase-i-geo-eol-ma-ye-yo']) {
+  for (const id of ['phrase-an-nyeong-ha-se-yo', 'phrase-i-geo-ju-se-yo', 'realtalk-neh', 'phrase-gam-sa-ham-ni-da', 'phrase-i-geo-eol-ma-ye-yo']) {
     assert.equal(ids.includes(id), true)
   }
   for (const line of FREE_TALKS.flatMap((week) => week.lines)) {
