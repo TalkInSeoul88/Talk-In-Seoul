@@ -41,13 +41,100 @@ export async function probeTeacherAudio(src: string): Promise<boolean> {
 
 let active: HTMLAudioElement | null = null
 
+/**
+ * A fresh element per clip. Reusing one element on iPhone speaks the previous
+ * line — 안녕하세요 under 이거 뭐예요?.
+ */
+let teacher: HTMLAudioElement | null = null
+let teacherSrc = ''
+
+export type TeacherPlayback = { src: string; kind: 'playing' | 'pause' | 'ended' }
+
+const teacherListeners = new Set<(event: TeacherPlayback) => void>()
+
+function emitTeacher(kind: TeacherPlayback['kind']) {
+  const event = { src: teacherSrc, kind }
+  for (const listener of teacherListeners) listener(event)
+}
+
+function retireTeacher() {
+  const previous = teacher
+  teacher = null
+  if (!previous) return
+  previous.pause()
+  previous.removeAttribute('src')
+  try {
+    previous.load()
+  } catch {
+    /* The new element is what plays. */
+  }
+}
+
+function startTeacher(src: string): HTMLAudioElement {
+  const audio = new Audio(src)
+  audio.preload = 'auto'
+  audio.setAttribute('playsinline', 'true')
+  const isCurrent = () => teacher === audio
+  audio.addEventListener('playing', () => {
+    if (isCurrent()) emitTeacher('playing')
+  })
+  audio.addEventListener('pause', () => {
+    if (isCurrent()) emitTeacher('pause')
+  })
+  audio.addEventListener('ended', () => {
+    if (isCurrent()) emitTeacher('ended')
+  })
+  teacher = audio
+  teacherSrc = src
+  return audio
+}
+
+export function subscribeTeacherPlayback(listener: (event: TeacherPlayback) => void) {
+  teacherListeners.add(listener)
+  return () => {
+    teacherListeners.delete(listener)
+  }
+}
+
+/** Pause Jung only when this row's file is the one playing. */
+export function stopTeacherClipIfSrc(src: string) {
+  if (!teacher || teacherSrc !== src || teacher.paused) return
+  teacher.pause()
+}
+
+export function playTeacherClip(src: string): Promise<void> {
+  if (teacher && teacherSrc === src && !teacher.paused && !teacher.ended) {
+    teacher.pause()
+    return Promise.resolve()
+  }
+  if (active && active !== teacher) {
+    active.pause()
+    active.currentTime = 0
+  }
+  // A reused element keeps the previous clip on iPhone (안녕하세요 under 이거 뭐예요?).
+  // A new element is born with this src, so play() cannot speak the line above.
+  if (!teacher || teacherSrc !== src) retireTeacher()
+  const audio = teacher && teacherSrc === src ? teacher : startTeacher(src)
+  // play() restarts an ended clip. Seeking as well makes Safari speak it twice.
+  if (!audio.ended && audio.currentTime > 0.05) {
+    try {
+      audio.currentTime = 0
+    } catch {
+      /* Not seekable yet. play() still starts this clip. */
+    }
+  }
+  active = audio
+  return audio.play()
+}
+
 export function stopActiveAudio() {
-  if (!active) return
-  active.pause()
+  if (teacher && !teacher.paused) teacher.pause()
+  if (active && active !== teacher) active.pause()
   active = null
 }
 
 export async function playExclusive(audio: HTMLAudioElement): Promise<void> {
+  if (teacher && teacher !== audio && !teacher.paused) teacher.pause()
   if (active && active !== audio) {
     active.pause()
     active.currentTime = 0

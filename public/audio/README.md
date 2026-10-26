@@ -355,6 +355,13 @@ Same folder and lookup as the vowels: `/audio/{audioId}.mp3`. These three menu s
 | 57 | 화장실 어디예요? (hwah-jahng-sheel uh-dee-yeh-yoh) Where is the restroom? | `phrase-hwa-jang-sil-eo-di-ye-yo.mp3` |
 | 58 | 다시 말해 주세요 (dah-shee mahl-heh joo-seh-yoh) Please say it again | `phrase-da-si-mal-hae-ju-se-yo.mp3` |
 | 59 | 안녕히 계세요 (ahn-nyuhng-hee gyeh-seh-yoh) Goodbye | `phrase-an-nyeong-hi-gye-se-yo.mp3` |
+| 60 | 다음에 뵈요 (dah-eu-meh bweh-yoh) See you next time | `phrase-dah-eu-meh-bweh-yoh.mp3` |
+| 61 | 몇 시예요? (myuht-shee-yeh-yoh) What time is it? | `phrase-myuht-shee-yeh-yoh.mp3` |
+| 62 | 아니에요 (ah-nee-eh-yoh) It's nothing / you're welcome | `phrase-ah-nee-eh-yoh.mp3` |
+| 63 | 여기요 (yuh-gee-yoh) Excuse me / over here | `phrase-yuh-gee-yoh.mp3` |
+| 64 | 진짜요? (jin-jjah-yoh) Really? | `phrase-jin-jjah-yoh.mp3` |
+
+`아니에요` is not `아니요` (`phrase-a-ni-yo.mp3`). Free `여기요` is `phrase-yuh-gee-yoh.mp3`. Real Talk keeps its own `realtalk-yuh-gee-yoh.mp3`. 일상 대화 has no clips yet.
 
 ## Sound Workout and Real Talk
 

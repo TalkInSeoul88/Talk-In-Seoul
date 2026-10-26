@@ -172,6 +172,11 @@ a {
   margin-top: 0.9rem;
 }
 
+#essential,
+#everyday {
+  scroll-margin-top: 4.75rem;
+}
+
 .card h2,
 .section-title {
   margin: 0 0 0.55rem;

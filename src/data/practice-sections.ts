@@ -135,7 +135,15 @@ export const CONVERSATION_PHRASES: SpokenItem[] = [
   { hangul: '화장실 어디예요?', roman: 'hwah-jahng-sheel uh-dee-yeh-yoh', english: 'Where is the restroom?', audioId: 'phrase-hwa-jang-sil-eo-di-ye-yo' },
   { hangul: '다시 말해 주세요', roman: 'dah-shee mahl-heh joo-seh-yoh', english: 'Please say it again', audioId: 'phrase-da-si-mal-hae-ju-se-yo' },
   { hangul: '안녕히 계세요', roman: 'ahn-nyuhng-hee gyeh-seh-yoh', english: 'Goodbye', audioId: 'phrase-an-nyeong-hi-gye-se-yo' },
+  { hangul: '다음에 뵈요', roman: 'dah-eu-meh bweh-yoh', english: 'See you next time', audioId: 'phrase-dah-eu-meh-bweh-yoh' },
+  { hangul: '몇 시예요?', roman: 'myuht-shee-yeh-yoh', english: 'What time is it?', audioId: 'phrase-myuht-shee-yeh-yoh' },
+  { hangul: '아니에요', roman: 'ah-nee-eh-yoh', english: "It's nothing / you're welcome", audioId: 'phrase-ah-nee-eh-yoh' },
+  { hangul: '여기요', roman: 'yuh-gee-yoh', english: 'Excuse me / over here', audioId: 'phrase-yuh-gee-yoh' },
+  { hangul: '진짜요?', roman: 'jin-jjah-yoh', english: 'Really?', audioId: 'phrase-jin-jjah-yoh' },
 ]
+
+/** Everyday lines. Empty until Jung records them — do not invent phrases. */
+export const EVERYDAY_PHRASES: SpokenItem[] = []
 
 export const PRACTICE_RECORDINGS: SpokenItem[] = [
   ...BATCHIM_WORDS,
@@ -143,4 +151,5 @@ export const PRACTICE_RECORDINGS: SpokenItem[] = [
   ...SINO_NUMBERS,
   ...NUMBER_PATTERN,
   ...CONVERSATION_PHRASES,
+  ...EVERYDAY_PHRASES,
 ]

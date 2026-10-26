@@ -12,7 +12,7 @@ Students come to an in-person Hangul class at the store, then use this phone-fri
 - **Pronunciation** — **모음(vowels)**, **이중모음(compound vowels)**, **자음(consonants)**, and **쌍자음(double consonants)** are free (Jung’s audio + Record / Play me). All 14 자음, all 5 쌍자음 (ㄲㄸㅃㅆㅉ), and all 11 이중모음 (ㅐㅔㅒㅖㅘㅙㅚㅝㅞㅟㅢ) have teacher clips. **음절(syllables)** is the full 140 CV chart; Play / Record need a class access code. All 10 vowel rows (ㅏㅑㅓㅕㅗㅛㅜㅠㅡㅣ, 140/140) have teacher clips.
 - **Bottom Sounds** (`/batchim`) — 20 easy 받침 words. Coral marks the syllable with a bottom letter. Open to every student. Drop `batchim-*.mp3` into `public/audio/`.
 - **Numbers** (`/numbers`) — native 1–10, Sino-Korean 1–10, and the tens pattern. Open to every student. Drop `number-*.mp3` into `public/audio/`.
-- **Conversation** (`/conversation`) — 10 everyday phrases. Open to every student. Drop `phrase-*.mp3` into `public/audio/`.
+- **Conversation** (`/conversation`) — 15 phrases in 꼭 필요한 대화, plus 일상 대화 (phrases coming). Open to every student. Drop `phrase-*.mp3` into `public/audio/`.
 - **Sound Workout** (`/sound`) — ㄹ (reu) / (ri-eul) tap ladder and a ㅂ (beu) / ㅍ (peu) / ㅃ (ppeu) listen-and-pick. Open with or without a class code. New clips are `sound-*.mp3`. Words that already have a recording reuse that file.
 - **Real Talk** (`/real-talk`) — counter conversations for Weeks 3–7. Jung is the cashier. Weeks 3 and 4 are free. Weeks 5–7 need full course access.
 - **Record & Compare** — on any Play row, Record keeps a clip on this phone only (nothing is uploaded). Compare plays Jung, then you.

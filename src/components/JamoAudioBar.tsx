@@ -3,9 +3,12 @@ import type { TeacherClip } from '../data/content'
 import {
   pickRecorderMime,
   playExclusive,
+  playTeacherClip,
   probeTeacherAudio,
   recorderSupported,
   stopActiveAudio,
+  stopTeacherClipIfSrc,
+  subscribeTeacherPlayback,
   teacherAudioSrc,
 } from '../lib/audio'
 
@@ -32,8 +35,8 @@ type Props = {
 
 export default function JamoAudioBar({ jamo, revealLabel = true, soonText = 'Audio coming soon' }: Props) {
   const src = teacherAudioSrc(jamo)
-  const teacherRef = useRef<HTMLAudioElement>(null)
   const mineRef = useRef<HTMLAudioElement>(null)
+  const onTeacherEnded = useRef<() => void>(() => {})
   const recorderRef = useRef<MediaRecorder | null>(null)
   const streamRef = useRef<MediaStream | null>(null)
   const chunksRef = useRef<Blob[]>([])
@@ -60,24 +63,44 @@ export default function JamoAudioBar({ jamo, revealLabel = true, soonText = 'Aud
   }, [src])
 
   useEffect(() => {
+    return subscribeTeacherPlayback((event) => {
+      if (event.src !== src) {
+        setTeacherPlaying(false)
+        return
+      }
+      setTeacherPlaying(event.kind === 'playing')
+      if (event.kind === 'ended') onTeacherEnded.current()
+    })
+  }, [src])
+
+  useEffect(() => {
+    onTeacherEnded.current = () => {
+      if (compareRef.current) void playMine()
+    }
+  })
+
+  useEffect(() => {
+    const mine = mineRef.current
+    return () => {
+      mine?.pause()
+    }
+  }, [mineUrl])
+
+  useEffect(() => {
     return () => {
       if (stopTimerRef.current) window.clearTimeout(stopTimerRef.current)
       if (recorderRef.current && recorderRef.current.state !== 'inactive') {
         recorderRef.current.stop()
       }
       streamRef.current?.getTracks().forEach((track) => track.stop())
-      teacherRef.current?.pause()
-      mineRef.current?.pause()
+      stopTeacherClipIfSrc(src)
     }
-  }, [])
+  }, [src])
 
   function stopCompare() {
     compareRef.current = false
     setComparePhase('off')
-    if (teacherRef.current) {
-      teacherRef.current.pause()
-      teacherRef.current.currentTime = 0
-    }
+    stopTeacherClipIfSrc(src)
     if (mineRef.current) {
       mineRef.current.pause()
       mineRef.current.currentTime = 0
@@ -99,18 +122,12 @@ export default function JamoAudioBar({ jamo, revealLabel = true, soonText = 'Aud
   }
 
   async function toggleTeacher() {
-    const audio = teacherRef.current
-    if (!audio || teacherStatus !== 'ready') return
+    if (teacherStatus !== 'ready') return
     if (compareRef.current) stopCompare()
-    if (!audio.paused) {
-      audio.pause()
-      audio.currentTime = 0
-      return
-    }
     mineRef.current?.pause()
     setMinePlaying(false)
     try {
-      await playExclusive(audio)
+      await playTeacherClip(src)
     } catch {
       setTeacherStatus('missing')
       setTeacherPlaying(false)
@@ -127,7 +144,6 @@ export default function JamoAudioBar({ jamo, revealLabel = true, soonText = 'Aud
     setRecordError(null)
     stopCompare()
     stopActiveAudio()
-    teacherRef.current?.pause()
     setTeacherPlaying(false)
     mineRef.current?.pause()
     setMinePlaying(false)
@@ -190,12 +206,10 @@ export default function JamoAudioBar({ jamo, revealLabel = true, soonText = 'Aud
     setRecordError(null)
     stopActiveAudio()
     compareRef.current = true
-    const teacher = teacherRef.current
-    if (teacher && teacherStatus === 'ready') {
+    if (teacherStatus === 'ready') {
       setComparePhase('jung')
-      teacher.currentTime = 0
       try {
-        await playExclusive(teacher)
+        await playTeacherClip(src)
       } catch {
         await playMine()
       }
@@ -214,7 +228,7 @@ export default function JamoAudioBar({ jamo, revealLabel = true, soonText = 'Aud
       setMinePlaying(false)
       return
     }
-    teacherRef.current?.pause()
+    stopTeacherClipIfSrc(src)
     setTeacherPlaying(false)
     try {
       await playExclusive(audio)
@@ -226,20 +240,6 @@ export default function JamoAudioBar({ jamo, revealLabel = true, soonText = 'Aud
 
   return (
     <div className="audio-bar">
-      {teacherStatus === 'ready' && (
-        <audio
-          ref={teacherRef}
-          src={src}
-          preload="auto"
-          playsInline
-          onPlaying={() => setTeacherPlaying(true)}
-          onEnded={() => {
-            setTeacherPlaying(false)
-            if (compareRef.current) void playMine()
-          }}
-          onPause={() => setTeacherPlaying(false)}
-        />
-      )}
       {mineUrl && (
         <audio
           ref={mineRef}

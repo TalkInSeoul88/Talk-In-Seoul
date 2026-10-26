@@ -12,7 +12,8 @@ const roman = /^[a-z]+(?:[ -][a-z]+)*$/
 const LOCKED_HANGUL = [
   '과자예요',
   '과자 주세요',
-  '여기요',
+  // Free essential conversation now teaches 여기요. The locked Real Talk line is 여기요!.
+  '여기요!',
   '김밥 주세요',
   '네, 맛있어요',
   '이거 매워요',
@@ -76,6 +77,28 @@ test('breath sets are the listen-and-pick pairs and reuse existing clips', () =>
   assert.match(page, /candle/)
   assert.match(page, /spy/)
   assert.match(page, /Recording coming soon/)
+})
+
+test('week 4 이거 뭐예요? plays its own clip, not hello', () => {
+  const week4 = FREE_TALKS.find((week) => week.week === 4)
+  assert.equal(
+    REAL_TALK_CARDS.find((card) => card.week === 4).title,
+    '안녕하세요 (ahn-nyuhng-hah-seh-yoh)',
+  )
+  assert.equal(week4.title, '안녕하세요 (ahn-nyuhng-hah-seh-yoh)')
+  assert.equal(week4.lines[1].hangul, '이거 뭐예요?')
+  const question = week4.lines.find((line) => line.hangul === '이거 뭐예요?')
+  const hello = week4.lines.find((line) => line.hangul === '안녕하세요')
+  assert.equal(question.audioId, 'realtalk-ee-guh-mwuh-yeh-yoh')
+  assert.equal(question.roman, 'ee-guh mwuh-yeh-yoh')
+  assert.equal(hello.audioId, 'phrase-an-nyeong-ha-se-yo')
+  assert.notEqual(question.audioId, hello.audioId)
+  const bar = readFileSync(join(root, 'src/components/JamoAudioBar.tsx'), 'utf8')
+  const audio = readFileSync(join(root, 'src/lib/audio.ts'), 'utf8')
+  assert.match(bar, /playTeacherClip\(src\)/)
+  assert.doesNotMatch(bar, /teacherRef/)
+  assert.match(audio, /export function playTeacherClip/)
+  assert.match(audio, /new Audio\(src\)/)
 })
 
 test('free Real Talk weeks reuse phrase clips and stay in the client', () => {
