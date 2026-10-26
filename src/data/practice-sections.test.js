@@ -1,11 +1,12 @@
 import assert from 'node:assert/strict'
-import { readFileSync } from 'node:fs'
+import { existsSync, readFileSync, statSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import test from 'node:test'
 import { fileURLToPath } from 'node:url'
 import {
   BATCHIM_WORDS,
   CONVERSATION_PHRASES,
+  EVERYDAY_PHRASES,
   NATIVE_NUMBERS,
   NUMBER_PATTERN,
   PRACTICE_RECORDINGS,
@@ -70,7 +71,22 @@ test('numbers and phrases match the teaching list', () => {
       '화장실 어디예요?|hwah-jahng-sheel uh-dee-yeh-yoh|Where is the restroom?',
       '다시 말해 주세요|dah-shee mahl-heh joo-seh-yoh|Please say it again',
       '안녕히 계세요|ahn-nyuhng-hee gyeh-seh-yoh|Goodbye',
+      '다음에 뵈요|dah-eu-meh bweh-yoh|See you next time',
+      '몇 시예요?|myuht-shee-yeh-yoh|What time is it?',
+      "아니에요|ah-nee-eh-yoh|It's nothing / you're welcome",
+      '여기요|yuh-gee-yoh|Excuse me / over here',
+      '진짜요?|jin-jjah-yoh|Really?',
     ],
+  )
+  assert.equal(CONVERSATION_PHRASES.length, 15)
+  assert.deepEqual(EVERYDAY_PHRASES, [])
+  assert.equal(
+    CONVERSATION_PHRASES.some((item) => item.hangul === '아니요' && item.audioId === 'phrase-a-ni-yo'),
+    true,
+  )
+  assert.equal(
+    CONVERSATION_PHRASES.some((item) => item.hangul === '아니에요' && item.audioId === 'phrase-ah-nee-eh-yoh'),
+    true,
   )
   const numbers = readFileSync(join(root, 'src/pages/Numbers.tsx'), 'utf8')
   assert.match(numbers, /하나 \(hah-nah\), 둘 \(dool\), 셋 \(seht\)/)
@@ -81,7 +97,7 @@ test('numbers and phrases match the teaching list', () => {
 test('every new clip has a unique public audio filename and lowercase pronunciation', () => {
   const files = PRACTICE_RECORDINGS.map(recordingFile)
   assert.equal(new Set(files).size, files.length)
-  assert.equal(files.length, 59)
+  assert.equal(files.length, 64)
   for (const item of PRACTICE_RECORDINGS) {
     assert.match(item.roman, /^[a-z]+(?:[ -][a-z]+)*$/)
     assert.match(item.audioId, /^[a-z0-9-]+$/)
@@ -108,5 +124,19 @@ test('the three sections are in the menu and stay unlocked', () => {
   for (const page of ['Batchim.tsx', 'Numbers.tsx', 'Conversation.tsx']) {
     const source = readFileSync(join(root, 'src/pages', page), 'utf8')
     assert.doesNotMatch(source, /useCourseGate|CourseLocked|ClassLocked/)
+  }
+  const conversation = readFileSync(join(root, 'src/pages/Conversation.tsx'), 'utf8')
+  assert.match(conversation, /Fifteen phrases you can use right away/)
+  assert.match(conversation, /id="essential"/)
+  assert.match(conversation, /id="everyday"/)
+  assert.match(conversation, /일상 대화/)
+  assert.match(conversation, /Phrases coming/)
+  assert.match(conversation, /EVERYDAY_PHRASES/)
+  const audioDir = join(root, 'public/audio')
+  for (const item of CONVERSATION_PHRASES.slice(-5)) {
+    const file = join(audioDir, `${item.audioId}.mp3`)
+    assert.equal(existsSync(file), true, item.audioId)
+    assert.ok(statSync(file).size > 4000, item.audioId)
+    assert.equal(readFileSync(file).subarray(0, 3).toString('latin1'), 'ID3', item.audioId)
   }
 })
