@@ -22,7 +22,7 @@ export type TalkCard = {
 
 export const REAL_TALK_CARDS: TalkCard[] = [
   { week: 3, title: '이거 주세요 (ee-guh joo-seh-yoh)', free: true },
-  { week: 4, title: '이거 뭐예요? (ee-guh mwuh-yeh-yoh)', free: true },
+  { week: 4, title: '안녕하세요 (ahn-nyuhng-hah-seh-yoh)', free: true },
   { week: 5, title: 'Food + 주세요 (joo-seh-yoh)', free: false },
   { week: 6, title: '맛있어요! (mah-shee-ssuh-yoh)', free: false },
   { week: 7, title: '매워요? (meh-wuh-yoh)', free: false },
@@ -60,7 +60,7 @@ export const FREE_TALKS: TalkWeek[] = [
   },
   {
     week: 4,
-    title: '이거 뭐예요? (ee-guh mwuh-yeh-yoh)',
+    title: '안녕하세요 (ahn-nyuhng-hah-seh-yoh)',
     lines: [
       {
         who: 'you',

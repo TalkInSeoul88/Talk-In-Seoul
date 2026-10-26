@@ -81,6 +81,12 @@ test('breath sets are the listen-and-pick pairs and reuse existing clips', () =>
 
 test('week 4 이거 뭐예요? plays its own clip, not hello', () => {
   const week4 = FREE_TALKS.find((week) => week.week === 4)
+  assert.equal(
+    REAL_TALK_CARDS.find((card) => card.week === 4).title,
+    '안녕하세요 (ahn-nyuhng-hah-seh-yoh)',
+  )
+  assert.equal(week4.title, '안녕하세요 (ahn-nyuhng-hah-seh-yoh)')
+  assert.equal(week4.lines[1].hangul, '이거 뭐예요?')
   const question = week4.lines.find((line) => line.hangul === '이거 뭐예요?')
   const hello = week4.lines.find((line) => line.hangul === '안녕하세요')
   assert.equal(question.audioId, 'realtalk-ee-guh-mwuh-yeh-yoh')
