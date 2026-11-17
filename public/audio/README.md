@@ -409,3 +409,7 @@ Record these filenames. The lines stay off the public page until a full-course c
 `realtalk-geem-bahp-hah-nah-joo-seh-yoh.mp3`
 `realtalk-geem-bahp-doo-geh-joo-seh-yoh.mp3`
 `realtalk-oh-dahl-luh-yeh-yoh.mp3`
+
+## Grammar
+
+Intermediate 1 lines are not listed here. When Jung records them, the files are `grammar-i1-ida-1.mp3` through `grammar-i1-ida-3.mp3`, `grammar-i1-have-1.mp3` through `grammar-i1-have-3.mp3`, and `grammar-i1-polite-1.mp3` through `grammar-i1-polite-3.mp3`. A missing file says **Recording coming soon**.

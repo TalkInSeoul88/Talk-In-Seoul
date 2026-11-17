@@ -1,12 +1,14 @@
-import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
+import { useLocation } from 'react-router-dom'
 import {
   FREE_ENROLLMENT,
+  levelsFromRedeem,
   loadEnrollment,
   saveEnrollment,
   type Enrollment,
 } from './enrollment.ts'
 
-type RedeemOk = { enrolled: true; code: string; expiresAt: string }
+type RedeemOk = { enrolled: true; code: string; expiresAt: string; levels: string[] }
 type RedeemFail = { ok: false; error: string; drop: boolean }
 
 type EnrollmentContextValue = {
@@ -24,14 +26,19 @@ async function redeemRequest(code: string): Promise<RedeemOk | RedeemFail> {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ code }),
   })
-  let payload: { enrolled?: boolean; code?: string; expiresAt?: string; error?: string } = {}
+  let payload: { enrolled?: boolean; code?: string; expiresAt?: string; levels?: unknown; error?: string } = {}
   try {
     payload = (await response.json()) as typeof payload
   } catch {
     payload = {}
   }
   if (response.ok && payload.enrolled && payload.code) {
-    return { enrolled: true, code: payload.code, expiresAt: payload.expiresAt || '' }
+    return {
+      enrolled: true,
+      code: payload.code,
+      expiresAt: payload.expiresAt || '',
+      levels: levelsFromRedeem(payload.levels),
+    }
   }
   return {
     ok: false,
@@ -41,35 +48,53 @@ async function redeemRequest(code: string): Promise<RedeemOk | RedeemFail> {
 }
 
 export function EnrollmentProvider({ children }: { children: ReactNode }) {
+  const location = useLocation()
   const [enrollment, setEnrollment] = useState<Enrollment>(loadEnrollment)
   const [error, setError] = useState<string | null>(null)
+  const codeRef = useRef(enrollment.code)
 
-  useEffect(() => {
+  const applyRedeem = useCallback((code: string, result: RedeemOk | RedeemFail) => {
+    if (codeRef.current !== code) return
+    if ('enrolled' in result) {
+      const next = {
+        enrolled: true as const,
+        code: result.code,
+        expiresAt: result.expiresAt,
+        levels: result.levels,
+      }
+      codeRef.current = next.code
+      saveEnrollment(next)
+      setEnrollment(next)
+      return
+    }
+    if (result.drop) {
+      saveEnrollment(FREE_ENROLLMENT)
+      setEnrollment(FREE_ENROLLMENT)
+    }
+  }, [])
+
+  const refreshSaved = useCallback(() => {
     const saved = loadEnrollment()
     if (!saved.enrolled || !saved.code) return
     const code = saved.code
-    let cancelled = false
     void redeemRequest(code)
-      .then((result) => {
-        if (cancelled) return
-        if ('enrolled' in result) {
-          const next = { enrolled: true, code: result.code, expiresAt: result.expiresAt }
-          saveEnrollment(next)
-          setEnrollment(next)
-          return
-        }
-        if (result.drop) {
-          saveEnrollment(FREE_ENROLLMENT)
-          setEnrollment(FREE_ENROLLMENT)
-        }
-      })
+      .then((result) => applyRedeem(code, result))
       .catch(() => {
         /* Keep the last local enrollment if the class list is unreachable. */
       })
-    return () => {
-      cancelled = true
+  }, [applyRedeem])
+
+  useEffect(() => {
+    refreshSaved()
+  }, [location.pathname, refreshSaved])
+
+  useEffect(() => {
+    function onVisible() {
+      if (document.visibilityState === 'visible') refreshSaved()
     }
-  }, [])
+    document.addEventListener('visibilitychange', onVisible)
+    return () => document.removeEventListener('visibilitychange', onVisible)
+  }, [refreshSaved])
 
   const value = useMemo<EnrollmentContextValue>(
     () => ({
@@ -80,7 +105,13 @@ export function EnrollmentProvider({ children }: { children: ReactNode }) {
         try {
           const result = await redeemRequest(code)
           if ('enrolled' in result) {
-            const next = { enrolled: true, code: result.code, expiresAt: result.expiresAt }
+            const next = {
+              enrolled: true as const,
+              code: result.code,
+              expiresAt: result.expiresAt,
+              levels: result.levels,
+            }
+            codeRef.current = next.code
             saveEnrollment(next)
             setEnrollment(next)
             return true
@@ -93,6 +124,7 @@ export function EnrollmentProvider({ children }: { children: ReactNode }) {
         }
       },
       clear() {
+        codeRef.current = null
         saveEnrollment(FREE_ENROLLMENT)
         setEnrollment(FREE_ENROLLMENT)
         setError(null)

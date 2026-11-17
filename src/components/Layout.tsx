@@ -1,62 +1,15 @@
-import { useEffect, useId, useRef, useState } from 'react'
 import { NavLink, Outlet, useLocation } from 'react-router-dom'
-import { STUDENT_NAV } from '../data/nav'
+import { TABS, tabForPath } from '../data/nav'
 import { useEnrollment } from '../lib/enrollment.tsx'
 
 export default function Layout() {
-  const [open, setOpen] = useState(false)
   const location = useLocation()
   const { enrollment } = useEnrollment()
-  const menuId = useId()
-  const menuButtonRef = useRef<HTMLButtonElement>(null)
-  const pathRef = useRef(location.pathname)
-
-  useEffect(() => {
-    if (pathRef.current === location.pathname) return
-    pathRef.current = location.pathname
-    setOpen(false)
-  }, [location.pathname])
-
-  useEffect(() => {
-    if (!open) return
-    function onKey(event: KeyboardEvent) {
-      if (event.key === 'Escape') {
-        setOpen(false)
-        menuButtonRef.current?.focus()
-      }
-    }
-    document.addEventListener('keydown', onKey)
-    return () => document.removeEventListener('keydown', onKey)
-  }, [open])
-
-  useEffect(() => {
-    if (!open) return
-    const previous = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
-    return () => {
-      document.body.style.overflow = previous
-    }
-  }, [open])
-
-  function closeMenu() {
-    setOpen(false)
-    menuButtonRef.current?.focus()
-  }
+  const current = tabForPath(location.pathname).id
 
   return (
-    <div className={open ? 'app-shell menu-open' : 'app-shell'}>
+    <div className="app-shell">
       <header className="topbar">
-        <button
-          ref={menuButtonRef}
-          type="button"
-          className="menu-btn"
-          aria-expanded={open}
-          aria-controls={menuId}
-          aria-label={open ? 'Close menu' : 'Open menu'}
-          onClick={() => setOpen((value) => !value)}
-        >
-          {open ? <CloseIcon /> : <MenuIcon />}
-        </button>
         <div className="topbar-copy">
           <h1>Talk in Seoul</h1>
           <p>
@@ -65,48 +18,77 @@ export default function Layout() {
           </p>
         </div>
       </header>
-
-      <div
-        className={open ? 'drawer-layer open' : 'drawer-layer'}
-        inert={!open}
-        aria-hidden={!open}
-      >
-        <button type="button" className="drawer-scrim" tabIndex={-1} onClick={closeMenu} aria-label="Close menu" />
-        <nav id={menuId} className="drawer" aria-label="Student menu">
-          {STUDENT_NAV.map((link) => (
-            <NavLink
-              key={link.to}
-              to={link.to}
-              end={link.to === '/'}
-              className={({ isActive }) => (isActive ? 'drawer-link active' : 'drawer-link')}
-              onClick={() => setOpen(false)}
-            >
-              <strong>{link.label}</strong>
-              <span>{link.ko}</span>
-            </NavLink>
-          ))}
-        </nav>
-      </div>
-
-      <main className="page" inert={open}>
+      <nav className="desktop-nav" aria-label="Sections">
+        {TABS.map((tab) => (
+          <NavLink key={tab.id} to={tab.to} end={tab.to === '/'} className={current === tab.id ? 'tab active' : 'tab'}>
+            <TabIcon id={tab.id} />
+            <span>
+              {tab.label} <span className="tab-ko">{tab.ko} ({tab.roman})</span>
+            </span>
+          </NavLink>
+        ))}
+      </nav>
+      <main className="page">
         <Outlet />
       </main>
+      <nav className="tabbar" aria-label="Sections">
+        {TABS.map((tab) => (
+          <NavLink key={tab.id} to={tab.to} end={tab.to === '/'} className={current === tab.id ? 'tab active' : 'tab'}>
+            <TabIcon id={tab.id} />
+            <span>{tab.label}</span>
+            <span className="tab-ko">
+              {tab.ko} ({tab.roman})
+            </span>
+          </NavLink>
+        ))}
+      </nav>
     </div>
   )
 }
 
-function MenuIcon() {
+function TabIcon({ id }: { id: string }) {
+  const common = {
+    viewBox: '0 0 24 24',
+    fill: 'none',
+    stroke: 'currentColor',
+    strokeWidth: 1.8,
+    strokeLinecap: 'round' as const,
+    strokeLinejoin: 'round' as const,
+    'aria-hidden': true,
+  }
+  if (id === 'home') {
+    return (
+      <svg {...common}>
+        <path d="M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1h-5v-6H10v6H5a1 1 0 0 1-1-1z" />
+      </svg>
+    )
+  }
+  if (id === 'sounds') {
+    return (
+      <svg {...common}>
+        <path d="M4 10v4M8 7v10M12 4v16M16 8v8M20 11v2" />
+      </svg>
+    )
+  }
+  if (id === 'talk') {
+    return (
+      <svg {...common}>
+        <path d="M5 16.5V7.5A2.5 2.5 0 0 1 7.5 5h9A2.5 2.5 0 0 1 19 7.5v6A2.5 2.5 0 0 1 16.5 16H9l-4 3.5z" />
+      </svg>
+    )
+  }
+  if (id === 'grammar') {
+    return (
+      <svg {...common}>
+        <path d="M6 4.5h9.5A2.5 2.5 0 0 1 18 7v12.5H8.5A2.5 2.5 0 0 0 6 22z" />
+        <path d="M6 4.5A2.5 2.5 0 0 0 8.5 7H18" />
+      </svg>
+    )
+  }
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" aria-hidden="true">
-      <path d="M5 7h14M5 12h14M5 17h14" strokeLinecap="round" />
-    </svg>
-  )
-}
-
-function CloseIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" aria-hidden="true">
-      <path d="M6 6l12 12M18 6L6 18" strokeLinecap="round" />
+    <svg {...common}>
+      <circle cx="12" cy="8" r="3.2" />
+      <path d="M5.5 19.5a6.5 6.5 0 0 1 13 0" />
     </svg>
   )
 }

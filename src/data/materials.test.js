@@ -47,10 +47,10 @@ test('the server copy of each sheet matches the source PDF', async () => {
 
 test('This Week sheets are course-only and not linked as public files', () => {
   assert.match(materialsSrc, /export const PUBLIC_MATERIALS/)
-  assert.match(materialsSrc, /Week 1 — Consonant writing practice \(자음\)/)
-  assert.match(materialsSrc, /Week 1 — Vowel writing practice \(모음\)/)
-  assert.match(materialsSrc, /Word writing practice \(단어\) — animals/)
-  assert.match(materialsSrc, /개 호랑이 토끼 다람쥐 새 개구리 나비 곰/)
+  assert.match(materialsSrc, /Week 1 — Consonant writing practice · 자음 \(jah-eum\)/)
+  assert.match(materialsSrc, /Week 1 — Vowel writing practice · 모음 \(moh-eum\)/)
+  assert.match(materialsSrc, /Word writing practice · 단어 \(dah-nuh\) — animals/)
+  assert.match(materialsSrc, /개 \(geh\) 호랑이 \(hoh-rahng-ee\)/)
   assert.match(materialsSrc, /sheet: id/)
   assert.doesNotMatch(materialsSrc, /\/materials\/hangul-/)
   assert.doesNotMatch(materialsSrc, /hangul-word-practice-week1/)
