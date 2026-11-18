@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState, type FormEvent } from 'react'
 import AdminNav from '../components/AdminNav'
+import { LEVELS, orderLevels } from '../data/levels.ts'
 import { useAdminToken } from '../lib/admin-session.ts'
 
 type CodeRow = {
@@ -9,6 +10,7 @@ type CodeRow = {
   createdAt: string
   status: 'active' | 'stopped' | 'expired'
   homeworkAccess: boolean
+  levels?: string[]
 }
 
 function todayPlus(days: number): string {
@@ -58,6 +60,7 @@ export default function Admin() {
   const [newCode, setNewCode] = useState('')
   const [expiresAt, setExpiresAt] = useState(() => todayPlus(90))
   const [newHomework, setNewHomework] = useState(true)
+  const [newLevels, setNewLevels] = useState<string[]>(['beginner'])
   const [createError, setCreateError] = useState<string | null>(null)
   const [creating, setCreating] = useState(false)
   const [busyCode, setBusyCode] = useState<string | null>(null)
@@ -162,7 +165,7 @@ export default function Admin() {
       const response = await fetch('/api/admin/codes', {
         method: 'POST',
         headers,
-        body: JSON.stringify({ code: newCode, expiresAt, homeworkAccess: newHomework }),
+        body: JSON.stringify({ code: newCode, expiresAt, homeworkAccess: newHomework, levels: newLevels }),
       })
       if (response.status === 401) {
         setToken(null)
@@ -174,6 +177,7 @@ export default function Admin() {
       }
       setNewCode('')
       setNewHomework(true)
+      setNewLevels(['beginner'])
       await loadCodes()
     } catch {
       setCreateError('Could not save that code.')
@@ -242,6 +246,31 @@ export default function Admin() {
       await loadCodes()
     } catch {
       setListError('Could not update full course access.')
+    } finally {
+      setBusyCode(null)
+    }
+  }
+
+  async function setLevels(code: string, levels: string[]) {
+    setBusyCode(code)
+    setListError(null)
+    try {
+      const response = await fetch('/api/admin/codes', {
+        method: 'PATCH',
+        headers,
+        body: JSON.stringify({ code, levels }),
+      })
+      if (response.status === 401) {
+        setToken(null)
+        return
+      }
+      if (!response.ok) {
+        setListError(await parseError(response))
+        return
+      }
+      await loadCodes()
+    } catch {
+      setListError('Could not update levels.')
     } finally {
       setBusyCode(null)
     }
@@ -365,9 +394,9 @@ export default function Admin() {
                 <p className="kicker">Access codes</p>
                 <h2 className="page-title">Issue a class code</h2>
                 <p className="lede">
-                  Set the code, the expiry, and full course access. On or Off starts or stops the whole code.
-                  Full course access off still unlocks pronunciation, Sound Workout, and notices, but not Homework, This
-                  Week, Trace, or Real Talk weeks 5–7.
+                  Set the code, the expiry, the levels, and full course access. On or Off starts or stops the whole
+                  code. A code with no saved levels stays Beginner only. Full course access off still unlocks
+                  pronunciation and notices, but not Homework, This Week, Trace, or Real Talk weeks 5–7.
                 </p>
               </header>
 
@@ -393,6 +422,13 @@ export default function Admin() {
                     required
                   />
                 </label>
+                <LevelChecks
+                  legendId="new-levels-label"
+                  selected={newLevels}
+                  onToggle={(id, next) => {
+                    setNewLevels((current) => orderLevels(next ? [...current, id] : current.filter((item) => item !== id)))
+                  }}
+                />
                 <p className="switch-label" id="new-homework-label">
                   Full course access (Homework, This Week, Trace, Real Talk)
                 </p>
@@ -498,6 +534,16 @@ export default function Admin() {
                           >
                             {expiryBusy === item.code ? 'Saving…' : justSaved ? 'Saved' : 'Save date'}
                           </button>
+                          <LevelChecks
+                            legendId={`levels-${item.code}`}
+                            selected={Array.isArray(item.levels) ? item.levels : ['beginner']}
+                            disabled={rowBusy}
+                            onToggle={(id, next) => {
+                              const current = Array.isArray(item.levels) ? item.levels : ['beginner']
+                              const levels = orderLevels(next ? [...current, id] : current.filter((level) => level !== id))
+                              void setLevels(item.code, levels)
+                            }}
+                          />
                           <p className="switch-label" id={`homework-access-${item.code}`}>
                             Full course access (Homework, This Week, Trace, Real Talk)
                           </p>
@@ -553,6 +599,37 @@ export default function Admin() {
         </div>
       </main>
     </div>
+  )
+}
+
+function LevelChecks({
+  legendId,
+  selected,
+  disabled,
+  onToggle,
+}: {
+  legendId: string
+  selected: string[]
+  disabled?: boolean
+  onToggle: (id: string, next: boolean) => void
+}) {
+  return (
+    <fieldset className="level-picks" aria-labelledby={legendId} disabled={disabled}>
+      <legend id={legendId}>Levels</legend>
+      {LEVELS.map((level) => {
+        const on = selected.includes(level.id)
+        return (
+          <label key={level.id} className={on ? 'level-check is-on' : 'level-check'}>
+            <input
+              type="checkbox"
+              checked={on}
+              onChange={(event) => onToggle(level.id, event.target.checked)}
+            />
+            <span>{level.label}</span>
+          </label>
+        )
+      })}
+    </fieldset>
   )
 }
 

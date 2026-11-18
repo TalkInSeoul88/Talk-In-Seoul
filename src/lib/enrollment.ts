@@ -1,15 +1,24 @@
+import { orderLevels } from '../data/levels.ts'
+
 const STORAGE_KEY = 'talk-in-seoul:access'
 
 export type Enrollment = {
   enrolled: boolean
   code: string | null
   expiresAt: string | null
+  levels: string[]
 }
 
 export const FREE_ENROLLMENT: Enrollment = {
   enrolled: false,
   code: null,
   expiresAt: null,
+  levels: [],
+}
+
+function levelsFrom(value: unknown, fallback: string[]): string[] {
+  if (!Array.isArray(value)) return fallback
+  return orderLevels(value.filter((item): item is string => typeof item === 'string'))
 }
 
 export function loadEnrollment(): Enrollment {
@@ -24,6 +33,7 @@ export function loadEnrollment(): Enrollment {
       enrolled: true,
       code: parsed.code,
       expiresAt: typeof parsed.expiresAt === 'string' ? parsed.expiresAt : null,
+      levels: levelsFrom(parsed.levels, ['beginner']),
     }
   } catch {
     return FREE_ENROLLMENT
@@ -35,7 +45,15 @@ export function saveEnrollment(value: Enrollment) {
     localStorage.removeItem(STORAGE_KEY)
     return
   }
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(value))
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify({
+      enrolled: true,
+      code: value.code,
+      expiresAt: value.expiresAt,
+      levels: value.levels,
+    }),
+  )
 }
 
 export function formatExpiry(expiresAt: string | null): string {
@@ -48,4 +66,8 @@ export function formatExpiry(expiresAt: string | null): string {
     year: 'numeric',
     timeZone: 'UTC',
   })
+}
+
+export function levelsFromRedeem(value: unknown): string[] {
+  return levelsFrom(value, ['beginner'])
 }

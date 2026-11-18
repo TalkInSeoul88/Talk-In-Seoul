@@ -39,6 +39,7 @@ export async function handleAdminCodes(ctx) {
       validateCodeFormat,
       validateExpiry,
     } = await import('./codes.js')
+    const { levelsFor, parseLevels } = await import('./levels.js')
     const { loadCodes, saveCodes, storeMode } = await import('./store.js')
 
     function publicCode(entry) {
@@ -49,6 +50,7 @@ export async function handleAdminCodes(ctx) {
         createdAt: entry.createdAt,
         status: statusLabel(entry),
         homeworkAccess: allowsHomework(entry),
+        levels: levelsFor(entry),
       }
     }
 
@@ -74,11 +76,16 @@ export async function handleAdminCodes(ctx) {
       const homeworkAccess = hasHomework ? asBoolean(ctx.body.homeworkAccess) : true
       if (homeworkAccess === null) return jsonResult(400, { error: 'Set full course access on or off.' })
 
+      const hasLevels = Object.prototype.hasOwnProperty.call(ctx.body ?? {}, 'levels')
+      const levels = hasLevels ? parseLevels(ctx.body.levels) : ['beginner']
+      if (levels === null) return jsonResult(400, { error: 'Choose levels from the list.' })
+
       const entry = {
         code,
         expiresAt,
         active: true,
         homeworkAccess,
+        levels,
         createdAt: new Date().toISOString(),
       }
       store.codes.push(entry)
@@ -94,8 +101,9 @@ export async function handleAdminCodes(ctx) {
       const hasActive = Object.prototype.hasOwnProperty.call(body, 'active')
       const hasExpiry = Object.prototype.hasOwnProperty.call(body, 'expiresAt')
       const hasHomework = Object.prototype.hasOwnProperty.call(body, 'homeworkAccess')
-      if (!hasActive && !hasExpiry && !hasHomework) {
-        return jsonResult(400, { error: 'Set active on or off, pick a new expiry date, or set full course access.' })
+      const hasLevels = Object.prototype.hasOwnProperty.call(body, 'levels')
+      if (!hasActive && !hasExpiry && !hasHomework && !hasLevels) {
+        return jsonResult(400, { error: 'Set active on or off, pick a new expiry date, set full course access, or choose levels.' })
       }
 
       const active = hasActive ? asBoolean(body.active) : null
@@ -103,6 +111,9 @@ export async function handleAdminCodes(ctx) {
 
       const homeworkAccess = hasHomework ? asBoolean(body.homeworkAccess) : null
       if (hasHomework && homeworkAccess === null) return jsonResult(400, { error: 'Set full course access on or off.' })
+
+      const levels = hasLevels ? parseLevels(body.levels) : null
+      if (hasLevels && levels === null) return jsonResult(400, { error: 'Choose levels from the list.' })
 
       const expiresAt = hasExpiry ? asString(body.expiresAt) : ''
       if (hasExpiry) {
@@ -116,6 +127,7 @@ export async function handleAdminCodes(ctx) {
       if (hasActive) entry.active = active
       if (hasExpiry) entry.expiresAt = expiresAt
       if (hasHomework) entry.homeworkAccess = homeworkAccess
+      if (hasLevels) entry.levels = levels
       await saveCodes(store)
       return jsonResult(200, { code: publicCode(entry) })
     }
@@ -150,6 +162,7 @@ export async function handleRedeem(ctx) {
   try {
     if (ctx.method !== 'POST') return jsonResult(405, { error: 'Use POST.' })
     const { normalizeCode, redeemProblem, validateCodeFormat } = await import('./codes.js')
+    const { levelsFor } = await import('./levels.js')
     const code = normalizeCode(asString(ctx.body?.code))
     if (!code) return jsonResult(400, { error: 'Enter your class access code.' })
     const formatError = validateCodeFormat(code)
@@ -164,6 +177,7 @@ export async function handleRedeem(ctx) {
       enrolled: true,
       code: entry.code,
       expiresAt: entry.expiresAt,
+      levels: levelsFor(entry),
     })
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Could not check that code right now.'

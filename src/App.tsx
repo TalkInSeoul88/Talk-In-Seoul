@@ -1,4 +1,5 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import BeginnerGate from './components/BeginnerGate'
 import Layout from './components/Layout'
 import { EnrollmentProvider } from './lib/enrollment.tsx'
 import Admin from './pages/Admin'
@@ -15,7 +16,9 @@ import Progress from './pages/Progress'
 import Pronunciation from './pages/Pronunciation'
 import RealTalk from './pages/RealTalk'
 import SoundWorkout from './pages/SoundWorkout'
+import Grammar from './pages/Grammar'
 import Quiz from './pages/Quiz'
+import SectionPage from './pages/SectionPage'
 import ThisWeek from './pages/ThisWeek'
 import Trace from './pages/Trace'
 
@@ -26,20 +29,25 @@ export default function App() {
         <Routes>
           <Route element={<Layout />}>
             <Route path="/" element={<Home />} />
-            <Route path="/progress" element={<Progress />} />
-            <Route path="/pronunciation" element={<Pronunciation />} />
-            <Route path="/sound" element={<SoundWorkout />} />
-            <Route path="/batchim" element={<Batchim />} />
-            <Route path="/numbers" element={<Numbers />} />
-            <Route path="/conversation" element={<Conversation />} />
-            <Route path="/real-talk" element={<RealTalk />} />
-            <Route path="/trace" element={<Trace />} />
-            <Route path="/quiz" element={<Quiz />} />
-            <Route path="/this-week" element={<ThisWeek />} />
-            <Route path="/notices" element={<Notices />} />
-            <Route path="/homework" element={<Homework />} />
+            <Route path="/sounds" element={<BeginnerGate><SectionPage id="sounds" /></BeginnerGate>} />
+            <Route path="/talk" element={<BeginnerGate><SectionPage id="talk" /></BeginnerGate>} />
+            <Route path="/practice" element={<BeginnerGate><SectionPage id="practice" /></BeginnerGate>} />
+            <Route path="/me" element={<Navigate to="/progress" replace />} />
+            <Route path="/grammar" element={<Grammar />} />
+            <Route path="/grammar/:levelId" element={<Grammar />} />
+            <Route path="/progress" element={<BeginnerGate><Progress /></BeginnerGate>} />
+            <Route path="/pronunciation" element={<BeginnerGate><Pronunciation /></BeginnerGate>} />
+            <Route path="/sound" element={<BeginnerGate><SoundWorkout /></BeginnerGate>} />
+            <Route path="/batchim" element={<BeginnerGate><Batchim /></BeginnerGate>} />
+            <Route path="/numbers" element={<BeginnerGate><Numbers /></BeginnerGate>} />
+            <Route path="/conversation" element={<BeginnerGate><Conversation /></BeginnerGate>} />
+            <Route path="/real-talk" element={<BeginnerGate><RealTalk /></BeginnerGate>} />
+            <Route path="/trace" element={<BeginnerGate><Trace /></BeginnerGate>} />
+            <Route path="/quiz" element={<BeginnerGate><Quiz /></BeginnerGate>} />
+            <Route path="/this-week" element={<BeginnerGate><ThisWeek /></BeginnerGate>} />
+            <Route path="/notices" element={<BeginnerGate><Notices /></BeginnerGate>} />
+            <Route path="/homework" element={<BeginnerGate><Homework /></BeginnerGate>} />
             <Route path="/lesson" element={<Navigate to="/pronunciation" replace />} />
-            <Route path="/practice" element={<Navigate to="/pronunciation" replace />} />
           </Route>
           <Route path="/admin" element={<Admin />} />
           <Route path="/admin/courses" element={<AdminCourses />} />

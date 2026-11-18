@@ -13,7 +13,7 @@ type Notice = {
   audience: string
 }
 
-export default function Notices() {
+export default function Notices({ embedded = false }: { embedded?: boolean }) {
   const { enrollment, clear } = useEnrollment()
   const [notices, setNotices] = useState<Notice[]>([])
   const [loading, setLoading] = useState(enrollment.enrolled)
@@ -55,11 +55,15 @@ export default function Notices() {
 
   return (
     <div className="stack">
-      <header>
-        <p className="kicker">Notices · 알림</p>
-        <h2 className="page-title">Class notices</h2>
-        <p className="lede">Reminders from Jung. Newest first. Pinned notes stay on top.</p>
-      </header>
+      {embedded ? null : (
+        <header>
+          <p className="kicker">
+            Notices · 알림 <span className="spoken">(ahl-lim)</span>
+          </p>
+          <h2 className="page-title">Class notices</h2>
+          <p className="lede">Reminders from Jung. Newest first. Pinned notes stay on top.</p>
+        </header>
+      )}
 
       {!enrollment.enrolled ? (
         <ClassLocked

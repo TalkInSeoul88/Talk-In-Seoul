@@ -10,6 +10,7 @@ export function requireAdmin(ctx) {
 
 export async function requireStudent(ctx) {
   const { allowsHomework, normalizeCode, redeemProblem, validateCodeFormat } = await import('./codes.js')
+  const { levelsFor } = await import('./levels.js')
   const { loadCodes } = await import('./store.js')
   const raw = ctx.header?.('x-access-code') || ctx.query?.code || ''
   const code = normalizeCode(raw)
@@ -22,5 +23,5 @@ export async function requireStudent(ctx) {
   if (problem || !entry) {
     return { ok: false, status: 401, error: problem ?? 'That access code was not found.' }
   }
-  return { ok: true, code: entry.code, homeworkAccess: allowsHomework(entry) }
+  return { ok: true, code: entry.code, homeworkAccess: allowsHomework(entry), levels: levelsFor(entry) }
 }
