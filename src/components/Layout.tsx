@@ -1,11 +1,12 @@
 import { NavLink, Outlet, useLocation } from 'react-router-dom'
-import { TABS, tabForPath } from '../data/nav'
+import { PROGRESS_LINK, TABS, tabForPath } from '../data/nav'
 import { useEnrollment } from '../lib/enrollment.tsx'
 
 export default function Layout() {
   const location = useLocation()
   const { enrollment } = useEnrollment()
-  const current = tabForPath(location.pathname).id
+  const current = tabForPath(location.pathname)?.id
+  const onProgress = location.pathname === PROGRESS_LINK.to || location.pathname === '/me'
 
   return (
     <div className="app-shell">
@@ -17,6 +18,10 @@ export default function Layout() {
             {enrollment.enrolled && <span className="enrolled-pill">Enrolled</span>}
           </p>
         </div>
+        <NavLink to={PROGRESS_LINK.to} className={onProgress ? 'me-link active' : 'me-link'}>
+          <span>Me</span>
+          <span className="tab-ko">나 (nah)</span>
+        </NavLink>
       </header>
       <nav className="desktop-nav" aria-label="Sections">
         {TABS.map((tab) => (
@@ -77,18 +82,18 @@ function TabIcon({ id }: { id: string }) {
       </svg>
     )
   }
-  if (id === 'grammar') {
+  if (id === 'practice') {
     return (
       <svg {...common}>
-        <path d="M6 4.5h9.5A2.5 2.5 0 0 1 18 7v12.5H8.5A2.5 2.5 0 0 0 6 22z" />
-        <path d="M6 4.5A2.5 2.5 0 0 0 8.5 7H18" />
+        <path d="M4 20h4L18 10l-4-4L4 16z" />
+        <path d="M12.5 7.5l4 4" />
       </svg>
     )
   }
   return (
     <svg {...common}>
-      <circle cx="12" cy="8" r="3.2" />
-      <path d="M5.5 19.5a6.5 6.5 0 0 1 13 0" />
+      <path d="M6 4.5h9.5A2.5 2.5 0 0 1 18 7v12.5H8.5A2.5 2.5 0 0 0 6 22z" />
+      <path d="M6 4.5A2.5 2.5 0 0 0 8.5 7H18" />
     </svg>
   )
 }

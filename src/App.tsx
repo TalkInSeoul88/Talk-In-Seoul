@@ -31,7 +31,8 @@ export default function App() {
             <Route path="/" element={<Home />} />
             <Route path="/sounds" element={<BeginnerGate><SectionPage id="sounds" /></BeginnerGate>} />
             <Route path="/talk" element={<BeginnerGate><SectionPage id="talk" /></BeginnerGate>} />
-            <Route path="/me" element={<BeginnerGate><SectionPage id="me" /></BeginnerGate>} />
+            <Route path="/practice" element={<BeginnerGate><SectionPage id="practice" /></BeginnerGate>} />
+            <Route path="/me" element={<Navigate to="/progress" replace />} />
             <Route path="/grammar" element={<Grammar />} />
             <Route path="/grammar/:levelId" element={<Grammar />} />
             <Route path="/progress" element={<BeginnerGate><Progress /></BeginnerGate>} />
@@ -47,7 +48,6 @@ export default function App() {
             <Route path="/notices" element={<BeginnerGate><Notices /></BeginnerGate>} />
             <Route path="/homework" element={<BeginnerGate><Homework /></BeginnerGate>} />
             <Route path="/lesson" element={<Navigate to="/pronunciation" replace />} />
-            <Route path="/practice" element={<Navigate to="/pronunciation" replace />} />
           </Route>
           <Route path="/admin" element={<Admin />} />
           <Route path="/admin/courses" element={<AdminCourses />} />

@@ -26,11 +26,11 @@ test('student and server levels match, and the menu is five sections', () => {
   )
   assert.deepEqual(
     TABS.map((tab) => tab.label),
-    ['Home', 'Sounds', 'Talk', 'Grammar', 'Me'],
+    ['Home', 'Sounds', 'Talk', 'Practice', 'Grammar'],
   )
   assert.deepEqual(
     TABS.map((tab) => `${tab.ko} (${tab.roman})`),
-    ['홈 (hohm)', '소리 (soh-ree)', '대화 (deh-hwah)', '문법 (moon-ppuhp)', '나 (nah)'],
+    ['홈 (hohm)', '소리 (soh-ree)', '대화 (deh-hwah)', '연습 (yuhn-seup)', '문법 (moon-ppuhp)'],
   )
   assert.deepEqual(
     GRAMMAR_LEVELS.map((level) => level.id),

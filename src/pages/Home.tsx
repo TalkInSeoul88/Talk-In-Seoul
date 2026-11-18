@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import AccessCodeCard from '../components/AccessCodeCard'
 import LevelLock from '../components/LevelLock'
+import { Link } from 'react-router-dom'
 import { WEEK_1_LESSON } from '../data/content'
 import { hasLevel } from '../data/levels.ts'
+import { PROGRESS_LINK } from '../data/nav'
 import { useEnrollment } from '../lib/enrollment.tsx'
 import Homework from './Homework'
 import Notices from './Notices'
@@ -28,15 +30,22 @@ export default function Home() {
           {WEEK_1_LESSON.weekLabel} · {WEEK_1_LESSON.weekLabelKo} <span className="spoken">(joo-chah)</span>
         </p>
         <h2 className="page-title">Hangul basics this week</h2>
-        <p className="lede">
-          Sheets, notices, and homework are here. Sounds, talk, grammar, and quiz are in the tabs.
-        </p>
+        <p className="lede">This week’s sheets, notices, and homework. Your checklist is here too.</p>
       </header>
 
       <AccessCodeCard />
 
       {beginnerOpen ? (
         <>
+          <Link className="home-link" to={PROGRESS_LINK.to}>
+            <span>
+              <strong>
+                {PROGRESS_LINK.label} · {PROGRESS_LINK.ko} ({PROGRESS_LINK.roman})
+              </strong>
+              <span className="tiny">{PROGRESS_LINK.detail}</span>
+            </span>
+            <Chevron />
+          </Link>
           <div className="segment" role="tablist" aria-label="Home">
             {PARTS.map((item) => (
               <button
@@ -63,5 +72,13 @@ export default function Home() {
         <LevelLock label="Beginner" />
       )}
     </div>
+  )
+}
+
+function Chevron() {
+  return (
+    <svg className="home-link-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+      <path d="M9 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
   )
 }

@@ -13,7 +13,7 @@ export const TABS = [
     label: 'Sounds',
     ko: '소리',
     roman: 'soh-ree',
-    paths: ['/sounds', '/pronunciation', '/sound', '/batchim', '/trace'],
+    paths: ['/sounds', '/pronunciation', '/sound', '/batchim', '/numbers'],
   },
   {
     id: 'talk',
@@ -21,7 +21,15 @@ export const TABS = [
     label: 'Talk',
     ko: '대화',
     roman: 'deh-hwah',
-    paths: ['/talk', '/conversation', '/real-talk', '/numbers'],
+    paths: ['/talk', '/conversation', '/real-talk'],
+  },
+  {
+    id: 'practice',
+    to: '/practice',
+    label: 'Practice',
+    ko: '연습',
+    roman: 'yuhn-seup',
+    paths: ['/practice', '/trace', '/quiz'],
   },
   {
     id: 'grammar',
@@ -31,17 +39,17 @@ export const TABS = [
     roman: 'moon-ppuhp',
     paths: ['/grammar'],
   },
-  {
-    id: 'me',
-    to: '/me',
-    label: 'Me',
-    ko: '나',
-    roman: 'nah',
-    paths: ['/me', '/progress', '/quiz'],
-  },
 ] as const
 
-export type SectionId = 'sounds' | 'talk' | 'me'
+export type SectionId = 'sounds' | 'talk' | 'practice'
+
+export const PROGRESS_LINK = {
+  to: '/progress',
+  label: 'My Progress',
+  ko: '진도',
+  roman: 'jeen-doh',
+  detail: 'What class covered, and what you reviewed.',
+}
 
 export const SECTIONS: Record<
   SectionId,
@@ -57,7 +65,7 @@ export const SECTIONS: Record<
     label: 'Sounds',
     ko: '소리',
     roman: 'soh-ree',
-    lede: 'Hear the letters, drill a sound, then trace it.',
+    lede: 'Hear the letters, drill a sound, and count.',
     links: [
       {
         to: '/pronunciation',
@@ -81,11 +89,11 @@ export const SECTIONS: Record<
         detail: 'Easy words with a bottom letter.',
       },
       {
-        to: '/trace',
-        label: 'Trace',
-        ko: '쓰기',
-        roman: 'sseuh-gee',
-        detail: 'Finger tracing for the 8-week course.',
+        to: '/numbers',
+        label: 'Numbers',
+        ko: '숫자',
+        roman: 'soo-jah',
+        detail: 'Native and Sino-Korean counts.',
       },
     ],
   },
@@ -93,7 +101,7 @@ export const SECTIONS: Record<
     label: 'Talk',
     ko: '대화',
     roman: 'deh-hwah',
-    lede: 'Phrases, counter talk, and numbers.',
+    lede: 'Everyday phrases and counter talk.',
     links: [
       {
         to: '/conversation',
@@ -109,27 +117,20 @@ export const SECTIONS: Record<
         roman: 'sheel-juhn',
         detail: 'At the counter with Jung.',
       },
-      {
-        to: '/numbers',
-        label: 'Numbers',
-        ko: '숫자',
-        roman: 'soo-jah',
-        detail: 'Native and Sino-Korean counts.',
-      },
     ],
   },
-  me: {
-    label: 'Me',
-    ko: '나',
-    roman: 'nah',
-    lede: 'Your checklist and the quiz.',
+  practice: {
+    label: 'Practice',
+    ko: '연습',
+    roman: 'yuhn-seup',
+    lede: 'Trace the letters, then quiz yourself.',
     links: [
       {
-        to: '/progress',
-        label: 'My Progress',
-        ko: '진도',
-        roman: 'jeen-doh',
-        detail: 'What class covered, and what you reviewed.',
+        to: '/trace',
+        label: 'Trace',
+        ko: '쓰기',
+        roman: 'sseuh-gee',
+        detail: 'Finger tracing for the 8-week course.',
       },
       {
         to: '/quiz',
@@ -143,8 +144,5 @@ export const SECTIONS: Record<
 }
 
 export function tabForPath(pathname: string) {
-  return (
-    TABS.find((tab) => tab.paths.some((path) => pathname === path || (path !== '/' && pathname.startsWith(`${path}/`)))) ??
-    TABS[0]
-  )
+  return TABS.find((tab) => tab.paths.some((path) => pathname === path || (path !== '/' && pathname.startsWith(`${path}/`))))
 }

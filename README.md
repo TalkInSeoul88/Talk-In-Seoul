@@ -20,7 +20,7 @@ Students come to an in-person Hangul class at the store, then use this phone-fri
 - **Quiz** — flashcards. **모음(vowels)** and **자음(consonants)** (14 basic + 5 쌍자음) stay free; Play uses Jung’s clips. **Words (단어) · Easy 20** is also free (no access code). **Words (단어) · Class unlock** needs the same student access code as 음절(syllables). Word cards have no teacher MP3s yet, so they stay silent. Compound vowels and 음절(syllables) are not in the jamo decks.
 - **This Week** — writing sheets for the 8-week course: 자음 (2 pages ㄱ–ㅎ), 모음, and 단어 (animals: 개 호랑이 토끼 다람쥐 새 개구리 나비 곰). A taste-class code does not open them, and the PDF addresses are not public.
 - **Grammar** (`/grammar`) — level-gated. Intermediate 1 has three starter topics. Intermediate 2, Advanced 1, and Advanced 2 say Coming soon. A locked level shows “Ask Jung to unlock …”. Lesson sentences stay on the server until that level is checked.
-- **My Progress** (`/progress`) — Beginner checklist under Me. Each step shows what you learn. **Class progress** is a filled dot, “Covered in class,” for every step through the week Jung set. **My review** is the student’s own check. Any Beginner class code can open it, including a taste-class code.
+- **My Progress** (`/progress`) — Beginner checklist, linked from Home and the header Me button. Each step shows what you learn. **Class progress** is a filled dot, “Covered in class,” for every step through the week Jung set. **My review** is the student’s own check. Any Beginner class code can open it, including a taste-class code.
 - **Notices** (`/notices`) — reminders Jung posts (title, message, date, optional pin). Newest first, pinned on top. A notice can be for every student or for one course. Needs a class code.
 - **Homework** (`/homework`) — files for the student’s course, grouped Week 1, Week 2, and so on. PDF or photo. Needs full course access. A taste-class code still unlocks pronunciation and notices.
 - **Admin** (`/admin`) — hidden from the student hamburger. Jung unlocks with a password, then:
@@ -29,9 +29,9 @@ Students come to an in-person Hangul class at the store, then use this phone-fri
   - **Notices** — post, edit, or delete reminders
   - **Homework** — post, edit, or delete homework and add or remove files
 
-The student menu is five sections: **Home**, **Sounds 소리 (soh-ree)**, **Talk 대화 (deh-hwah)**, **Grammar 문법 (moon-ppuhp)**, and **Me 나 (nah)**. On a phone they sit in a bottom tab bar. On a wider screen the same five sit under the title. Home holds this week’s sheets, notices, and homework. Older links such as `/pronunciation` and `/homework` still open. English is the primary UI language, with Korean labels and a pronunciation after each new Korean word. Students do **not** create an account. Without a code they can still use the free app. Admin stays at `/admin`, not in the student tabs.
+The student menu is five tabs: **Home 홈 (hohm)**, **Sounds 소리 (soh-ree)**, **Talk 대화 (deh-hwah)**, **Practice 연습 (yuhn-seup)**, and **Grammar 문법 (moon-ppuhp)**. On a phone they sit in a bottom tab bar. On a wider screen the same five sit under the title. Home holds this week’s sheets, notices, homework, and a card for My Progress. **Me 나 (nah)** in the header opens that checklist. Sounds includes Numbers. Practice holds Trace and Quiz. Older links such as `/pronunciation`, `/homework`, and `/numbers` still open. `/me` opens My Progress. English is the primary UI language, with Korean labels and a pronunciation after each new Korean word. Students do **not** create an account. Without a code they can still use the free app. Admin stays at `/admin`, not in the student tabs.
 
-Old `/lesson` and `/practice` URLs go to Pronunciation.
+Old `/lesson` goes to Pronunciation.
 
 ## Run locally
 

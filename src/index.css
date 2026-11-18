@@ -118,6 +118,27 @@ a {
 
 .topbar-copy {
   min-width: 0;
+  flex: 1;
+}
+
+.me-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  min-width: 3.4rem;
+  padding: 0.25rem 0.4rem;
+  border-radius: 0.75rem;
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.15;
+  text-align: center;
+}
+
+.me-link.active {
+  color: var(--coral-deep);
+  background: var(--wash);
 }
 
 .topbar h1 {
