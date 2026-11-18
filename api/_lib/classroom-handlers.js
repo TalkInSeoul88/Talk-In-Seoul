@@ -19,6 +19,8 @@ import {
 import { loadClassroom, saveClassroom } from './classroom-store.js'
 import { coveredThrough, stepsForCourse } from './course-progress.js'
 import { COURSE_CLOSED } from './codes.js'
+import { beginnerDenied } from './levels.js'
+import { handleStudentGrammar } from './grammar.js'
 import { LOCKED_TALKS, REAL_TALK_LOCKED } from './real-talk.js'
 import { readWeekSheet } from './week-sheets.js'
 import {
@@ -37,6 +39,11 @@ import { storeMode } from './store.js'
 
 function json(status, body) {
   return { status, body }
+}
+
+function closedBeginner(student) {
+  const error = beginnerDenied(student)
+  return error ? json(403, { error }) : null
 }
 
 function failure(error) {
@@ -566,6 +573,8 @@ export async function handleStudentProgress(ctx) {
   if (ctx.method !== 'GET' && ctx.method !== 'PATCH') return json(405, { error: 'Use GET or PATCH.' })
   const student = await requireStudent(ctx)
   if (!student.ok) return json(student.status, { error: student.error })
+  const blocked = closedBeginner(student)
+  if (blocked) return blocked
   try {
     const data = await loadClassroom()
     const course = courseForCode(data, student.code)
@@ -597,6 +606,8 @@ export async function handleStudentNotices(ctx) {
   if (ctx.method !== 'GET') return json(405, { error: 'Use GET.' })
   const student = await requireStudent(ctx)
   if (!student.ok) return json(student.status, { error: student.error })
+  const blocked = closedBeginner(student)
+  if (blocked) return blocked
   try {
     const data = await loadClassroom()
     const course = courseForCode(data, student.code)
@@ -617,15 +628,20 @@ export async function handleStudentRealTalk(ctx) {
   if (ctx.method !== 'GET') return json(405, { error: 'Use GET.' })
   const student = await requireStudent(ctx)
   if (!student.ok) return json(student.status, { error: student.error })
+  const blocked = closedBeginner(student)
+  if (blocked) return blocked
   if (!student.homeworkAccess) return json(403, { error: REAL_TALK_LOCKED })
   return json(200, { weeks: LOCKED_TALKS })
 }
 
 export async function handleStudentHomework(ctx) {
   if (ctx.query?.realtalk === '1') return handleStudentRealTalk(ctx)
+  if (ctx.query?.grammar === '1') return handleStudentGrammar(ctx)
   if (ctx.method !== 'GET') return json(405, { error: 'Use GET.' })
   const student = await requireStudent(ctx)
   if (!student.ok) return json(student.status, { error: student.error })
+  const blocked = closedBeginner(student)
+  if (blocked) return blocked
   if (!student.homeworkAccess) return json(403, { error: COURSE_CLOSED })
   try {
     const data = await loadClassroom()
@@ -648,6 +664,8 @@ export async function handleStudentFile(ctx) {
   if (ctx.method !== 'GET') return json(405, { error: 'Use GET.' })
   const student = await requireStudent(ctx)
   if (!student.ok) return json(student.status, { error: student.error })
+  const blocked = closedBeginner(student)
+  if (blocked) return blocked
   if (!student.homeworkAccess) return json(403, { error: COURSE_CLOSED })
   if (ctx.query?.sheet) {
     try {

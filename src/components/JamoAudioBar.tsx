@@ -293,7 +293,7 @@ export default function JamoAudioBar({ jamo, revealLabel = true, soonText = 'Aud
           aria-label={recording ? `Stop recording ${jamo.char}` : `Record yourself saying ${jamo.char}`}
         >
           {recording ? 'Stop' : 'Record'}
-          <span>{recording ? '녹음 중' : '녹음'}</span>
+          <span>{recording ? '녹음 (noh-geum) 중 (joong)' : '녹음 (noh-geum)'}</span>
         </button>
       ) : (
         <p className="audio-soon">Recording isn’t supported here. Try Safari or Chrome.</p>

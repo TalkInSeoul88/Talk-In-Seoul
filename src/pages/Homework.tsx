@@ -22,7 +22,7 @@ type HomeworkItem = {
 
 type Week = { week: number; items: HomeworkItem[] }
 
-export default function Homework() {
+export default function Homework({ embedded = false }: { embedded?: boolean }) {
   const { enrollment, clear } = useEnrollment()
   const [courseName, setCourseName] = useState('')
   const [weeks, setWeeks] = useState<Week[]>([])
@@ -72,13 +72,17 @@ export default function Homework() {
 
   return (
     <div className="stack">
-      <header>
-        <p className="kicker">Homework · 숙제</p>
-        <h2 className="page-title">{enrollment.enrolled && courseName ? courseName : 'Homework'}</h2>
-        <p className="lede">
-          {blocked ? 'Pronunciation and notices stay open.' : 'Open a file to read it or save it on your phone.'}
-        </p>
-      </header>
+      {embedded ? null : (
+        <header>
+          <p className="kicker">
+            Homework · 숙제 <span className="spoken">(sook-jeh)</span>
+          </p>
+          <h2 className="page-title">{enrollment.enrolled && courseName ? courseName : 'Homework'}</h2>
+          <p className="lede">
+            {blocked ? 'Pronunciation and notices stay open.' : 'Open a file to read it or save it on your phone.'}
+          </p>
+        </header>
+      )}
 
       {!enrollment.enrolled ? (
         <CourseLocked title="Homework" inputId="homework-access-code" enrolled={false} error={gateError} />

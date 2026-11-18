@@ -4,20 +4,24 @@ import { CLASS_MATERIALS, PUBLIC_MATERIALS, weekSheetHref, type WeekMaterial } f
 import { useCourseGate } from '../lib/course-access.ts'
 import { useEnrollment } from '../lib/enrollment.tsx'
 
-export default function ThisWeek() {
+export default function ThisWeek({ embedded = false }: { embedded?: boolean }) {
   const { enrollment } = useEnrollment()
   const course = useCourseGate()
   const open = course.state === 'open' && Boolean(course.code)
 
   return (
     <div className="stack">
-      <header>
-        <p className="kicker">This Week · 이번 주</p>
-        <h2 className="page-title">
-          {WEEK_1_LESSON.weekLabel} · {WEEK_1_LESSON.title}
-        </h2>
-        <p className="lede">{open ? WEEK_1_LESSON.summary : 'Writing sheets for the 8-week course.'}</p>
-      </header>
+      {embedded ? null : (
+        <header>
+          <p className="kicker">
+            This Week · 이번 주 <span className="spoken">(ee-buhn joo)</span>
+          </p>
+          <h2 className="page-title">
+            {WEEK_1_LESSON.weekLabel} · {WEEK_1_LESSON.title}
+          </h2>
+          <p className="lede">{open ? WEEK_1_LESSON.summary : 'Writing sheets for the 8-week course.'}</p>
+        </header>
+      )}
 
       {course.state === 'loading' ? (
         <p className="tiny">Loading…</p>
@@ -41,6 +45,8 @@ export default function ThisWeek() {
             </div>
           ) : null}
         </section>
+      ) : embedded && !enrollment.enrolled ? (
+        <p className="tiny">Writing sheets open with an 8-week course code.</p>
       ) : (
         <CourseLocked
           title="This Week"
