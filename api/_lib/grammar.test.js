@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import { after, before, beforeEach, describe, it } from 'node:test'
 import { handleStudentHomework } from './classroom-handlers.js'
-import { INTERMEDIATE_1_TOPICS, handleStudentGrammar } from './grammar.js'
+import { INTERMEDIATE_1_TOPICS } from './grammar.js'
 import { handleAdminCodes, handleAdminLogin, handleRedeem } from './handlers.js'
 import { resetMemoryStore, saveCodes, loadCodes } from './store.js'
 
@@ -105,7 +105,9 @@ describe('level grammar access', () => {
     )
 
     const grammar = (code) =>
-      handleStudentGrammar(ctx('GET', {}, (name) => (name === 'x-access-code' ? code : '')))
+      handleStudentHomework(
+        ctx('GET', {}, (name) => (name === 'x-access-code' ? code : ''), { query: { grammar: '1' } }),
+      )
 
     const missing = await grammar('')
     assert.equal(missing.status, 401)

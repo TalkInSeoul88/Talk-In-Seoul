@@ -9,7 +9,6 @@ import {
   handleStudentHomework,
   handleStudentNotices,
 } from './classroom-handlers.js'
-import { handleStudentGrammar } from './grammar.js'
 import { handleAdminCodes, handleAdminLogin, handleRedeem } from './handlers.js'
 import { toContext, sendResult } from './vercel-handler.js'
 
@@ -26,7 +25,6 @@ const HANDLERS = {
   '/api/class/notices': handleStudentNotices,
   '/api/class/homework': handleStudentHomework,
   '/api/class/file': handleStudentFile,
-  '/api/class/grammar': handleStudentGrammar,
 }
 
 export function talkApiPlugin() {

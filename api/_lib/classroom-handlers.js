@@ -20,6 +20,7 @@ import { loadClassroom, saveClassroom } from './classroom-store.js'
 import { coveredThrough, stepsForCourse } from './course-progress.js'
 import { COURSE_CLOSED } from './codes.js'
 import { beginnerDenied } from './levels.js'
+import { handleStudentGrammar } from './grammar.js'
 import { LOCKED_TALKS, REAL_TALK_LOCKED } from './real-talk.js'
 import { readWeekSheet } from './week-sheets.js'
 import {
@@ -635,6 +636,7 @@ export async function handleStudentRealTalk(ctx) {
 
 export async function handleStudentHomework(ctx) {
   if (ctx.query?.realtalk === '1') return handleStudentRealTalk(ctx)
+  if (ctx.query?.grammar === '1') return handleStudentGrammar(ctx)
   if (ctx.method !== 'GET') return json(405, { error: 'Use GET.' })
   const student = await requireStudent(ctx)
   if (!student.ok) return json(student.status, { error: student.error })

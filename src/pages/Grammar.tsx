@@ -80,7 +80,7 @@ export default function Grammar() {
     let cancelled = false
     void (async () => {
       try {
-        const response = await fetch('/api/class/grammar', { headers: { 'X-Access-Code': code } })
+        const response = await fetch('/api/class/homework?grammar=1', { headers: { 'X-Access-Code': code } })
         if (cancelled) return
         if (response.status === 401) {
           clear()
