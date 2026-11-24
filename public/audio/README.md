@@ -288,7 +288,7 @@ Filenames stay ASCII even when the sound palatalizes (시 → `syllable-si.mp3`)
 
 ## Quiz 단어 (words)
 
-Easy 20 and Class unlock flashcards are Hangul → romanization + English. There are **no** `word-*.mp3` files yet. Do not add silent placeholder MP3s. Quiz Play stays on the 모음/자음 cards that already have Jung’s clips.
+Easy 20, Next 20, and Class unlock flashcards are Hangul → romanization + English. There are **no** `word-*.mp3` files yet. Do not add silent placeholder MP3s. Quiz Play stays on the 모음/자음 cards that already have Jung’s clips.
 
 ## Bottom Sounds, Numbers, Conversation
 

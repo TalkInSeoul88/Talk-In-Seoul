@@ -137,7 +137,8 @@ export const SECTIONS: Record<
         label: 'Quiz',
         ko: '퀴즈',
         roman: 'kwee-jeuh',
-        detail: 'Free 모음 (moh-eum), 자음 (jah-eum), and Easy 20 단어 (dah-nuh). Class 단어 (dah-nuh) with a code.',
+        detail:
+          'Free 모음 (moh-eum), 자음 (jah-eum), Easy 20 단어 (dah-nuh), and Next 20 단어 (dah-nuh). Class 단어 (dah-nuh) with a code.',
       },
     ],
   },
