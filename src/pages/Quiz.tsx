@@ -2,15 +2,17 @@ import { useState } from 'react'
 import FlashcardPlay from '../components/FlashcardPlay'
 import UnlockControl from '../components/UnlockControl'
 import { QUIZ_CONSONANTS, QUIZ_VOWELS, type Jamo } from '../data/content'
-import { QUIZ_WORDS_CLASS, QUIZ_WORDS_EASY, type QuizWord } from '../data/quiz-words'
+import { QUIZ_WORDS_CLASS, QUIZ_WORDS_EASY, QUIZ_WORDS_NEXT, type QuizWord } from '../data/quiz-words'
 import { useEnrollment } from '../lib/enrollment.tsx'
 
-type Deck = 'vowels' | 'consonants' | 'words-easy' | 'words-class'
+type WordDeck = 'words-easy' | 'words-next' | 'words-class'
+type Deck = 'vowels' | 'consonants' | WordDeck
 
 const TABS: { id: Deck; label: string; sub: string; name: string }[] = [
   { id: 'vowels', label: '모음', sub: '(vowels)', name: '모음 (vowels)' },
   { id: 'consonants', label: '자음', sub: '(consonants)', name: '자음 (consonants)' },
   { id: 'words-easy', label: 'Easy 20', sub: '(단어)', name: 'Words (단어) · Easy 20' },
+  { id: 'words-next', label: 'Next 20', sub: '(단어)', name: 'Words (단어) · Next 20' },
   { id: 'words-class', label: 'Class', sub: '(unlock)', name: 'Words (단어) · Class unlock' },
 ]
 
@@ -19,13 +21,20 @@ const JAMO_DECKS: Record<'vowels' | 'consonants', Jamo[]> = {
   consonants: QUIZ_CONSONANTS,
 }
 
-const WORD_DECKS: Record<'words-easy' | 'words-class', QuizWord[]> = {
+const WORD_DECKS: Record<WordDeck, QuizWord[]> = {
   'words-easy': QUIZ_WORDS_EASY,
+  'words-next': QUIZ_WORDS_NEXT,
   'words-class': QUIZ_WORDS_CLASS,
 }
 
-function isWordDeck(deck: Deck): deck is 'words-easy' | 'words-class' {
-  return deck === 'words-easy' || deck === 'words-class'
+function isWordDeck(deck: Deck): deck is WordDeck {
+  return deck === 'words-easy' || deck === 'words-next' || deck === 'words-class'
+}
+
+function wordKindLabel(deck: WordDeck) {
+  if (deck === 'words-class') return '단어 · class'
+  if (deck === 'words-next') return '단어 · next 20'
+  return '단어 · easy 20'
 }
 
 function jamoKindLabel(card: Jamo) {
@@ -58,8 +67,8 @@ export default function Quiz() {
         <p className="kicker">Quiz · 퀴즈</p>
         <h2 className="page-title">Hangul cards</h2>
         <p className="lede">
-          Free 모음, 자음 (including 쌍자음), and Easy 20 단어 — no access code. Class 단어 uses the
-          same class code as 음절(syllables). Tap a card to flip.
+          Free 모음, 자음 (including 쌍자음), Easy 20 단어, and Next 20 단어 — no access code. Class
+          단어 uses the same class code as 음절(syllables). Tap a card to flip.
         </p>
       </header>
 
@@ -86,7 +95,7 @@ export default function Quiz() {
           <h2>Access code needed</h2>
           <p className="tiny">
             These 20 class words unlock with the same student code as 음절(syllables). Easy 20 단어,
-            모음, and 자음 stay free.
+            Next 20 단어, 모음, and 자음 stay free.
           </p>
           <div className="unlock-bar">
             <p className="tiny">Access code needed</p>
@@ -99,6 +108,7 @@ export default function Quiz() {
           index={index}
           flipped={flipped}
           gated={deck === 'words-class'}
+          kindLabel={wordKindLabel(deck)}
           onFlip={() => setFlipped((value) => !value)}
           onGo={go}
         />
@@ -179,6 +189,7 @@ function WordCards({
   index,
   flipped,
   gated,
+  kindLabel,
   onFlip,
   onGo,
 }: {
@@ -186,13 +197,13 @@ function WordCards({
   index: number
   flipped: boolean
   gated: boolean
+  kindLabel: string
   onFlip: () => void
   onGo: (nextIndex: number) => void
 }) {
   const card = cards[index]
   if (!card) return null
   const last = index + 1 === cards.length
-  const kindLabel = gated ? '단어 · class' : '단어 · easy 20'
   const phrase = card.hangul.length > 2
 
   return (
